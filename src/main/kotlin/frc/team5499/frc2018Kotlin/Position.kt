@@ -10,7 +10,7 @@ object Position {
 
     fun update(left_distance: Double, right_distance: Double, angle: Double) {
         val newAngle = Math.toRadians(angle)
-        var angle_delta = angle - last_angle
+        var angle_delta = newAngle - last_angle
         if (angle_delta == 0.0) angle_delta = Constants.EPSILON
         val left_delta = left_distance - last_left
         val right_delta = right_distance - last_right
@@ -22,7 +22,7 @@ object Position {
         x += delta_x * Math.sin(last_angle) + delta_y * Math.cos(last_angle)
         last_left = left_distance
         last_right = right_distance
-        last_angle = angle
+        last_angle = newAngle
     }
 
     fun getPositionVector() {}
