@@ -51,6 +51,7 @@ jar {
 }
 
 test {
+    dependsOn 'cleanTest'
     dependsOn 'build_envs'
 
     useJUnitPlatform()
