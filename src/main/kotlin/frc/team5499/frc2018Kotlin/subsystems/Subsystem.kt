@@ -1,8 +1,6 @@
 package frc.team5499.frc2018Kotlin.subsystems
 
-abstract class Subsystem() {
-
-    init {}
+abstract class Subsystem {
 
     abstract fun update()
 

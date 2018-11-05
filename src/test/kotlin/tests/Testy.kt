@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 
 public class Testy {
     @Test
-    fun test_test() {
+    fun test() {
         println("test")
     }
 }
