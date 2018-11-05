@@ -11,11 +11,6 @@ import com.ctre.phoenix.sensors.PigeonIMU
 
 import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.Position
-import frc.team5499.frc2018Kotlin.subsystems.Drivetrain.gyroAngle
-import frc.team5499.frc2018Kotlin.subsystems.Drivetrain.isBrakeMode
-import frc.team5499.frc2018Kotlin.subsystems.Drivetrain.leftDistance
-import frc.team5499.frc2018Kotlin.subsystems.Drivetrain.rightDistance
-import frc.team5499.frc2018Kotlin.subsystems.Drivetrain.zeroGyro
 import frc.team5499.frc2018Kotlin.utils.Vector2
 import frc.team5499.frc2018Kotlin.utils.Utils
 
