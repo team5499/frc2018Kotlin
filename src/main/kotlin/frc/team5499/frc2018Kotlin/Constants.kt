@@ -31,4 +31,5 @@ object Constants {
     const val WHEEL_DIAMETER = 6.0 // inches
     const val WHEEL_CIR = WHEEL_DIAMETER * 2.0
     const val TALON_PIDF_UPDATE_PERIOD_MS = 1
+    const val MAX_VELOCITY_SETPOINT = 50.0 // inches per second
 }
