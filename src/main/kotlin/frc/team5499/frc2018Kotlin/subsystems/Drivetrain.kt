@@ -174,8 +174,8 @@ object Drivetrain : Subsystem() {
             configRemoteFeedbackFilter(0x00, RemoteSensorSource.Off, 1, 0)
             configSensorTerm(SensorTerm.Sum0, FeedbackDevice.None, 0)
             configSensorTerm(SensorTerm.Sum1, FeedbackDevice.None, 0)
-            // configSelectedFeedbackCoefficient(1, 1, 0)
-            // configSelectedFeedbackCoefficient(1, 0, 0)
+            configSelectedFeedbackCoefficient(1.0, 1, 0)
+            configSelectedFeedbackCoefficient(1.0, 0, 0)
             configSelectedFeedbackSensor(FeedbackDevice.None, 1, 0)
         }
 
