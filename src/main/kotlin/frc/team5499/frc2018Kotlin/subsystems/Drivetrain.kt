@@ -2,12 +2,14 @@ package frc.team5499.frc2018Kotlin.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
+import com.ctre.phoenix.motorcontrol.FollowerType
 import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource
 import com.ctre.phoenix.motorcontrol.SensorTerm
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.sensors.PigeonIMU
+import com.ctre.phoenix.motorcontrol.DemandType
 import com.ctre.phoenix.ParamEnum
 
 import frc.team5499.frc2018Kotlin.Constants
@@ -15,7 +17,7 @@ import frc.team5499.frc2018Kotlin.Position
 import frc.team5499.frc2018Kotlin.utils.Vector2
 import frc.team5499.frc2018Kotlin.utils.Utils
 
-@Suppress("TooManyFunctions")
+@Suppress("LargeClass", "TooManyFunctions")
 object Drivetrain : Subsystem() {
 
     // HARDWARE INIT
@@ -154,6 +156,7 @@ object Drivetrain : Subsystem() {
     // setup funcs
     private fun configForPercent() {
         mLeftMaster.apply {
+            follow(null)
             configNominalOutputForward(0.0, 0)
             configNominalOutputReverse(0.0, 0)
             configPeakOutputForward(+1.0, 0)
@@ -183,6 +186,7 @@ object Drivetrain : Subsystem() {
     private fun configForVelocity() {
         mLeftMaster.apply {
             inverted = false
+            follow(null)
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             configPeakOutputForward(+1.0, 0)
             configPeakOutputReverse(-1.0, 0)
@@ -243,9 +247,59 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForTurn() {
+        mLeftMaster.apply {
+            configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            configPeakOutputForward(+1.0, 0)
+            configPeakOutputReverse(-1.0, 0)
+            follow(mRightMaster, FollowerType.AuxOutput1)
+            setSensorPhase(false)
+            inverted = true
+        }
+
+        mLeftSlave.apply {
+            inverted = true
+        }
+
+        mRightMaster.apply {
+            configRemoteFeedbackFilter(mLeftMaster.getDeviceID(), RemoteSensorSource.TalonSRX_SelectedSensor, 0, 0)
+            configRemoteFeedbackFilter(mGyro.getDeviceID(), RemoteSensorSource.Pigeon_Yaw, 1, 0)
+            configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, 0)
+            configSensorTerm(SensorTerm.Sum1, FeedbackDevice.QuadEncoder, 0)
+            configSelectedFeedbackSensor(FeedbackDevice.SensorSum, 1, 0)
+            @Suppress("MagicNumber")
+            configSelectedFeedbackCoefficient(0.5, 1, 0)
+            configSelectedFeedbackCoefficient(
+                (Constants.Gyro.TURN_UNITS_PER_ROTATION / Constants.Gyro.PIGEON_UNITS_PER_ROTATION).toDouble(), 0, 0)
+            configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, 0, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            configPeakOutputForward(+1.0, 0)
+            configPeakOutputReverse(-1.0, 0)
+            config_kP(0, Constants.PID.TURN_KP, 0)
+            config_kI(0, Constants.PID.TURN_KI, 0)
+            config_kD(0, Constants.PID.TURN_KD, 0)
+            config_kF(0, Constants.PID.TURN_KF, 0)
+            config_kP(1, Constants.PID.FIXED_KP, 0)
+            config_kI(1, Constants.PID.FIXED_KI, 0)
+            config_kD(1, Constants.PID.FIXED_KD, 0)
+            config_kF(1, Constants.PID.FIXED_KF, 0)
+            config_IntegralZone(0, Constants.PID.TURN_IZONE, 0)
+            configClosedLoopPeakOutput(0, Constants.PID.TURN_MAX_OUTPUT, 0)
+            config_IntegralZone(1, Constants.PID.FIXED_IZONE, 0)
+            configClosedLoopPeakOutput(1, Constants.PID.FIXED_MAX_OUTPUT, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
+            configAuxPIDPolarity(!Constants.PID.INVERT_FIXED_AUX_PIDF, 0)
+            selectProfileSlot(0, 0)
+            selectProfileSlot(1, 1)
+            setSensorPhase(true)
+        }
     }
 
-    private fun configForPosition() {}
+    private fun configForPosition() {
+    }
 
     // drive funcs
     fun setPercent(left: Double, right: Double) {
@@ -262,6 +316,9 @@ object Drivetrain : Subsystem() {
 
     fun setTurn(angle: Double) {
         driveMode = DriveMode.TURN
+        val fixedDistance = Utils.inchesToEncoderTicks((leftDistance + rightDistance) / 2.0)
+        val angleTarget = mRightMaster.getSelectedSensorPosition(1) + Utils.degreesToTalonAngle(angle)
+        mRightMaster.set(ControlMode.Position, angleTarget.toDouble(), DemandType.AuxPID, fixedDistance.toDouble())
     }
 
     fun setVelocity(leftSpeed: Double, rightSpeed: Double) {

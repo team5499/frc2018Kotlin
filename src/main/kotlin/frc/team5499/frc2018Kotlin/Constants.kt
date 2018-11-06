@@ -56,6 +56,8 @@ object Constants {
         const val FIXED_KF = 0.0
         const val FIXED_IZONE = 10
         const val FIXED_MAX_OUTPUT = 0.5
+
+        const val INVERT_FIXED_AUX_PIDF = false
     }
 
     const val EPSILON = 0.00000000001
