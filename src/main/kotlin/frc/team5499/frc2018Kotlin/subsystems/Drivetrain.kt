@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.SensorTerm
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.sensors.PigeonIMU
+import com.ctre.phoenix.ParamEnum
 
 import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.Position
@@ -160,8 +161,27 @@ object Drivetrain : Subsystem() {
 
     private fun configForVelocity() {
         mLeftMaster.apply {
-            configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             inverted = false
+            configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
+            configPeakOutputForward(+1.0, 0)
+            configPeakOutputReverse(-1.0, 0)
+            setSensorPhase(false)
+            config_kP(0, Constants.PID.VEL_KP, 0)
+            config_kI(0, Constants.PID.VEL_PI, 0)
+            config_kD(0, Constants.PID.VEL_KD, 0)
+            config_kF(0, Constants.PID.VEL_KF, 0)
+            config_kP(1, 0.0, 0)
+            config_kI(1, 0.0, 0)
+            config_kD(1, 0.0, 0)
+            config_kF(1, 0.0, 0)
+            config_IntegralZone(0, 0, 0)
+            configClosedLoopPeakOutput(0, 1.0, 0)
+            config_IntegralZone(1, 0, 0)
+            configClosedLoopPeakOutput(1, 0.0, 0)
+            selectProfileSlot(0, 0)
+            selectProfileSlot(1, 1)
+            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
         }
 
         mLeftSlave.apply {
@@ -177,6 +197,25 @@ object Drivetrain : Subsystem() {
             configSelectedFeedbackCoefficient(1.0, 1, 0)
             configSelectedFeedbackCoefficient(1.0, 0, 0)
             configSelectedFeedbackSensor(FeedbackDevice.None, 1, 0)
+            configPeakOutputForward(+1.0, 0)
+            configPeakOutputReverse(-1.0, 0)
+            setSensorPhase(true)
+            config_kP(0, Constants.PID.VEL_KP, 0)
+            config_kI(0, Constants.PID.VEL_PI, 0)
+            config_kD(0, Constants.PID.VEL_KD, 0)
+            config_kF(0, Constants.PID.VEL_KF, 0)
+            config_kP(1, 0.0, 0)
+            config_kI(1, 0.0, 0)
+            config_kD(1, 0.0, 0)
+            config_kF(1, 0.0, 0)
+            config_IntegralZone(0, 0, 0)
+            configClosedLoopPeakOutput(0, 1.0, 0)
+            config_IntegralZone(1, 0, 0)
+            configClosedLoopPeakOutput(1, 0.0, 0)
+            selectProfileSlot(0, 0)
+            selectProfileSlot(1, 1)
+            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
         }
 
         mRightSlave.apply {}
