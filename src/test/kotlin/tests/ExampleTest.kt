@@ -2,9 +2,10 @@ package tests
 
 import org.junit.jupiter.api.Test
 
-public class Testy {
+public class ExampleTest {
     @Test
     fun test() {
         println("test")
+        assert(true)
     }
 }

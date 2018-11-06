@@ -12,6 +12,8 @@ object Constants {
 
     object Gyro {
         const val GYRO_PORT_NUMBER: Int = 5
+        const val TURN_UNITS_PER_ROTATION: Int = 3600
+        const val PIGEON_UNITS_PER_ROTATION: Int = 8192
     }
 
     object Input {
@@ -21,9 +23,39 @@ object Constants {
 
     object PID {
         const val VEL_KP = 0.0
-        const val VEL_PI = 0.0
+        const val VEL_KI = 0.0
         const val VEL_KD = 0.0
         const val VEL_KF = 0.0
+        const val VEL_IZONE = 10
+        const val VEL_MAX_OUTPUT = 1.0
+
+        const val POS_KP = 0.0
+        const val POS_KI = 0.0
+        const val POS_KD = 0.0
+        const val POS_KF = 0.0
+        const val POS_IZONE = 10
+        const val POS_MAX_OUTPUT = 0.5
+
+        const val ANGLE_KP = 0.0
+        const val ANGLE_KI = 0.0
+        const val ANGLE_KD = 0.0
+        const val ANGLE_KF = 0.0
+        const val ANGLE_IZONE = 10
+        const val ANGLE_MAX_OUTPUT = 1.0
+
+        const val TURN_KP = 0.0
+        const val TURN_KI = 0.0
+        const val TURN_KD = 0.0
+        const val TURN_KF = 0.0
+        const val TURN_IZONE = 10
+        const val TURN_MAX_OUTPUT = 1.0
+
+        const val FIXED_KP = 0.0
+        const val FIXED_KI = 0.0
+        const val FIXED_KD = 0.0
+        const val FIXED_KF = 0.0
+        const val FIXED_IZONE = 10
+        const val FIXED_MAX_OUTPUT = 0.5
     }
 
     const val EPSILON = 0.00000000001

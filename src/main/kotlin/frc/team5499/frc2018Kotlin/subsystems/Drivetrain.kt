@@ -130,6 +130,27 @@ object Drivetrain : Subsystem() {
     val rightVelocity: Double
         get() = Utils.encoderTicksPer100MsToInchesPerSecond(mRightMaster.sensorCollection.quadratureVelocity)
 
+    val leftVelocityError: Double
+        get() = Utils.encoderTicksPer100MsToInchesPerSecond(mLeftMaster.getClosedLoopError(0))
+
+    val rightVelocityError: Double
+        get() = Utils.encoderTicksPer100MsToInchesPerSecond(mRightMaster.getClosedLoopError(0))
+
+    val averageVelocityError: Double
+        get() = (leftVelocityError + rightVelocityError) / 2.0
+
+    val positionError: Double
+        get() = Utils.encoderTicksToInches(mRightMaster.getClosedLoopError(0))
+
+    val anglePositionError: Double
+        get() = Utils.talonAngleToDegrees(mRightMaster.getClosedLoopError(1))
+
+    val turnError: Double
+        get() = Utils.talonAngleToDegrees(mRightMaster.getClosedLoopError(0))
+
+    val turnFixedError: Double
+        get() = Utils.encoderTicksToInches(mRightMaster.getClosedLoopError(1))
+
     // setup funcs
     private fun configForPercent() {
         mLeftMaster.apply {
@@ -167,7 +188,7 @@ object Drivetrain : Subsystem() {
             configPeakOutputReverse(-1.0, 0)
             setSensorPhase(false)
             config_kP(0, Constants.PID.VEL_KP, 0)
-            config_kI(0, Constants.PID.VEL_PI, 0)
+            config_kI(0, Constants.PID.VEL_KI, 0)
             config_kD(0, Constants.PID.VEL_KD, 0)
             config_kF(0, Constants.PID.VEL_KF, 0)
             config_kP(1, 0.0, 0)
@@ -201,7 +222,7 @@ object Drivetrain : Subsystem() {
             configPeakOutputReverse(-1.0, 0)
             setSensorPhase(true)
             config_kP(0, Constants.PID.VEL_KP, 0)
-            config_kI(0, Constants.PID.VEL_PI, 0)
+            config_kI(0, Constants.PID.VEL_KI, 0)
             config_kD(0, Constants.PID.VEL_KD, 0)
             config_kF(0, Constants.PID.VEL_KF, 0)
             config_kP(1, 0.0, 0)
@@ -221,7 +242,8 @@ object Drivetrain : Subsystem() {
         mRightSlave.apply {}
     }
 
-    private fun configForTurn() {}
+    private fun configForTurn() {
+    }
 
     private fun configForPosition() {}
 
@@ -244,8 +266,8 @@ object Drivetrain : Subsystem() {
 
     fun setVelocity(leftSpeed: Double, rightSpeed: Double) {
         driveMode = DriveMode.VELOCITY
-        val left = min(Constants.MAX_VELOCITY_SETPOINT, leftSpeed)
-        val right = min(Constants.MAX_VELOCITY_SETPOINT, rightSpeed)
+        val left = Math.min(Constants.MAX_VELOCITY_SETPOINT, leftSpeed)
+        val right = Math.min(Constants.MAX_VELOCITY_SETPOINT, rightSpeed)
         mLeftMaster.set(ControlMode.Velocity, Utils.inchesPerSecondToEncoderTicksPer100Ms(left))
         mRightMaster.set(ControlMode.Velocity, Utils.inchesPerSecondToEncoderTicksPer100Ms(right))
     }
