@@ -299,6 +299,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForPosition() {
+        // im lazy af, i wanna
     }
 
     // drive funcs
@@ -308,10 +309,11 @@ object Drivetrain : Subsystem() {
         mRightMaster.set(ControlMode.PercentOutput, right)
     }
 
-    fun setPosition(leftDistance: Double, rightDistance: Double) {
+    fun setPosition(distance: Double) {
         driveMode = DriveMode.POSITION
-        mLeftMaster.set(ControlMode.Position, Utils.inchesToEncoderTicks(leftDistance).toDouble())
-        mRightMaster.set(ControlMode.Position, Utils.inchesToEncoderTicks(rightDistance).toDouble())
+        val absDistance = Utils.inchesToEncoderTicks(((leftDistance + rightDistance) / 2.0) + distance)
+        val angleTarget = mRightMaster.getSelectedSensorPosition(1)
+        mRightMaster.set(ControlMode.Position, absDistance.toDouble(), DemandType.AuxPID, angleTarget.toDouble())
     }
 
     fun setTurn(angle: Double) {
