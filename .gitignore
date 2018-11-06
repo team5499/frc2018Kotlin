@@ -1,9 +1,11 @@
 .DS_Store
 .classpath
 .gradle/
+.idea
 .project
 .settings/
 .vscode/
 bin/
 build/
+frc2018Kotlin.iml
 virtualenv_run/

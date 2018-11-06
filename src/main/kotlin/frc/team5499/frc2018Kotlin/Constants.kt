@@ -14,5 +14,13 @@ object Constants {
         const val GYRO_PORT_NUMBER: Int = 5
     }
 
+    object Input {
+        const val DRIVER_PORT: Int = 1
+        const val CODRIVER_PORT: Int = 2
+    }
+
     const val EPSILON = 0.00000000001
+    const val ENCODERS_TICKS_PER_ROTATION = 1028
+    const val WHEEL_DIAMETER = 6.0 // inches
+    const val WHEEL_CIR = WHEEL_DIAMETER * 2.0
 }
