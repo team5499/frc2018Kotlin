@@ -58,6 +58,7 @@ object Constants {
         const val FIXED_MAX_OUTPUT = 0.5
 
         const val INVERT_FIXED_AUX_PIDF = false
+        const val INVERT_ANGLE_AUX_PIDF = false
     }
 
     const val EPSILON = 0.00000000001

@@ -299,7 +299,56 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForPosition() {
-        // im lazy af, i wanna
+        // im lazy af, i wanna die
+        mLeftMaster.apply {
+            configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
+            configPeakOutputForward(+1.0, 0)
+            configPeakOutputReverse(-1.0, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            follow(mRightMaster, FollowerType.AuxOutput1)
+            setSensorPhase(false)
+            inverted = false
+        }
+
+        mLeftSlave.apply {
+            inverted = false
+        }
+
+        mRightMaster.apply {
+            configRemoteFeedbackFilter(mLeftMaster.getDeviceID(), RemoteSensorSource.TalonSRX_SelectedSensor, 0, 0)
+            configRemoteFeedbackFilter(mGyro.getDeviceID(), RemoteSensorSource.GadgeteerPigeon_Yaw, 1, 0)
+            configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, 0)
+            configSensorTerm(SensorTerm.Sum1, FeedbackDevice.QuadEncoder, 0)
+            configSelectedFeedbackSensor(FeedbackDevice.SensorSum, 0, 0)
+            @Suppress("MagicNumber")
+            configSelectedFeedbackCoefficient(0.5, 0, 0)
+            configSelectedFeedbackCoefficient(
+                (Constants.Gyro.TURN_UNITS_PER_ROTATION / Constants.Gyro.PIGEON_UNITS_PER_ROTATION).toDouble(), 1, 0)
+            configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, 1, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            configPeakOutputForward(+1.0, 0)
+            configPeakOutputReverse(-1.0, 0)
+            config_kP(0, Constants.PID.POS_KP, 0)
+            config_kI(0, Constants.PID.POS_KI, 0)
+            config_kD(0, Constants.PID.POS_KD, 0)
+            config_kF(0, Constants.PID.POS_KF, 0)
+            config_kP(1, Constants.PID.ANGLE_KP, 0)
+            config_kI(1, Constants.PID.ANGLE_KI, 0)
+            config_kD(1, Constants.PID.ANGLE_KF, 0)
+            config_kF(1, Constants.PID.ANGLE_KF, 0)
+            config_IntegralZone(0, Constants.PID.POS_IZONE, 0)
+            configClosedLoopPeakOutput(0, Constants.PID.POS_MAX_OUTPUT, 0)
+            config_IntegralZone(1, Constants.PID.ANGLE_IZONE, 0)
+            configClosedLoopPeakOutput(1, Constants.PID.ANGLE_MAX_OUTPUT, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
+            selectProfileSlot(0, 0)
+            selectProfileSlot(1, 1)
+            configAuxPIDPolarity(!Constants.PID.INVERT_ANGLE_AUX_PIDF, 0)
+            setSensorPhase(true)
+        }
     }
 
     // drive funcs
