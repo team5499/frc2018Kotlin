@@ -15,20 +15,20 @@ public class Path {
     private var lines : Array<BoundLine>
     private var waypoints : Array<Vector2>
 
-    public fun Path(waypoints : Array<Vector2>) throws IncompletePathException {
-        this.lines = new Array<BoundLine>(waypoints.length - 1)
+    public fun Path (waypoints : Array<Vector2>) {
+        this.lines = new Array<Boundline>(waypoints.length - 1)
         this.waypoints = waypoints
 
-        public fun Path(waypoints: Array<Vector2>) throw new IncompletePathException("Path that was provided haed less than 2 waypoints!") 
+        if(waypoints.length <= 1) throw new IncompletePathException("Path that was provided had less than 2 waypoints!") 
 
         for (i in waypoints) {
-            lines[i] = new BoundLine(waypoints[i], waypoints[i + 1]) 
-            i++ 
+            lines[i] = new BoundLine(waypoints[i]; waypoints[i + 1]) 
+            
         }
     }
 }
 
-    public fun Vector2d getClosestPointOnLineToPoint(target: Vector2, sample_size: Int) {
+     public fun Vector2d getClosestPointOnLineToPoint(target: Vector2, sample_size: Int) {
         minPoints:Array<Vector2> = new Array<Vector2>(lines.length) 
 		for(i in minPoints.length) {
 			minPoints[i] = lines[i].getClosestPointOnLineToPoint(target, sample_size) 
@@ -98,3 +98,50 @@ public class Path {
 			return waypoints[waypoints.length-1] 
 		}
     }
+
+    public fun Double getDistanceToEndpoint(position: Vector2) {
+        return Vector2.distanceBetween(position, waypoints[waypoints.length - 1])
+    }
+
+    public fun Array<BoundLine> getBoundLines() {
+        return this.lines
+    }
+
+    public fun Array<Vector2> getWayPoints() {
+        return this.waypoints
+    }
+    
+    public static fun Path readPathFromFile(String path) {
+        List<Vector2d> waypoints = new ArrayList<>(5)
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path)) 
+            String line = br.readLine()
+            while(line != null) {
+                String[] s = line.split(",")
+                if(s.length > 2) {
+                    throw new Exception("Too many arguments in path") 
+                }
+                x: Double = Double.parseDouble(s[0].trim()) 
+                y: Double = Double.parseDouble(s[1].trim()) 
+                waypoints.add(new Vector2d(x, y)) 
+                line = br.readLine() 
+            }
+            br.close() 
+        } catch(Exception e) {
+            e.printStackTrace() 
+            return default_path 
+        }
+        
+        res: Array<Vector2> = new Vector2[waypoints.size()] 
+        res = waypoints.toArray(res) 
+        return new Path(res) 
+    }
+
+    private static fun Path createDefaultPath() {
+        Array<Vector2> waypoints = {new Vector2d(0,0), new Vector2d(1, 1)} 
+        return new Path(waypoints) 
+    }
+
+    private static default_path: Path = createDefaultPath() 
+
+} 
