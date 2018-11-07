@@ -8,8 +8,18 @@ object Constants {
         const val LEFT_SLAVE_PORT: Int = 2
         const val RIGHT_MASTER_PORT: Int = 3
         const val RIGHT_SLAVE_PORT: Int = 4
+    }
 
+    object Gyro {
+        const val GYRO_PORT_NUMBER: Int = 5
+    }
 
+    object Input {
+        const val DRIVER_PORT: Int = 1
+        const val CODRIVER_PORT: Int = 2
+    }
+
+    object Arm{
         const val INTAKE_SPEED: Double = -0.7 
         const val INTAKE_HOLD_SPEED: Double = -0.3
         const val INTAKE_SPIT_SPEED: Double = 0.7
@@ -20,16 +30,11 @@ object Constants {
 
         const val INVERT_ARM: Boolean = false
         const val INVERT_INTAKE: Boolean = false
-
-    }
-
-    object XboxController {
-
-    }
-
-    object Gyro {
-        const val GYRO_PORT_NUMBER: Int = 5
     }
 
     const val EPSILON = 0.00000000001
+    const val ENCODERS_TICKS_PER_ROTATION = 1028
+    const val WHEEL_DIAMETER = 6.0 // inches
+    const val WHEEL_CIR = WHEEL_DIAMETER * 2.0
+
 }
