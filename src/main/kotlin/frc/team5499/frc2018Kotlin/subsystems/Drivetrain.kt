@@ -205,8 +205,10 @@ object Drivetrain : Subsystem() {
             configClosedLoopPeakOutput(1, 0.0, 0)
             selectProfileSlot(0, 0)
             selectProfileSlot(1, 1)
-            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
-            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod,
+                Constants.Talons.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod,
+                Constants.Talons.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
         }
 
         mLeftSlave.apply {
@@ -239,8 +241,10 @@ object Drivetrain : Subsystem() {
             configClosedLoopPeakOutput(1, 0.0, 0)
             selectProfileSlot(0, 0)
             selectProfileSlot(1, 1)
-            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
-            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod,
+                Constants.Talons.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod,
+                Constants.Talons.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
         }
 
         mRightSlave.apply {}
@@ -289,9 +293,11 @@ object Drivetrain : Subsystem() {
             configClosedLoopPeakOutput(0, Constants.PID.TURN_MAX_OUTPUT, 0)
             config_IntegralZone(1, Constants.PID.FIXED_IZONE, 0)
             configClosedLoopPeakOutput(1, Constants.PID.FIXED_MAX_OUTPUT, 0)
-            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
-            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
-            configAuxPIDPolarity(!Constants.PID.INVERT_FIXED_AUX_PIDF, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod,
+                Constants.Talons.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod,
+                Constants.Talons.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
+            configAuxPIDPolarity(!Constants.PID.INVERT_TURN_AUX_PIDF, 0)
             selectProfileSlot(0, 0)
             selectProfileSlot(1, 1)
             setSensorPhase(true)
@@ -342,8 +348,10 @@ object Drivetrain : Subsystem() {
             configClosedLoopPeakOutput(0, Constants.PID.POS_MAX_OUTPUT, 0)
             config_IntegralZone(1, Constants.PID.ANGLE_IZONE, 0)
             configClosedLoopPeakOutput(1, Constants.PID.ANGLE_MAX_OUTPUT, 0)
-            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
-            configSetParameter(ParamEnum.ePIDLoopPeriod, Constants.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod,
+                Constants.Talons.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 0, 0)
+            configSetParameter(ParamEnum.ePIDLoopPeriod,
+                Constants.Talons.TALON_PIDF_UPDATE_PERIOD_MS.toDouble(), 0x00, 1, 0)
             selectProfileSlot(0, 0)
             selectProfileSlot(1, 1)
             configAuxPIDPolarity(!Constants.PID.INVERT_ANGLE_AUX_PIDF, 0)

@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.TimedRobot
 
 class Robot : TimedRobot() {
 
-    override fun robotInit() {}
+    override fun robotInit() {
+        super.setPeriod(Constants.UPDATE_PERIOD)
+    }
 
     override fun robotPeriodic() {}
 
