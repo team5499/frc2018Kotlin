@@ -6,52 +6,62 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX
 
 import frc.team5499.frc2018Kotlin.Constants
 
-public class Arm() {
+public class Arm : Subsystem(){
     var m_arm: TalonSRX
     var m_left_intake: TalonSRX
     var m_right_intake: TalonSRX
 
     init{
-        m_arm = TalonSRX(Constants.Talons.ARM_PORT)
-        m_left_intake = TalonSRX(Constants.Talons.LEFT_INTAKE_PORT)
-        m_right_intake = TalonSRX(Constants.Talons.RIGHT_INTAKE_PORT)
+        m_arm = TalonSRX(Constants.Arm.ARM_PORT)
+        m_left_intake = TalonSRX(Constants.Arm.LEFT_INTAKE_PORT)
+        m_right_intake = TalonSRX(Constants.Arm.RIGHT_INTAKE_PORT)
 
-        m_left_intake.setInverted(Constants.Talons.INVERT_INTAKE)
-        m_right_intake.setInverted(Constants.Talons.INVERT_INTAKE)
+        m_left_intake.setInverted(Constants.Arm.INVERT_INTAKE)
+        m_right_intake.setInverted(Constants.Arm.INVERT_INTAKE)
 
-        m_arm.setInverted(Constants.Talons.INVERT_ARM)
+        m_arm.setInverted(Constants.Arm.INVERT_ARM)
     }
 
-    /*override*/ fun update() {
+    override fun update() {
 
+    }
+
+    override public fun stop() {
+        setArm(0.0)
+        stopIntake()
+    }
+
+    override public fun reset() {
+        m_left_intake.setNeutralMode(NeutralMode.Coast)
+        m_right_intake.setNeutralMode(NeutralMode.Coast)
     }
 
     fun intake() {
         m_left_intake.setNeutralMode(NeutralMode.Brake)
         m_right_intake.setNeutralMode(NeutralMode.Brake)
-        m_left_intake.set(ControlMode.PercentOutput, Constants.Talons.INTAKE_SPEED)
-        m_right_intake.set(ControlMode.PercentOutput, Constants.Talons.INTAKE_SPEED)
+        m_left_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_SPEED)
+        m_right_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_SPEED)
     }
 
     public fun hold() {
         m_left_intake.setNeutralMode(NeutralMode.Brake)
         m_right_intake.setNeutralMode(NeutralMode.Brake)
-        m_left_intake.set(ControlMode.PercentOutput, Constants.Talons.INTAKE_HOLD_SPEED)
-        m_right_intake.set(ControlMode.PercentOutput, Constants.Talons.INTAKE_HOLD_SPEED)
+        m_left_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_HOLD_SPEED)
+        m_right_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_HOLD_SPEED)
     }
 
     public fun drop() {
         m_left_intake.setNeutralMode(NeutralMode.Brake)
         m_right_intake.setNeutralMode(NeutralMode.Brake)
-        m_left_intake.set(ControlMode.PercentOutput, Constants.Talons.INTAKE_HOLD_SPEED)
-        m_right_intake.set(ControlMode.PercentOutput, Constants.Talons.INTAKE_HOLD_SPEED)
+        m_left_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_HOLD_SPEED)
+        m_right_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_HOLD_SPEED)
     }
 
     public fun spit() {
         m_left_intake.setNeutralMode(NeutralMode.Brake)
         m_right_intake.setNeutralMode(NeutralMode.Brake)
-        m_left_intake.set(ControlMode.PercentOutput, Constants.Talons.INTAKE_SPIT_SPEED)
-        m_right_intake.set(ControlMode.PercentOutput, Constants.Talons.INTAKE_SPIT_SPEED)
+        m_left_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_SPIT_SPEED)
+        m_right_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_SPIT_SPEED)
     }
 
     public fun stopIntake() {
@@ -61,21 +71,13 @@ public class Arm() {
 
     public fun setArm(speed:Double) {
         var speed:Double = speed
-        if (Math.abs(speed) > Constants.Talons.MAX_ARM_SPEED) {
-            speed = Math.signum(speed) * Constants.Talons.MAX_ARM_SPEED
+        if (Math.abs(speed) > Constants.Arm.MAX_ARM_SPEED) {
+            speed = Math.signum(speed) * Constants.Arm.MAX_ARM_SPEED
         }
         m_arm.set(ControlMode.PercentOutput, speed)
     }
 
-    /*override*/ public fun stop() {
-        setArm(0.0)
-        stopIntake()
-    }
 
-    /*override*/ public fun reset() {
-        m_left_intake.setNeutralMode(NeutralMode.Coast)
-        m_right_intake.setNeutralMode(NeutralMode.Coast)
-    }
 
     
     companion object{

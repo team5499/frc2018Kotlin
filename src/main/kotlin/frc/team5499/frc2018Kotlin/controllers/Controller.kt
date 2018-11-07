@@ -1,20 +1,10 @@
-package org.frc2018.controllers
+package frc.team5499.frc2018Kotlin.controllers
 
-public class Controller {
+abstract class Controller {
 
-    protected fun Controller() {
-    
-    }
+    abstract fun start()
 
-    init {
+    abstract fun update()
 
-    }
-
-    public fun handle() {
-
-    }
-
-    public fun reset() {
-        
-    }
+    abstract fun reset()
 }
