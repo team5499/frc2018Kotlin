@@ -1,11 +1,12 @@
+*.iml
 .DS_Store
 .classpath
 .gradle/
 .idea
 .project
 .settings/
+.tox/
 .vscode/
 bin/
 build/
-frc2018Kotlin.iml
 virtualenv_run/
