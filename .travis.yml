@@ -10,4 +10,4 @@ script:
 -   docker run -v $(pwd):/code:rw team5499/frc-testing-image /code/gradlew -p /code test
 after_success:
 -   codecov -t 705a3cf5-96a2-467a-a8dc-614efb420eb9
--   bash <(curl -s https://codecov.io/bash)
+# -   bash <(curl -s https://codecov.io/bash)
