@@ -2,6 +2,7 @@
 set -euxo pipefail
 
 function cleanup {
+    :
 }
 
 trap cleanup EXIT
