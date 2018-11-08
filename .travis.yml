@@ -1,5 +1,7 @@
-language: 'java'
+language: java
 sudo: required
+install:
+-   pip install --user codecov
 services:
 -   docker
 env:
