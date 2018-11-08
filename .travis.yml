@@ -1,7 +1,7 @@
 language: java
 sudo: required
 install:
--   pip install --user codecov
+-   pip install --user codecov && codecov -t 705a3cf5-96a2-467a-a8dc-614efb420eb9
 services:
 -   docker
 env:
