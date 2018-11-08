@@ -14,11 +14,7 @@ class Robot : TimedRobot() {
         super.setPeriod(Constants.UPDATE_PERIOD)
     }
 
-    override fun robotPeriodic() {
-        Drivetrain.broadcastToDashboard()
-        Arm.broadcastToDashboard()
-        Intake.broadcastToDashboard()
-    }
+    override fun robotPeriodic() {}
 
     override fun disabledInit() {}
 

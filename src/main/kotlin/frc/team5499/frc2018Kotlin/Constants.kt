@@ -69,7 +69,7 @@ object Constants {
     const val WHEEL_CIR = WHEEL_DIAMETER * 2.0
     const val TRACK_WIDTH = 20.0
     const val MAX_VELOCITY_SETPOINT = 120.0 // inches per second
-    const val UPDATE_PERIOD: Double = 0.005
+    const val UPDATE_PERIOD = 0.005
 
     const val LOOK_AHEAD_DISTANCE = 12.0
 }

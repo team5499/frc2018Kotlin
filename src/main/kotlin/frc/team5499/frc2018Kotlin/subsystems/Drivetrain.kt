@@ -411,6 +411,4 @@ object Drivetrain : Subsystem() {
         mRightMaster.neutralOutput()
         isBrakeMode = false
     }
-
-    override fun broadcastToDashboard() {}
 }

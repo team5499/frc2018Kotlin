@@ -10,7 +10,4 @@ object Intake : Subsystem() {
 
     override fun reset() {
     }
-
-    override fun broadcastToDashboard() {
-    }
 }
