@@ -45,4 +45,60 @@ public class Vector2Test {
         Assert.assertEquals(z.x, 0.0, 1E-5)
         Assert.assertEquals(z.y, 0.0, 1E-5)
     }
+
+    @Test
+    fun test_add() {
+        val a = Vector2(2, 2)
+        val b = Vector2(3, 3)
+        Assert.assertEquals(a + b, Vector2(5, 5))
+    }
+
+    @Test
+    fun test_subtract() {
+        val a = Vector2(3, 3)
+        val b = Vector2(2, 2)
+        Assert.assertEquals(a - b, Vector2(1, 1))
+    }
+
+    @Test
+    fun test_mult() {
+        val a = Vector2(2, 2)
+        val b = 5
+        Assert.assertEquals(a * b, Vector2(10, 10))
+    }
+
+    @Test
+    fun test_div() {
+        val a = Vector2(10, 10)
+        val b = 5
+        Assert.assertEquals(a / b, Vector2(2, 2))
+    }
+
+    @Test
+    fun test_unary_minus() {
+        val a = Vector2(1, 1)
+        Assert.assertEquals(-a, Vector2(-1, -1))
+    }
+
+    @Test
+    fun test_divide_by_0() {
+        val a = Vector2(10, 10)
+        val b = 0.0
+        try {
+            val c = a / b
+            assert(false)
+        } catch (e: IllegalArgumentException) {
+            println("Caught divide by 0 error")
+        }
+        assert(true)
+    }
+
+    @Test
+    fun test_misc() {
+        val a = Vector2(10, 10)
+        val b = 10.0
+        Assert.assertEquals(a.toString(), "X: $b, Y: $b")
+        val c = Vector2(a)
+        Assert.assertEquals(a, c)
+    }
 }
