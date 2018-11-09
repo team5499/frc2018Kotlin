@@ -16,11 +16,11 @@ object Utils {
     }
 
     fun inchesToEncoderTicks(inches: Double): Int {
-        return ((Constants.WHEEL_CIR / Constants.ENCODERS_TICKS_PER_ROTATION) * inches).toInt()
+        return ((inches / Constants.WHEEL_CIR) * Constants.ENCODERS_TICKS_PER_ROTATION).toInt()
     }
 
     fun encoderTicksToInches(ticks: Int): Double {
-        return (Constants.WHEEL_CIR / Constants.ENCODERS_TICKS_PER_ROTATION) * ticks
+        return (ticks / Constants.ENCODERS_TICKS_PER_ROTATION) * Constants.WHEEL_CIR
     }
 
     fun talonAngleToDegrees(ticks: Int): Double {
@@ -29,5 +29,16 @@ object Utils {
 
     fun degreesToTalonAngle(degrees: Double): Int {
         return ((Constants.Gyro.TURN_UNITS_PER_ROTATION / DEGREES_PER_ROTATION) * degrees).toInt()
+    }
+
+    @Suppress("ReturnCount")
+    fun bandLimit(signal: Double, limit: Double): Double {
+        if (signal > limit) {
+            return limit
+        } else if (signal < -limit) {
+            return -limit
+        } else {
+            return signal
+        }
     }
 }

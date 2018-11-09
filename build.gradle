@@ -49,6 +49,10 @@ dependencies {
     test {
         dependsOn 'cleanTest'
 
+        testLogging {
+            exceptionFormat = 'full'
+        }
+
         afterSuite { desc, result ->
             if (!desc.parent) {
                 println "\nTest result: ${result.resultType}"
@@ -60,19 +64,56 @@ dependencies {
         }
     }
 
+
 /* End JUint */
 /* Begin Codecov */
 
-jacoco {
-    toolVersion = '0.8.2'
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
+    jacoco {
+        toolVersion = '0.8.2'
     }
-}
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            html.enabled true
+        }
+    }
+
+    // We have to do offline instrumentation to make powermock and jacoco play nice
+    project.ext.jacocoOfflineSourceSets = ['main']
+
+    task instrument(dependsOn: [classes, project.configurations.jacocoAnt]) {
+        inputs.files classes.outputs.files
+        File outputDir = new File(project.buildDir, 'instrumentedClasses')
+        outputs.dir outputDir
+        doFirst {
+            project.delete(outputDir)
+            ant.taskdef(
+                    resource: 'org/jacoco/ant/antlib.xml',
+                    classpath: project.configurations.jacocoAnt.asPath,
+                    uri: 'jacoco'
+            )
+            def instrumented = false
+            jacocoOfflineSourceSets.each { sourceSetName ->
+                if (file("${buildDir}/classes/kotlin/${sourceSetName}").exists()) {
+                    def instrumentedClassedDir = "${outputDir}/${sourceSetName}"
+                    ant.'jacoco:instrument'(destdir: instrumentedClassedDir) {
+                        fileset(dir: "${buildDir}/classes/kotlin/${sourceSetName}", includes: '**/*.class')
+                    }
+                    //Replace the classes dir in the test classpath with the instrumented one
+                    sourceSets.test.runtimeClasspath -= files("${buildDir}/classes/kotlin/${sourceSetName}")
+                    sourceSets.test.runtimeClasspath += files(instrumentedClassedDir)
+                    instrumented = true
+                }
+            }
+            if (instrumented) {
+                //Disable class verification based on https://github.com/jayway/powermock/issues/375
+                test.jvmArgs += '-noverify'
+            }
+        }
+    }
+
+    test.dependsOn 'instrument'
 
 /* End Codecov */
 /* Begin Tox */

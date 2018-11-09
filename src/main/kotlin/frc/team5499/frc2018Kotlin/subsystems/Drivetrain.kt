@@ -382,8 +382,8 @@ object Drivetrain : Subsystem() {
 
     fun setVelocity(leftSpeed: Double, rightSpeed: Double) {
         driveMode = DriveMode.VELOCITY
-        val left = Math.min(Constants.MAX_VELOCITY_SETPOINT, leftSpeed)
-        val right = Math.min(Constants.MAX_VELOCITY_SETPOINT, rightSpeed)
+        val left = Utils.bandLimit(leftSpeed, Constants.MAX_VELOCITY_SETPOINT)
+        val right = Utils.bandLimit(rightSpeed, Constants.MAX_VELOCITY_SETPOINT)
         mLeftMaster.set(ControlMode.Velocity, Utils.inchesPerSecondToEncoderTicksPer100Ms(left))
         mRightMaster.set(ControlMode.Velocity, Utils.inchesPerSecondToEncoderTicksPer100Ms(right))
     }
