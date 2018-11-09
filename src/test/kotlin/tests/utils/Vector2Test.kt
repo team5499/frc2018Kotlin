@@ -24,6 +24,7 @@ public class Vector2Test {
         val a = Vector2(0, 0)
         val b = Vector2(3, 4)
         Assert.assertEquals(a.distanceTo(b), 5.0, 1E-5)
+        Assert.assertEquals(Vector2.distanceBetween(a, b), 5.0, 1E-5)
     }
 
     @Test
@@ -63,14 +64,14 @@ public class Vector2Test {
     @Test
     fun test_mult() {
         val a = Vector2(2, 2)
-        val b = 5
+        val b = 5.0
         Assert.assertEquals(a * b, Vector2(10, 10))
     }
 
     @Test
     fun test_div() {
         val a = Vector2(10, 10)
-        val b = 5
+        val b = 5.0
         Assert.assertEquals(a / b, Vector2(2, 2))
     }
 
