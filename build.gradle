@@ -49,6 +49,10 @@ dependencies {
     test {
         dependsOn 'cleanTest'
 
+        testLogging {
+            exceptionFormat = 'full'
+        }
+
         afterSuite { desc, result ->
             if (!desc.parent) {
                 println "\nTest result: ${result.resultType}"
