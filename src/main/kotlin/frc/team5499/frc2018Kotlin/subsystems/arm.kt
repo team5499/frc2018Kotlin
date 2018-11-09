@@ -6,9 +6,13 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX
 
 import frc.team5499.frc2018Kotlin.Constants
 
-public class Arm : Subsystem(){
-    var m_arm: TalonSRX
-    var m_left_intake: TalonSRX
+public object Arm: Subsystem(){
+    var m_arm: TalonSRX = TalonSRX(Constants.Arm.ARM_PORT).apply{
+        setInverted(Constants.Arm.INVERT_ARM)
+    }
+    var m_left_intake: TalonSRX = TalonSRX(Constants.Arm.LEFT_INTAKE_PORT).apply{
+
+    }
     var m_right_intake: TalonSRX
 
     init{
@@ -19,7 +23,7 @@ public class Arm : Subsystem(){
         m_left_intake.setInverted(Constants.Arm.INVERT_INTAKE)
         m_right_intake.setInverted(Constants.Arm.INVERT_INTAKE)
 
-        m_arm.setInverted(Constants.Arm.INVERT_ARM)
+        
     }
 
     override fun update() {
@@ -69,22 +73,16 @@ public class Arm : Subsystem(){
         m_right_intake.set(ControlMode.PercentOutput, 0.0)
     }
 
-    public fun setArm(speed:Double) {
-        var speed:Double = speed
+    public fun setArm(sp: Double) {
+        var speed: Double = sp
         if (Math.abs(speed) > Constants.Arm.MAX_ARM_SPEED) {
             speed = Math.signum(speed) * Constants.Arm.MAX_ARM_SPEED
         }
         m_arm.set(ControlMode.PercentOutput, speed)
     }
 
-
-
-    
-    companion object{
-        private val _instance : Arm = Arm()
-        public fun getInstance(): Arm {
-            return _instance
-        }
-    }
-    
+    private val _instance: Arm = Arm
+    public fun getInstance(): Arm {
+        return _instance
+    } 
 }

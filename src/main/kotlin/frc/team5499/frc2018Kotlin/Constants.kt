@@ -19,7 +19,7 @@ object Constants {
         const val CODRIVER_PORT: Int = 2
     }
 
-    object Arm{
+    object Arm {
         const val INTAKE_SPEED: Double = -0.7 
         const val INTAKE_HOLD_SPEED: Double = -0.3
         const val INTAKE_SPIT_SPEED: Double = 0.7
@@ -30,6 +30,11 @@ object Constants {
 
         const val INVERT_ARM: Boolean = false
         const val INVERT_INTAKE: Boolean = false
+    }
+
+    object Controller {
+        const val XBOX_DEADBAND: Double = 0.1
+        const val XBOX_TURN_MULTIPLIER: Double = 0.4
     }
 
     const val EPSILON = 0.00000000001
