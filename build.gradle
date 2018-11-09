@@ -14,8 +14,10 @@ dependencies {
     compile wpilib()
     compile ctre()
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.1'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.powermock:powermock:1.6.6'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.6'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.6'
 }
 
 /* Begin GradleRIO */
@@ -46,13 +48,6 @@ dependencies {
 
     test {
         dependsOn 'cleanTest'
-
-        useJUnitPlatform()
-
-        testLogging {
-            events 'PASSED', 'FAILED', 'SKIPPED'
-            showStandardStreams true
-        }
 
         afterSuite { desc, result ->
             if (!desc.parent) {
