@@ -80,4 +80,26 @@ public class Vector2Test {
         val a = Vector2(1, 1)
         Assert.assertEquals(-a, Vector2(-1, -1))
     }
+
+    @Test
+    fun test_divide_by_0() {
+        val a = Vector2(10, 10)
+        val b = 0.0
+        try {
+            val c = a / b
+            assert(false)
+        } catch (e: IllegalArgumentException) {
+            println("Caught divide by 0 error")
+        }
+        assert(true)
+    }
+
+    @Test
+    fun test_misc() {
+        val a = Vector2(10, 10)
+        val b = 10.0
+        Assert.assertEquals(a.toString(), "X: $b, Y: $b")
+        val c = Vector2(a)
+        Assert.assertEquals(a, c)
+    }
 }
