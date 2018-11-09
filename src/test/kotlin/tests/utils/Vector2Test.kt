@@ -24,6 +24,7 @@ public class Vector2Test {
         val a = Vector2(0, 0)
         val b = Vector2(3, 4)
         Assert.assertEquals(a.distanceTo(b), 5.0, 1E-5)
+        Assert.assertEquals(Vector2.distanceBetween(a, b), 5.0, 1E-5)
     }
 
     @Test
@@ -44,5 +45,39 @@ public class Vector2Test {
         val z = Vector2.Zero
         Assert.assertEquals(z.x, 0.0, 1E-5)
         Assert.assertEquals(z.y, 0.0, 1E-5)
+    }
+
+    @Test
+    fun test_add() {
+        val a = Vector2(2, 2)
+        val b = Vector2(3, 3)
+        Assert.assertEquals(a + b, Vector2(5, 5))
+    }
+
+    @Test
+    fun test_subtract() {
+        val a = Vector2(3, 3)
+        val b = Vector2(2, 2)
+        Assert.assertEquals(a - b, Vector2(1, 1))
+    }
+
+    @Test
+    fun test_mult() {
+        val a = Vector2(2, 2)
+        val b = 5
+        Assert.assertEquals(a * b, Vector2(10, 10))
+    }
+
+    @Test
+    fun test_div() {
+        val a = Vector2(10, 10)
+        val b = 5
+        Assert.assertEquals(a / b, Vector2(2, 2))
+    }
+
+    @Test
+    fun test_unary_minus() {
+        val a = Vector2(1, 1)
+        Assert.assertEquals(-a, Vector2(-1, -1))
     }
 }
