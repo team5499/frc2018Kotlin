@@ -1,6 +1,6 @@
 # frc2018Kotlin
 
-[![Build Status](https://travis-ci.org/team5499/frc2018Kotlin.svg?branch=master)](https://travis-ci.org/team5499/frc2018Kotlin)
+[![Build Status](https://travis-ci.org/team5499/frc2018Kotlin.svg?branch=master)](https://travis-ci.org/team5499/frc2018Kotlin) [![Code Coverage](https://codecov.io/gh/team5499/frc2018Kotlin/branch/master/graph/badge.svg)](https://codecov.io/gh/team5499/frc2018Kotlin)
 
 ## Getting started
 ### Pre-commit
