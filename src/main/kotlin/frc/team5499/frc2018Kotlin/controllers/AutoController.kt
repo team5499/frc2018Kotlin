@@ -1,4 +1,4 @@
-package frc.team5499.frc2018Kotlin.controller
+package frc.team5499.frc2018Kotlin.controllers
 
 object AutoController : Controller() {
 
