@@ -1,147 +1,101 @@
-package org.team5499.robots.frc2018Kotlin.path_pursuit 
+package org.frc2018.path
 
-import java.io.BufferedReader 
-import java.io.FileNotFoundException 
-import java.io.FileReader 
-import java.util.ArrayList 
-import java.util.Arrays 
-import java.util.List 
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import org.team5499.robots.frc2018Kotlin.exceptions.IncompletePathException 
-import org.team5499.robots.frc2018Kotlin.math.Vector2d 
+import com.opencsv.CSVReader;
 
-public class Path {
+import org.frc2018.Constants;
+import org.frc2018.Vector2;
+import org.glassfish.grizzly.compression.lzma.impl.Base;
 
-    private var lines : Array<BoundLine>
-    private var waypoints : Array<Vector2>
+public class Path(filepath: String, backwards: Boolean = false){
 
-    public fun Path (waypoints : Array<Vector2>) {
-        this.lines = new Array<Boundline>(waypoints.length - 1)
-        this.waypoints = waypoints
+    private var coordinates: MutableList<Vector2> = mutableListOf<Vector2>()
+    private var target_velocities: MutableList<Double> = mutableListOf<Double>()
 
-        if(waypoints.length <= 1) throw new IncompletePathException("Path that was provided had less than 2 waypoints!") 
+    private var backwards: Boolean = false
 
-        for (i in waypoints) {
-            lines[i] = new BoundLine(waypoints[i]; waypoints[i + 1]) 
-            
+    init {
+        this.backwards = backwards;
+
+        var temp_coords: MutableList<Vector2> = mutableListOf<Vector2>()
+        var temp_velo: MutableList<Double> = mutableListOf<Double>()
+        try {
+            var reader: CSVReader = CSVReader(FileReader(filepath))
+            var line: MutableList<String> = reader.readNext()
+            while(line != null) {
+                temp_coords.add(Vector2(Double.parseDouble(line[0]), Double.parseDouble(line[1])))
+                if(backwards) {temp_velo.add(-Double.parseDouble(line[2]))}
+                else {temp_velo.add(Double.parseDouble(line[2]))}
+                line = reader.readNext()
+            }
+            reader.close()
+
+            coordinates = mutableListOf<Vector2>(temp_coords.size() + 1)
+            target_velocities = mutableListOf<Double>(temp_velo.size() + 1)
+
+            for (i in temp_coords.indicies) {
+                coordinates[i] = temp_coords.get(i);
+                target_velocities[i] = temp_velo.get(i);
+            }
+        } 
+        catch(Exception e) {
+            e.printStackTrace();
+            System.exit(1);
         }
+
+        // extend the last line segment by the lookahead distance
+        var last_segment_unit_direction: Vector2 = Vector2.unitDirectionVector(Vector2.subtract(coordinates[coordinates.length - 2], coordinates[coordinates.length - 3]))
+        coordinates[coordinates.length - 1] = Vector2.add(coordinates[coordinates.length - 2], Vector2.multiply(last_segment_unit_direction, Constants.LOOK_AHEAD_DISTANCE))
+        var double point_distance: Double = Vector2.distanceBetween(coordinates[coordinates.length - 3], coordinates[coordinates.length - 2])
+        target_velocities[target_velocities.length - 2] = target_velocities[target_velocities.length - 3] * point_distance / (point_distance + Constants.LOOK_AHEAD_DISTANCE)
+    }
+
+    public fun getPoint(index: Int): Vector2 {
+        if(index >= coordinates.length || index < 0) {
+            throw IndexOutOfBoundsException()
+        }
+        return Vector2.copyVector(coordinates[index])
+    }
+
+    public fun isBackwards(): Boolean {
+        return backwards;
+    }
+
+    public fun getPointVelocity(index: Int): Double {
+        if(index >= target_velocities.length || index < 0) {
+            throw IndexOutOfBoundsException()
+        }
+        return Double(target_velocities[index])
+    }
+
+    public fun findClosestPointIndex(point: Vector2, last_index: Int): Int {
+        var last_closest: Vector2 = coordinates[last_index];
+        var min_distance: Double = Vector2.distanceBetween(point, last_closest)
+        var index: Int = last_index
+        for(i in last_index..coordinates.size) {
+            var temp_distance: Double = Vector2.distanceBetween(point, coordinates[i])
+            if(temp_distance <  min_distance) {
+                index = i
+                min_distance = temp_distance
+            }
+        }
+        return index;
+    }
+
+    @Override
+    public fun toString(): String {
+        var tmp: String = ""
+        for(i in coordinates.indices) {
+            tmp += coordinates[i].toString() + " - " + target_velocities[i] + "\n"
+        }
+        return tmp
+    }
+
+    public fun getPathLength(): Int {
+        return coordinates.length
     }
 }
-
-     public fun Vector2d getClosestPointOnLineToPoint(target: Vector2, sample_size: Int) {
-        minPoints:Array<Vector2> = new Array<Vector2>(lines.length) 
-		for(i in minPoints.length) {
-			minPoints[i] = lines[i].getClosestPointOnLineToPoint(target, sample_size) 
-		}
-		
-		minDistance: Double = Double.MAX_VALUE 
-		var closestPoint: Vector2 = minPoints[0] 
-		for(var point:Vector2 in minPoints) {
-			if(Vector2.distanceBetween(point, target) < minDistance) {
-				minDistance = Vector2d.distanceBetween(point, target) 
-				closestPoint = point 
-			}
-		}
-		
-		return closestPoint 
-    }
-
-    public fun Int getBoundLineIndexOfClosestPointOnLineToPoint(target: Vector2, sample_size: Int) {
-        minPoints: Array<Vector2> = new Vector2[lines.length] 
-		for(i in minPoints) {
-			minPoints[i] = lines[i].getClosestPointOnLineToPoint(target, sample_size) 
-            i++ 
-		}
-		
-		closestIndex: Int = 0 
-		minDistance: Double = Double.MAX_VALUE 
-		closestPoint: Vector2 = minPoints[0] 
-		for(i in minPoints) {
-			if(Vector2d.distanceBetween(minPoints[i], target) < minDistance) {
-				minDistance = Vector2d.distanceBetween(minPoints[i], target) 
-				closestPoint = minPoints[i] 
-				closestIndex = i 
-			}
-		}
-		
-		return closestIndex 
-    }
-
-    public fun Vector2 getLookaheadPointFromPoint(currentPose:Vector2, lookahead_distance: Double, sample_size: Int) {
-        currentIndex: Int = getBoundLineIndexOfClosestPointOnLineToPoint(currentPose, sample_size) 
-		currentLine: BoundLine = lines[currentIndex] 
-		start: Vector2= getClosestPointOnLineToPoint(currentPose, sample_size) 
-		
-		try {
-			remainingDistance: Double = lookahead_distance - Vector2.distanceBetween(start, waypoints[currentIndex+1]) 
-			if(remainingDistance > 0) {
-				lowerBound: Double= lines[currentIndex+1].getLowerBound() 
-				upperBound: Double = lines[currentIndex+1].getUpperBound() 
-				stepSize: Double= (upperBound - lowerBound) / ((double) sample_size) 
-				xValue: Double= lowerBound + (2 * stepSize) 
-				return getLookaheadPointFromPoint(new Vector2(xValue, lines[currentIndex+1].get(xValue)), remainingDistance, sample_size) 
-			} else if(remainingDistance == 0) {
-				return waypoints[currentIndex+1] 
-			} else {
-                startingVector: Vector2= new Vector2(start) 
-				startingVector.multiply(-1) 
-
-                deltaVector: Vector2= new Vector2(waypoints[currentIndex+1]) 
-				deltaVector.add(startingVector) 
-				deltaVector.multiply(lookahead_distance / Vector2.distanceBetween(start, waypoints[currentIndex+1])) 
-
-                finalVector: Vector2 = new Vector2(start) 
-				finalVector.add(deltaVector) 
-				return finalVector 
-			}
-		} catch(ArrayIndexOutOfBoundsException e) {
-			return waypoints[waypoints.length-1] 
-		}
-    }
-
-    public fun Double getDistanceToEndpoint(position: Vector2) {
-        return Vector2.distanceBetween(position, waypoints[waypoints.length - 1])
-    }
-
-    public fun Array<BoundLine> getBoundLines() {
-        return this.lines
-    }
-
-    public fun Array<Vector2> getWayPoints() {
-        return this.waypoints
-    }
-    
-    public static fun Path readPathFromFile(String path) {
-        List<Vector2d> waypoints = new ArrayList<>(5)
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path)) 
-            String line = br.readLine()
-            while(line != null) {
-                String[] s = line.split(",")
-                if(s.length > 2) {
-                    throw new Exception("Too many arguments in path") 
-                }
-                x: Double = Double.parseDouble(s[0].trim()) 
-                y: Double = Double.parseDouble(s[1].trim()) 
-                waypoints.add(new Vector2d(x, y)) 
-                line = br.readLine() 
-            }
-            br.close() 
-        } catch(Exception e) {
-            e.printStackTrace() 
-            return default_path 
-        }
-        
-        res: Array<Vector2> = new Vector2[waypoints.size()] 
-        res = waypoints.toArray(res) 
-        return new Path(res) 
-    }
-
-    private static fun Path createDefaultPath() {
-        Array<Vector2> waypoints = {new Vector2d(0,0), new Vector2d(1, 1)} 
-        return new Path(waypoints) 
-    }
-
-    private static default_path: Path = createDefaultPath() 
-
-} 
