@@ -48,14 +48,14 @@ public class Path(filepath: String, backwards: Boolean = false){
         }
 
         // extend the last line segment by the lookahead distance
-        var last_segment_unit_direction: Vector2 = Vector2.unitDirectionVector(Vector2.subtract(coordinates[coordinates.length - 2], coordinates[coordinates.length - 3]))
-        coordinates[coordinates.length - 1] = Vector2.add(coordinates[coordinates.length - 2], Vector2.multiply(last_segment_unit_direction, Constants.LOOK_AHEAD_DISTANCE))
-        var double point_distance: Double = Vector2.distanceBetween(coordinates[coordinates.length - 3], coordinates[coordinates.length - 2])
-        target_velocities[target_velocities.length - 2] = target_velocities[target_velocities.length - 3] * point_distance / (point_distance + Constants.LOOK_AHEAD_DISTANCE)
+        var last_segment_unit_direction: Vector2 = Vector2.unitDirectionVector(Vector2.subtract(coordinates[coordinates.size - 2], coordinates[coordinates.size - 3]))
+        coordinates[coordinates.size - 1] = Vector2.add(coordinates[coordinates.size - 2], Vector2.multiply(last_segment_unit_direction, Constants.LOOK_AHEAD_DISTANCE))
+        var double point_distance: Double = Vector2.distanceBetween(coordinates[coordinates.size - 3], coordinates[coordinates.size - 2])
+        target_velocities[target_velocities.size - 2] = target_velocities[target_velocities.size - 3] * point_distance / (point_distance + Constants.LOOK_AHEAD_DISTANCE)
     }
 
     public fun getPoint(index: Int): Vector2 {
-        if(index >= coordinates.length || index < 0) {
+        if(index >= coordinates.size || index < 0) {
             throw IndexOutOfBoundsException()
         }
         return Vector2.copyVector(coordinates[index])
@@ -66,7 +66,7 @@ public class Path(filepath: String, backwards: Boolean = false){
     }
 
     public fun getPointVelocity(index: Int): Double {
-        if(index >= target_velocities.length || index < 0) {
+        if(index >= target_velocities.size || index < 0) {
             throw IndexOutOfBoundsException()
         }
         return Double(target_velocities[index])
@@ -96,6 +96,6 @@ public class Path(filepath: String, backwards: Boolean = false){
     }
 
     public fun getPathLength(): Int {
-        return coordinates.length
+        return coordinates.size
     }
 }
