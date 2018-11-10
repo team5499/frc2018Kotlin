@@ -12,28 +12,28 @@ class TeleopController : Controller() {
     val driver = XboxController(Constants.Input.DRIVER_PORT)
     val codriver = XboxController(Constants.Input.CODRIVER_PORT)
 
-    public fun handle(){
+    public fun handle () {
         var base: Double = driver.getY(Hand.kLeft)
-        if(Constants.Controller.XBOX_DEADBAND > Math.abs(driver.getY(Hand.kLeft))){
+        if(Constants.Controller.XBOX_DEADBAND > Math.abs(driver.getY(Hand.kLeft))) {
             base = 0.0
         }
 
         var turn: Double = driver.getX(Hand.kRight)
-        if(Constants.Controller.XBOX_DEADBAND > Math.abs(driver.getX(Hand.kRight))){
+        if(Constants.Controller.XBOX_DEADBAND > Math.abs(driver.getX(Hand.kRight))) {
             turn = 0.0
         }
-        if(driver.getBumper(Hand.kRight)){
+        if(driver.getBumper(Hand.kRight)) {
             turn *= Constants.Controller.XBOX_TURN_MULTIPLIER
         }
 
         var arm: Double = codriver.getY(Hand.kLeft) * Constants.Arm.MAX_ARM_SPEED
-        if(Constants.Controller.XBOX_DEADBAND > codriver.getY(Hand.kLeft)){
+        if(Constants.Controller.XBOX_DEADBAND > codriver.getY(Hand.kLeft)) {
             arm = 0.0
         }
 
         Arm.getInstance().setArm(arm)
 
-        if(codriver.getBumper(Hand.kRight)){
+        if(codriver.getBumper(Hand.kRight)) {
             Arm.getInstance().intake()
         } else if(codriver.getTriggerAxis(Hand.kLeft) > Constants.Controller.XBOX_DEADBAND) {
             Arm.getInstance().spit()
@@ -63,9 +63,4 @@ class TeleopController : Controller() {
     }
 
     override fun reset() {}
-
-    private val _instance: TeleopController = TeleopController()
-    public fun getInstance(): TeleopController{
-        return _instance
-    } 
 }
