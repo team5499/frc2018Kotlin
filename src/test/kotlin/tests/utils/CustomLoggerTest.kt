@@ -9,7 +9,7 @@ class CustomLoggerTest {
     @Test
     fun test_logger() {
         CustomLogger.LOG.info("Testing logger")
-        CustomLogger.LOG.warning("yeet")
+        CustomLogger.LOG.warning("Test Warning")
         assert(true)
     }
 }
