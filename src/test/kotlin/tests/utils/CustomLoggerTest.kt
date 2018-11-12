@@ -10,6 +10,5 @@ class CustomLoggerTest {
     fun test_logger() {
         CustomLogger.LOG.info("Testing logger")
         CustomLogger.LOG.warning("Test Warning")
-        assert(true)
     }
 }

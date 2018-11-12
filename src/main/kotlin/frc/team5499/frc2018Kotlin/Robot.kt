@@ -8,10 +8,15 @@ import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 import frc.team5499.frc2018Kotlin.subsystems.Arm
 import frc.team5499.frc2018Kotlin.subsystems.Intake
 
+import frc.team5499.frc2018Kotlin.utils.CustomLogger
+
 class Robot : TimedRobot() {
 
     override fun robotInit() {
         super.setPeriod(Constants.UPDATE_PERIOD)
+        CustomLogger.LOG.info("test")
+        // val mediaDir: File = File("~/media/")
+        // println(mediaDir.listFiles())
     }
 
     override fun robotPeriodic() {}
