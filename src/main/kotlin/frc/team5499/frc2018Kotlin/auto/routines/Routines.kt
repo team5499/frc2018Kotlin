@@ -1,36 +1,35 @@
 package frc.team5499.frc2018Kotlin.auto.routines
 
-import java.util.Arraylist
+import java.util.ArrayList
 
-import frc.team5499.frc2018Kotlin.actions.*
-import frc.team5499.frc2018Kotlin.actions.ArmAction.ArmDirection
-import frc.team5499.frc2018Kotlin.actions.ArmAction.IntakeDirection
+import frc.team5499.frc2018Kotlin.auto.routines.Routine
+import frc.team5499.frc2018Kotlin.auto.actions.*
+import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.ArmDirection
+import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.IntakeDirection
 
 public class Routines {
-    companion object {
-        public var ROUTINES: ArrayList<Routine> = ArrayList<Routine>()
-        var ro_oc: Routine = Routine("rightouter_onecube")
-        var ri_tc: Routine = Routine("rightinner_twocube")
-        var m_tc_l: Routine = Routine("middle_twocube_left")
-        var m_tc_r: Routine = Routine("middle_twocube_right")
-        var li_tc: Routine = Routine("leftinner_twocube")
-        var lo_oc: Routine = Routine("leftouter_onecube")
-        var baseline: Routine = Routine("baseline")
-        var nothing: Routine = Routine("nothing")
-        var tuning: Routine = Routine("tuning")
+        public var routineList: ArrayList<Routine> = ArrayList<Routine>()
+        public var ro_oc: Routine = Routine("rightouter_onecube")
+        public var ri_tc: Routine = Routine("rightinner_twocube")
+        public var m_tc_l: Routine = Routine("middle_twocube_left")
+        public var m_tc_r: Routine = Routine("middle_twocube_right")
+        public var li_tc: Routine = Routine("leftinner_twocube")
+        public var lo_oc: Routine = Routine("leftouter_onecube")
+        public var baseline: Routine = Routine("baseline")
+        public var nothing: Routine = Routine("nothing")
+        public var tuning: Routine = Routine("tuning")
 
-        ROUTINES.add(ro_oc)
-        ROUTINES.add(ri_tc)
-        ROUTINES.add(m_tc_l)
-        ROUTINES.add(m_tc_r)
-        ROUTINES.add(li_tc)
-        ROUTINES.add(lo_oc)
-        ROUTINES.add(baseline)
-        ROUTINES.add(nothing)
-        ROUTINES.add(tuning)
+        routineList.add(ro_oc)
+        routineList.add(ri_tc)
+        routineList.add(m_tc_l)
+        routineList.add(m_tc_r)
+        routineList.add(li_tc)
+        routineList.add(lo_oc)
+        routineList.add(baseline)
+        routineList.add(nothing)
+        routineList.add(tuning)
 
         // define routines
-
         // ro_oc.addAction(NothingCommand(7.0))
         ro_oc.addAction(NothingAction(0.0))
         ro_oc.addAction(ArmAction(ArmDirection.UP, IntakeDirection.HOLD, 0.4))
@@ -45,7 +44,7 @@ public class Routines {
         lo_oc.addAction(DriveStraightAction(3, -150))
         lo_oc.addAction(TurnAction(1.5, -90))
         lo_oc.addAction(DriveStraightAction(1.5, -35))
-        slo_oc.addAction(ArmAction(ArmDirection.NONE, IntakeDirection.DROP, 0.4))
+        lo_oc.addAction(ArmAction(ArmDirection.NONE, IntakeDirection.DROP, 0.4))
 
 
         // m_tc_l.addAction(NothingCommand(0))
@@ -85,7 +84,7 @@ public class Routines {
         // m_tc_r.addAction(DriveSlowCommand(0.5, false, -10))
         // m_tc_r.addAction(ArmAction(0, true, false, 110))
         // m_tc_r.addAction(OuttakeDriveCommand(0.25, true, 0.6))
-        // // Two cube section
+        // Two cube section
         // m_tc_r.addAction(DriveCommand(2, false, 60))
         // m_tc_r.addAction(ArmAction(0.5, true, true, -50))
         // m_tc_r.addAction(ArmAction(0, false, true, -50))
@@ -113,7 +112,7 @@ public class Routines {
 
         nothing.addAction(NothingAction(0))
 
-       // tuning.addAction(ArmAction(1, true, true, 50))
+        // tuning.addAction(ArmAction(1, true, true, 50))
         //tuning.addAction(ArmAction(1, true, true, 80))
         /*
         tuning.addAction(DriveCommand(3, false, -20))
@@ -122,6 +121,4 @@ public class Routines {
         tuning.addAction(IntakeDriveCommand(10, false, 200, -1, true))
         tuning.addAction(NothingCommand(10))
         */
-
-    }
 }
