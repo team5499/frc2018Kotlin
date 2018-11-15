@@ -20,6 +20,14 @@ object Constants {
     object Input {
         const val DRIVER_PORT: Int = 1
         const val CODRIVER_PORT: Int = 2
+
+        const val DEADBAND: Double = 0.02
+        const val WHEEL_NON_LINEARITY: Double = 0.65
+        const val INERTIA_SCALAR: Double = 4.0
+        const val SENSITIVITY: Double = 0.65
+        const val QUICK_STOP_DEADBAND: Double = 0.5
+        const val QUICK_STOP_WEIGHT: Double = 0.1
+        const val QUICK_STOP_SCALAR: Double = 4.0
     }
 
     object PID {
