@@ -64,9 +64,9 @@ object Constants {
     }
 
     const val EPSILON = 1E-10
-    const val ENCODERS_TICKS_PER_ROTATION = 1028
+    const val ENCODER_TICKS_PER_ROTATION = 1024
     const val WHEEL_DIAMETER = 6.0 // inches
-    const val WHEEL_CIR = WHEEL_DIAMETER * 2.0
+    const val WHEEL_CIR = WHEEL_DIAMETER * Math.PI
     const val TRACK_WIDTH = 20.0
     const val MAX_VELOCITY_SETPOINT = 120.0 // inches per second
     const val UPDATE_PERIOD = 0.005

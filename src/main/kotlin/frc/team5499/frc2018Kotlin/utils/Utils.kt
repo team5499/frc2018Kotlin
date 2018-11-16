@@ -16,11 +16,11 @@ object Utils {
     }
 
     fun inchesToEncoderTicks(inches: Double): Int {
-        return ((Constants.WHEEL_CIR / Constants.ENCODERS_TICKS_PER_ROTATION) * inches).toInt()
+        return ((Constants.WHEEL_CIR / Constants.ENCODER_TICKS_PER_ROTATION) * inches).toInt()
     }
 
     fun encoderTicksToInches(ticks: Int): Double {
-        return (Constants.WHEEL_CIR / Constants.ENCODERS_TICKS_PER_ROTATION) * ticks
+        return (Constants.WHEEL_CIR / Constants.ENCODER_TICKS_PER_ROTATION) * ticks
     }
 
     fun talonAngleToDegrees(ticks: Int): Double {
