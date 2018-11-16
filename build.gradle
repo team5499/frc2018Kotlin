@@ -9,8 +9,9 @@ repositories {
 }
 
 dependencies {
-    compile 'org.jetbrains.kotlin:kotlin-stdlib'
-    compile 'org.jetbrains.kotlin:kotlin-reflect'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
+    compile group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
 
     compile wpilib()
     compile ctre()
