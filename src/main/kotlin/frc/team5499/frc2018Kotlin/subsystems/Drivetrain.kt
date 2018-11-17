@@ -397,21 +397,6 @@ object Drivetrain : Subsystem() {
     // super class methods
     override fun update() {
         Position.update(leftDistance, rightDistance, gyroAngle)
-        when (driveMode) {
-            DriveMode.POSITION -> {
-                @Suppress("MaxLineLength")
-                println("Left Pos Raw: ${mLeftMaster.sensorCollection.quadraturePosition}, Right Pos Raw: ${mRightMaster.sensorCollection.quadraturePosition}")
-                val leftTarget = Utils.encoderTicksToInches(mLeftMaster.getClosedLoopTarget(0))
-                val rightTarget = Utils.encoderTicksToInches(mRightMaster.getClosedLoopTarget(0))
-                val leftError = Utils.encoderTicksToInches(mLeftMaster.getClosedLoopError(0))
-                val rightError = Utils.encoderTicksToInches(mRightMaster.getClosedLoopError(0))
-                println("Left Target: $leftTarget, Right Target: $rightTarget")
-                println("Left Error: $leftError, Right Error: $rightError")
-                // println("Left: ${mLeftMaster.getClosedLoopError(0)}, Right: ${mRightMaster.getClosedLoopError(0)}")
-            }
-            DriveMode.VELOCITY -> {}
-            else -> {}
-        }
     }
 
     override fun reset() {
