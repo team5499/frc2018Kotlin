@@ -156,7 +156,7 @@ object Drivetrain : Subsystem() {
     // setup funcs
     private fun configForPercent() {
         mLeftMaster.apply {
-            follow(null)
+            // follow(null)
             configNominalOutputForward(0.0, 0)
             configNominalOutputReverse(0.0, 0)
             configPeakOutputForward(+1.0, 0)
@@ -186,7 +186,7 @@ object Drivetrain : Subsystem() {
     private fun configForVelocity() {
         mLeftMaster.apply {
             inverted = false
-            follow(null)
+            // follow(null)
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             configPeakOutputForward(+1.0, 0)
             configPeakOutputReverse(-1.0, 0)
@@ -368,8 +368,10 @@ object Drivetrain : Subsystem() {
 
     fun setPosition(distance: Double) {
         driveMode = DriveMode.POSITION
+        println("setting position setpoint to $distance")
         val absDistance = Utils.inchesToEncoderTicks(((leftDistance + rightDistance) / 2.0) + distance)
         val angleTarget = mRightMaster.getSelectedSensorPosition(1)
+        println("absolute distance: $absDistance")
         mRightMaster.set(ControlMode.Position, absDistance.toDouble(), DemandType.AuxPID, angleTarget.toDouble())
     }
 
@@ -378,6 +380,7 @@ object Drivetrain : Subsystem() {
         val fixedDistance = Utils.inchesToEncoderTicks((leftDistance + rightDistance) / 2.0)
         val angleTarget = mRightMaster.getSelectedSensorPosition(1) + Utils.degreesToTalonAngle(angle)
         mRightMaster.set(ControlMode.Position, angleTarget.toDouble(), DemandType.AuxPID, fixedDistance.toDouble())
+        println("Left: ${mLeftMaster.getClosedLoopError(0)}, Right: ${mRightMaster.getClosedLoopError(0)}")
     }
 
     fun setVelocity(leftSpeed: Double, rightSpeed: Double) {
@@ -395,6 +398,16 @@ object Drivetrain : Subsystem() {
     // super class methods
     override fun update() {
         Position.update(leftDistance, rightDistance, gyroAngle)
+        when (driveMode) {
+            DriveMode.POSITION -> {
+                val leftError = Utils.encoderTicksToInches(mLeftMaster.getClosedLoopTarget(0))
+                val rightError = Utils.encoderTicksToInches(mRightMaster.getClosedLoopTarget(0))
+                // println("Left: $leftError, Right: $rightError")
+                // println("Left: ${mLeftMaster.getClosedLoopError(0)}, Right: ${mRightMaster.getClosedLoopError(0)}")
+            }
+            DriveMode.VELOCITY -> {}
+            else -> {}
+        }
     }
 
     override fun reset() {
