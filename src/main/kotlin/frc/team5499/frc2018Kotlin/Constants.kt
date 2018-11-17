@@ -30,7 +30,7 @@ object Constants {
         const val VEL_IZONE = 10
         const val VEL_MAX_OUTPUT = 1.0
 
-        const val POS_KP = 0.7
+        const val POS_KP = 0.79
         const val POS_KI = 0.0
         const val POS_KD = 0.3
         const val POS_KF = 0.0
