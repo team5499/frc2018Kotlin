@@ -379,7 +379,6 @@ object Drivetrain : Subsystem() {
         val fixedDistance = Utils.inchesToEncoderTicks((leftDistance + rightDistance) / 2.0)
         val angleTarget = mRightMaster.getSelectedSensorPosition(1) + Utils.degreesToTalonAngle(angle)
         mRightMaster.set(ControlMode.Position, angleTarget.toDouble(), DemandType.AuxPID, fixedDistance.toDouble())
-        println("Left: ${mLeftMaster.getClosedLoopError(0)}, Right: ${mRightMaster.getClosedLoopError(0)}")
     }
 
     fun setVelocity(leftSpeed: Double, rightSpeed: Double) {
