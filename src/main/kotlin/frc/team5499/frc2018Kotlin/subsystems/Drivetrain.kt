@@ -22,24 +22,24 @@ object Drivetrain : Subsystem() {
 
     // HARDWARE INIT
     private val mLeftMaster = TalonSRX(Constants.Talons.LEFT_MASTER_PORT).apply {
-        inverted = false
+        setInverted(false)
         setSensorPhase(false)
         setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
     }
 
     private val mLeftSlave = TalonSRX(Constants.Talons.LEFT_SLAVE_PORT).apply {
-        inverted = false
+        setInverted(false)
         follow(mLeftMaster)
     }
 
     private val mRightMaster = TalonSRX(Constants.Talons.RIGHT_MASTER_PORT).apply {
-        inverted = true
+        setInverted(true)
         setSensorPhase(false)
         setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
     }
 
     private val mRightSlave = TalonSRX(Constants.Talons.RIGHT_SLAVE_PORT).apply {
-        inverted = true
+        setInverted(true)
         follow(mRightMaster)
     }
 
@@ -305,7 +305,6 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForPosition() {
-        // im lazy af, i wanna die
         mLeftMaster.apply {
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             configPeakOutputForward(+1.0, 0)
@@ -313,16 +312,16 @@ object Drivetrain : Subsystem() {
             setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
             follow(mRightMaster, FollowerType.AuxOutput1)
             setSensorPhase(false)
-            inverted = false
+            setInverted(false)
         }
 
         mLeftSlave.apply {
-            inverted = false
+            setInverted(false)
         }
 
         mRightMaster.apply {
             configRemoteFeedbackFilter(mLeftMaster.getDeviceID(), RemoteSensorSource.TalonSRX_SelectedSensor, 0, 0)
-            configRemoteFeedbackFilter(mGyro.getDeviceID(), RemoteSensorSource.GadgeteerPigeon_Yaw, 1, 0)
+            configRemoteFeedbackFilter(mGyro.getDeviceID(), RemoteSensorSource.Pigeon_Yaw, 1, 0)
             configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, 0)
             configSensorTerm(SensorTerm.Sum1, FeedbackDevice.QuadEncoder, 0)
             configSelectedFeedbackSensor(FeedbackDevice.SensorSum, 0, 0)
@@ -368,10 +367,8 @@ object Drivetrain : Subsystem() {
 
     fun setPosition(distance: Double) {
         driveMode = DriveMode.POSITION
-        println("setting position setpoint to $distance")
         val absDistance = Utils.inchesToEncoderTicks(((leftDistance + rightDistance) / 2.0) + distance)
         val angleTarget = mRightMaster.getSelectedSensorPosition(1)
-        println("absolute distance: $absDistance")
         mRightMaster.set(ControlMode.Position, absDistance.toDouble(), DemandType.AuxPID, angleTarget.toDouble())
     }
 

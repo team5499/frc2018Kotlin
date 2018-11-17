@@ -9,7 +9,8 @@ object AutoController : Controller() {
         Drivetrain.setPosition(60.0)
     }
 
-    override fun update() {}
+    override fun update() {
+    }
 
     override fun reset() {}
 }
