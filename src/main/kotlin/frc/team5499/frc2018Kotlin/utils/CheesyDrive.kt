@@ -7,6 +7,7 @@ class CheesyDrive {
     private var mLastTurn = 0.0
     private var mQuickStopAccumlator = 0.0
     private var mNegInertiaAccumlator = 0.0
+    private var mDebugCounter = 0
 
     @Suppress("LongMethod", "ComplexMethod")
     fun cheesyDrive(throttle: Double, turn: Double, isQuickTurn: Boolean): DriveSignal {
@@ -21,12 +22,13 @@ class CheesyDrive {
         newTurn = Math.sin(Math.PI / 2.0 * turnNonLinearity * newTurn) / denominator
         newTurn = Math.sin(Math.PI / 2.0 * turnNonLinearity * newTurn) / denominator
 
-        val negInertiaScalar = Constants.Input.QUICK_STOP_SCALAR
+        val negInertiaScalar = Constants.Input.INERTIA_SCALAR
         val sensitivity = Constants.Input.SENSITIVITY
         val negInertiaPower = negInertia * negInertiaScalar
 
         mNegInertiaAccumlator += negInertiaPower
-        newTurn = newTurn * mNegInertiaAccumlator
+
+        newTurn = newTurn + mNegInertiaAccumlator
         if (mNegInertiaAccumlator > 1) {
             mNegInertiaAccumlator -= 1
         } else if (mNegInertiaAccumlator < -1) {
@@ -76,6 +78,15 @@ class CheesyDrive {
         } else if (rightPWM < -1.0) {
             leftPWM += overpower * (-1.0 - rightPWM)
             rightPWM = -1.0
+        }
+        @Suppress("MagicNumber")
+        if (mDebugCounter == 50) {
+            @Suppress("MaxLineLength")
+            // println("Quick Turn: $isQuickTurn, Angular Power: $angularPower, Quick Stop Accumulator: $mQuickStopAccumlator")
+            println("Left PWM: $leftPWM, Right PWM: $rightPWM")
+            mDebugCounter = 0
+        } else {
+            mDebugCounter++
         }
 
         return DriveSignal(leftPWM, rightPWM, false)

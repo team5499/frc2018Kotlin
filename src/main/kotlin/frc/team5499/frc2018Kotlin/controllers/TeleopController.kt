@@ -20,7 +20,7 @@ object TeleopController : Controller() {
 
     override fun update() {
         val signal = cheesyDriver.cheesyDrive(-driver.getY(Hand.kLeft),
-            -driver.getX(Hand.kRight),
+            driver.getX(Hand.kRight),
             driver.getBumper(Hand.kRight))
         Drivetrain.setPercent(signal)
     }
