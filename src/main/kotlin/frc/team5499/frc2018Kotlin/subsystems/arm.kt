@@ -22,8 +22,6 @@ public object Arm: Subsystem(){
 
         m_left_intake.setInverted(Constants.Arm.INVERT_INTAKE)
         m_right_intake.setInverted(Constants.Arm.INVERT_INTAKE)
-
-        
     }
 
     override fun update() {
@@ -81,8 +79,8 @@ public object Arm: Subsystem(){
         m_arm.set(ControlMode.PercentOutput, speed)
     }
 
-    private val _instance: Arm = Arm
-    public fun getInstance(): Arm {
-        return _instance
-    } 
+    public fun stopArm() {
+        System.out.println("stop");
+        m_arm.set(ControlMode.PercentOutput, 0.0)
+    }
 }

@@ -31,18 +31,19 @@ class TeleopController : Controller() {
             arm = 0.0
         }
 
-        Arm.getInstance().setArm(arm)
+        Drivetrain.setPercent(-base + turn, -base + turn)
+        Arm.setArm(arm)
 
         if(codriver.getBumper(Hand.kRight)) {
-            Arm.getInstance().intake()
+            Arm.intake()
         } else if(codriver.getTriggerAxis(Hand.kLeft) > Constants.Controller.XBOX_DEADBAND) {
-            Arm.getInstance().spit()
+            Arm.spit()
         } else if(codriver.getTriggerAxis(Hand.kRight) > Constants.Controller.XBOX_DEADBAND) {
-            Arm.getInstance().hold()
+            Arm.hold()
         } else if(codriver.getBumper(Hand.kLeft)) {
-            Arm.getInstance().drop()
+            Arm.drop()
         } else {
-            Arm.getInstance().stopIntake()
+            Arm.stopIntake()
         }
     }
 

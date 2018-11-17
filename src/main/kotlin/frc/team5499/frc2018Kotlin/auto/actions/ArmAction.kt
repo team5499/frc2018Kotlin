@@ -1,6 +1,8 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
-public class ArmAction(armDirectionSt: ArmDirection, intakeDirectionSt: IntakeDirection, val timeout: Double) : Action(timeout) {
+import frc.team5499.frc2018Kotlin.subsystems.Arm
+
+public class ArmAction(armDirectionSt: ArmAction.ArmDirection, intakeDirectionSt: ArmAction.IntakeDirection, timeout: Double) : Action(timeout) {
 
     enum class ArmDirection {
         UP,
@@ -17,10 +19,14 @@ public class ArmAction(armDirectionSt: ArmDirection, intakeDirectionSt: IntakeDi
         SPIT,
         NONE
     }
+
+    var armDirection: ArmDirection
+    var intakeDirection: IntakeDirection
+
     init{
-        var armDirection: ArmDirection = armDirectionSt //ArmDirection.NONE
-        var intakeDirection: IntakeDirection = intakeDirectionSt//IntakeDirection.NONE
-    }
+        armDirection = armDirectionSt //ArmDirection.NONE
+        intakeDirection = intakeDirectionSt //IntakeDirection.NONE
+    }   
     
     /*constructor(armDirection: ArmDirection, intakeDirection: IntakeDirection): this(timeout) {
         this.armDirection = armDirection
@@ -32,21 +38,20 @@ public class ArmAction(armDirectionSt: ArmDirection, intakeDirectionSt: IntakeDi
     }
 
     override public fun update() {
-
-        /* when(arm_direction) {
-            ArmDirection.UP -> Arm.getInstance().setArm(1.0)
-            ArmDirection.DOWN -> Arm.getInstance().setArm(-1.0)
-            ArmDirection.HOLD_UP -> Arm.getInstance().setArm(0.2)
-            ArmDirection.HOLD_DOWN -> Arm.getInstance().setArm(-0.2)
-            ArmDirection.NONE -> Arm.getInstance().stopArm()
+        when(armDirection) {
+            ArmDirection.UP -> Arm.setArm(1.0)
+            ArmDirection.DOWN -> Arm.setArm(-1.0)
+            ArmDirection.HOLD_UP -> Arm.setArm(0.2)
+            ArmDirection.HOLD_DOWN -> Arm.setArm(-0.2)
+            ArmDirection.NONE -> Arm.stopArm()
         }
-        when(intake_direction) {
-            IntakeDirection.INTAKE -> Arm.getInstance().intake()
-            IntakeDirection.HOLD -> Arm.getInstance().hold()
-            IntakeDirection.DROP -> Arm.getInstance().drop()
-            IntakeDirection.SPIT -> Arm.getInstance().spit()
-            IntakeDirection.NONE -> // Arm.getInstance().stopIntake()
-        }*/
+        when(intakeDirection    ) {
+            IntakeDirection.INTAKE -> Arm.intake()
+            IntakeDirection.HOLD -> Arm.hold()
+            IntakeDirection.DROP -> Arm.drop()
+            IntakeDirection.SPIT -> Arm.spit()
+            IntakeDirection.NONE -> Arm.stopIntake()
+        }
     }
 
     override public fun next(): Boolean {
@@ -54,7 +59,7 @@ public class ArmAction(armDirectionSt: ArmDirection, intakeDirectionSt: IntakeDi
     }
 
     override public fun finish() {
-        System.out.println("finish arm")
+        println("finish arm")
         //Arm.getInstance().stop()
     }
 

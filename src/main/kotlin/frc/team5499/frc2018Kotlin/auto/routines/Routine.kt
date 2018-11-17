@@ -1,27 +1,20 @@
 package frc.team5499.frc2018Kotlin.auto.routines
 
-import java.util.ArrayList;
-import java.util.List;
-
 import frc.team5499.frc2018Kotlin.auto.actions.Action
 
 
-open public class Routine(name: String) {
+open class Routine(name: String) {
     companion object{
         public val CURRENTROUTINE: RoutineTag = RoutineTag("__default__", -1)
         public val NOT_FINISHED: RoutineTag = RoutineTag("", -1)
     }
 
-    var m_actions: ArrayList<Action> = ArrayList<Action>()
+    var m_actions: MutableList<Action> = mutableListOf<Action>()
     var m_step_number: Int = 0
-    var name: String
-
-    init{
-        var name: String = name
-    }
+    var m_name: String = name
    
     public fun getName(): String {
-        return name
+        return m_name
     }
 
     public fun addAction(action: Action) {

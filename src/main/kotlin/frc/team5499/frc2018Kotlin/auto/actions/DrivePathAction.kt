@@ -1,6 +1,6 @@
-package frc.team5499.frc2018Kotlin.auto.actions
+/*package frc.team5499.frc2018Kotlin.auto.actions
 
-public class DrivePathAction(/*path: Path,*/ timeout: Double) : Action(timeout) {
+public class DrivePathAction(path: Path, timeout: Double) : Action(timeout) {
 
     init{
         //var mPath: Path = path
@@ -21,4 +21,4 @@ public class DrivePathAction(/*path: Path,*/ timeout: Double) : Action(timeout) 
 
     override public fun reset() {
     }
-}
+}*/
