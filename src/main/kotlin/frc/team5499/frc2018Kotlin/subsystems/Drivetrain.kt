@@ -305,7 +305,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForPosition() {
-        // im lazy af, i wanna die
+
         mLeftMaster.apply {
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             configPeakOutputForward(+1.0, 0)
@@ -334,6 +334,7 @@ object Drivetrain : Subsystem() {
             setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
             setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
             setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
+            setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
             configPeakOutputForward(+1.0, 0)
             configPeakOutputReverse(-1.0, 0)
             config_kP(0, Constants.PID.POS_KP, 0)
@@ -368,10 +369,10 @@ object Drivetrain : Subsystem() {
 
     fun setPosition(distance: Double) {
         driveMode = DriveMode.POSITION
-        println("setting position setpoint to $distance")
+        // println("setting position setpoint to $distance")
         val absDistance = Utils.inchesToEncoderTicks(((leftDistance + rightDistance) / 2.0) + distance)
         val angleTarget = mRightMaster.getSelectedSensorPosition(1)
-        println("absolute distance: $absDistance")
+        // println("absolute distance: $absDistance")
         mRightMaster.set(ControlMode.Position, absDistance.toDouble(), DemandType.AuxPID, angleTarget.toDouble())
     }
 
@@ -400,9 +401,14 @@ object Drivetrain : Subsystem() {
         Position.update(leftDistance, rightDistance, gyroAngle)
         when (driveMode) {
             DriveMode.POSITION -> {
-                val leftError = Utils.encoderTicksToInches(mLeftMaster.getClosedLoopTarget(0))
-                val rightError = Utils.encoderTicksToInches(mRightMaster.getClosedLoopTarget(0))
-                // println("Left: $leftError, Right: $rightError")
+                @Suppress("MaxLineLength")
+                println("Left Pos Raw: ${mLeftMaster.sensorCollection.quadraturePosition}, Right Pos Raw: ${mRightMaster.sensorCollection.quadraturePosition}")
+                val leftTarget = Utils.encoderTicksToInches(mLeftMaster.getClosedLoopTarget(0))
+                val rightTarget = Utils.encoderTicksToInches(mRightMaster.getClosedLoopTarget(0))
+                val leftError = Utils.encoderTicksToInches(mLeftMaster.getClosedLoopError(0))
+                val rightError = Utils.encoderTicksToInches(mRightMaster.getClosedLoopError(0))
+                println("Left Target: $leftTarget, Right Target: $rightTarget")
+                println("Left Error: $leftError, Right Error: $rightError")
                 // println("Left: ${mLeftMaster.getClosedLoopError(0)}, Right: ${mRightMaster.getClosedLoopError(0)}")
             }
             DriveMode.VELOCITY -> {}
