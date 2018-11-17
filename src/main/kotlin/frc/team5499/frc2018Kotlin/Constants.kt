@@ -30,7 +30,7 @@ object Constants {
         const val VEL_IZONE = 10
         const val VEL_MAX_OUTPUT = 1.0
 
-        const val POS_KP = 0.7
+        const val POS_KP = 0.79
         const val POS_KI = 0.0
         const val POS_KD = 0.3
         const val POS_KF = 0.0
@@ -64,9 +64,9 @@ object Constants {
     }
 
     const val EPSILON = 1E-10
-    const val ENCODERS_TICKS_PER_ROTATION = 1028
+    const val ENCODERS_TICKS_PER_ROTATION = 1024
     const val WHEEL_DIAMETER = 6.0 // inches
-    const val WHEEL_CIR = WHEEL_DIAMETER * 2.0
+    const val WHEEL_CIR = WHEEL_DIAMETER * Math.PI
     const val TRACK_WIDTH = 20.0
     const val MAX_VELOCITY_SETPOINT = 120.0 // inches per second
     const val UPDATE_PERIOD = 0.005
