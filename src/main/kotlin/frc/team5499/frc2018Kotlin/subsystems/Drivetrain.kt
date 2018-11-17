@@ -162,12 +162,12 @@ object Drivetrain : Subsystem() {
             configNominalOutputReverse(0.0, 0)
             configPeakOutputForward(+1.0, 0)
             configPeakOutputReverse(-1.0, 0)
-            inverted = false
+            setInverted(false)
             setSensorPhase(false)
         }
 
         mLeftSlave.apply {
-            mLeftSlave.inverted = false
+            setInverted(false)
         }
 
         mRightMaster.apply {
@@ -175,18 +175,18 @@ object Drivetrain : Subsystem() {
             configNominalOutputReverse(0.0, 0)
             configPeakOutputForward(+1.0, 0)
             configPeakOutputReverse(-1.0, 0)
-            inverted = true
+            setInverted(true)
             setSensorPhase(false)
         }
 
         mRightSlave.apply {
-            inverted = true
+            setInverted(true)
         }
     }
 
     private fun configForVelocity() {
         mLeftMaster.apply {
-            inverted = false
+            setInverted(false)
             // follow(null)
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             configPeakOutputForward(+1.0, 0)
@@ -213,7 +213,7 @@ object Drivetrain : Subsystem() {
         }
 
         mLeftSlave.apply {
-            inverted = false
+            setInverted(false)
         }
 
         mRightMaster.apply {
@@ -259,11 +259,11 @@ object Drivetrain : Subsystem() {
             configPeakOutputReverse(-1.0, 0)
             follow(mRightMaster, FollowerType.AuxOutput1)
             setSensorPhase(false)
-            inverted = true
+            setInverted(true)
         }
 
         mLeftSlave.apply {
-            inverted = true
+            setInverted(true)
         }
 
         mRightMaster.apply {
