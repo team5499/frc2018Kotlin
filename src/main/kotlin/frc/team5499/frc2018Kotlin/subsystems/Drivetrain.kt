@@ -97,7 +97,8 @@ object Drivetrain : Subsystem() {
             return ypr[0]
         }
         set(value) {
-            mGyro.setYaw(value, 0)
+            @Suppress("MagicNumber")
+            mGyro.setYaw(value * 64.0, 0)
         }
 
     val gyroAngularVelocity: Double
