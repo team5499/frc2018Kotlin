@@ -7,7 +7,7 @@ import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 import frc.team5499.frc2018Kotlin.subsystems.Arm
 
-class TeleopController : Controller() {
+object TeleopController : Controller() {
 
     val driver = XboxController(Constants.Input.DRIVER_PORT)
     val codriver = XboxController(Constants.Input.CODRIVER_PORT)
@@ -52,16 +52,16 @@ class TeleopController : Controller() {
     public val getRotateCube: Boolean = codriver.getAButton()
     
 
-    override fun start() {
+    public override fun start() {
         Drivetrain.isBrakeMode = false
         Drivetrain.stop()
     }
 
-    override fun update() {
+    public override fun update() {
         val left = -driver.getY(Hand.kLeft)
         val right = -driver.getY(Hand.kRight)
         Drivetrain.setPercent(left, right)
     }
 
-    override fun reset() {}
+    public override fun reset() {}
 }

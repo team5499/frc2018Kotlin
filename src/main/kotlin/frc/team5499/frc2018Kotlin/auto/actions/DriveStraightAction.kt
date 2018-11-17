@@ -6,11 +6,15 @@ import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
 public class DriveStraightAction(timeout: Double, inches: Double) : Action(timeout) {
     
-    var mInches: Double = inches
+    var mInches: Double
+
+    init{
+        mInches = inches
+    }
 
     override public fun start() {
         super.start()
-        Drivetrain.setPosition(mInches, mInches)
+        Drivetrain.setPosition(mInches)
     }
 
     override public fun update() {

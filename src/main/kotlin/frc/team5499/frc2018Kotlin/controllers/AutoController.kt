@@ -17,7 +17,7 @@ import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
 import edu.wpi.first.wpilibj.DriverStation
 
-public object AutoController : Controller() {
+object AutoController : Controller() {
 
     private var left_one_cube: Routine = Routine("left_one_cube")
     private var right_one_cube: Routine = Routine("right_one_cube")

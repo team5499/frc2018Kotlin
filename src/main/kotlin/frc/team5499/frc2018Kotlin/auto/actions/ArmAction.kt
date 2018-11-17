@@ -26,12 +26,7 @@ public class ArmAction(armDirectionSt: ArmAction.ArmDirection, intakeDirectionSt
     init{
         armDirection = armDirectionSt //ArmDirection.NONE
         intakeDirection = intakeDirectionSt //IntakeDirection.NONE
-    }   
-    
-    /*constructor(armDirection: ArmDirection, intakeDirection: IntakeDirection): this(timeout) {
-        this.armDirection = armDirection
-        this.intakeDirection = intakeDirection
-    }*/
+    }
 
     override public fun start() {
         super.start()
