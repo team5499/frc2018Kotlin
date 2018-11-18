@@ -2,10 +2,6 @@ package frc.team5499.frc2018Kotlin.utils
 
 import java.util.logging.Logger
 import java.util.logging.Level
-import java.util.logging.FileHandler
-import java.util.logging.SimpleFormatter
-
-import java.time.LocalDateTime
 
 import java.io.File
 
@@ -34,12 +30,12 @@ object CustomLogger {
         if (pathToLogsFolder.equals("")) {
             println("No logs folder found!")
         } else {
-            val currentTime = LocalDateTime.now()
-            var fileName = "robot-log-$currentTime.log"
-            val handler = FileHandler(pathToLogsFolder + fileName)
-            val formatter = SimpleFormatter()
-            handler.setFormatter(formatter)
-            LOG.addHandler(handler)
+            // val currentTime = LocalDateTime.now()
+            // var fileName = "robot-log-$currentTime.log"
+            // val handler = FileHandler(pathToLogsFolder + fileName)
+            // val formatter = SimpleFormatter()
+            // handler.setFormatter(formatter)
+            // LOG.addHandler(handler)
         }
     }
 }
