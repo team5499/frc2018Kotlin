@@ -12,6 +12,7 @@ dependencies {
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib'
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
     compile group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
+    compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
 
     compile wpilib()
     compile ctre()
