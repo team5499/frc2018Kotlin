@@ -6,6 +6,7 @@ import kotlin.reflect.KMutableProperty
 import org.junit.jupiter.api.Test
 
 import frc.team5499.frc2018Kotlin.dashboard.Dashboard
+import frc.team5499.frc2018Kotlin.dashboard.DashboardClient
 
 public class DashboardTest {
 
@@ -31,6 +32,7 @@ public class DashboardTest {
     fun annotationTest() {
         bindReflectionValue(this)
         println(reflectTest)
+        DashboardClient.testFun()
         assert(reflectTest == "REFLECT_TEST")
     }
 }
