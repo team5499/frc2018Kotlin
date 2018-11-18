@@ -15,8 +15,12 @@ class Robot : TimedRobot() {
     override fun robotInit() {
         super.setPeriod(Constants.UPDATE_PERIOD)
         CustomLogger.LOG.info("test")
-        // val mediaDir: File = File("~/media/")
-        // println(mediaDir.listFiles())
+        // val mediaDir: File = File("/media/")
+        // var list = mediaDir.list()
+        // println(list.indices)
+        // for (i in list.indices) {
+        //     println(list[i])
+        // }
     }
 
     override fun robotPeriodic() {}
