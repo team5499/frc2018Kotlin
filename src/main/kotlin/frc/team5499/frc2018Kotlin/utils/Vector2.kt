@@ -17,11 +17,13 @@ data class Vector2(val x: Double, val y: Double) {
     operator fun minus(other: Vector2) = Vector2(x - other.x, y - other.y)
 
     operator fun times(coef: Double) = Vector2(x * coef, y * coef)
+    operator fun times(coef: Int) = times(coef.toDouble())
 
     operator fun div(coef: Double) = when (coef) {
         0.0 -> throw IllegalArgumentException("Division by 0")
         else -> Vector2(x / coef, y / coef)
     }
+    operator fun div(coef: Int) = div(coef.toDouble())
 
     operator fun unaryMinus() = Vector2(-x, -y)
 
