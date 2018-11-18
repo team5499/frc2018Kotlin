@@ -1,5 +1,7 @@
 package frc.team5499.frc2018Kotlin
 
+import frc.team5499.frc2018Kotlin.controllers.TeleopController.DriveConfig
+
 object Constants {
     object Talons {
         const val TALON_UPDATE_PERIOD_MS: Int = 1
@@ -20,6 +22,8 @@ object Constants {
     object Input {
         const val DRIVER_PORT: Int = 1
         const val CODRIVER_PORT: Int = 2
+
+        val DRIVE_CONFIG: DriveConfig = DriveConfig.TANK
 
         const val DEADBAND: Double = 0.02
         const val WHEEL_NON_LINEARITY: Double = 0.65
