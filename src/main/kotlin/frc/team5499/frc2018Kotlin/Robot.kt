@@ -12,6 +12,7 @@ class Robot : TimedRobot() {
 
     override fun robotInit() {
         super.setPeriod(Constants.UPDATE_PERIOD)
+        println("test")
     }
 
     override fun robotPeriodic() {}
