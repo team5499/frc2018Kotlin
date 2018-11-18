@@ -9,6 +9,9 @@ object Constants {
         const val LEFT_SLAVE_PORT: Int = 1
         const val RIGHT_MASTER_PORT: Int = 8
         const val RIGHT_SLAVE_PORT: Int = 9
+        const val ARM_PORT: Int = 5
+        const val LEFT_INTAKE_PORT: Int = 4
+        const val RIGHT_INTAKE_PORT: Int = 6
     }
 
     object Gyro {
@@ -20,6 +23,8 @@ object Constants {
     object Input {
         const val DRIVER_PORT: Int = 1
         const val CODRIVER_PORT: Int = 2
+        const val XBOX_DEADBAND: Double = 0.1
+        const val XBOX_TURN_MULTIPLIER: Double = 0.4
     }
 
     object PID {
@@ -64,23 +69,20 @@ object Constants {
     }
 
     object Arm {
-        const val INTAKE_SPEED: Double = -0.7 
+        const val INTAKE_SPEED: Double = -0.7
         const val INTAKE_HOLD_SPEED: Double = -0.3
         const val INTAKE_SPIT_SPEED: Double = 0.7
-        const val MAX_ARM_SPEED: Double = 0.7  
-        const val ARM_PORT: Int = 5
-        const val LEFT_INTAKE_PORT: Int = 4
-        const val RIGHT_INTAKE_PORT: Int = 6
+        const val MAX_ARM_SPEED: Double = 0.7
+
+        const val ARM_UP_SPEED = 1.0
+        const val ARM_DOWN_SPEED = -1.0
+        const val ARM_HOLD_UP_SPEED = 0.2
+        const val ARM_HOLD_DOWN_SPEED = -0.2
 
         const val INVERT_ARM: Boolean = false
         const val INVERT_INTAKE: Boolean = false
     }
 
-    object Controller {
-        const val XBOX_DEADBAND: Double = 0.1
-        const val XBOX_TURN_MULTIPLIER: Double = 0.4
-    }
-    
     const val EPSILON = 1E-10
     const val ENCODERS_TICKS_PER_ROTATION = 1028
     const val WHEEL_DIAMETER = 6.0 // inches

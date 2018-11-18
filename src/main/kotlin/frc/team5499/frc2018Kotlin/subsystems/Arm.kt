@@ -26,50 +26,17 @@ object Arm : Subsystem() {
     override fun update() {
     }
 
-    public override fun stop() {
+    override fun stop() {
         setArm(0.0)
         stopIntake()
     }
 
-    public override fun reset() {
+    override fun reset() {
         m_left_intake.setNeutralMode(NeutralMode.Coast)
         m_right_intake.setNeutralMode(NeutralMode.Coast)
     }
 
-    fun intake() {
-        m_left_intake.setNeutralMode(NeutralMode.Brake)
-        m_right_intake.setNeutralMode(NeutralMode.Brake)
-        m_left_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_SPEED)
-        m_right_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_SPEED)
-    }
-
-    public fun hold() {
-        m_left_intake.setNeutralMode(NeutralMode.Brake)
-        m_right_intake.setNeutralMode(NeutralMode.Brake)
-        m_left_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_HOLD_SPEED)
-        m_right_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_HOLD_SPEED)
-    }
-
-    public fun drop() {
-        m_left_intake.setNeutralMode(NeutralMode.Brake)
-        m_right_intake.setNeutralMode(NeutralMode.Brake)
-        m_left_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_HOLD_SPEED)
-        m_right_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_HOLD_SPEED)
-    }
-
-    public fun spit() {
-        m_left_intake.setNeutralMode(NeutralMode.Brake)
-        m_right_intake.setNeutralMode(NeutralMode.Brake)
-        m_left_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_SPIT_SPEED)
-        m_right_intake.set(ControlMode.PercentOutput, Constants.Arm.INTAKE_SPIT_SPEED)
-    }
-
-    public fun stopIntake() {
-        m_left_intake.set(ControlMode.PercentOutput, 0.0)
-        m_right_intake.set(ControlMode.PercentOutput, 0.0)
-    }
-
-    public fun setArm(sp: Double) {
+    fun setArm(sp: Double) {
         var speed: Double = sp
         if (Math.abs(speed) > Constants.Arm.MAX_ARM_SPEED) {
             speed = Math.signum(speed) * Constants.Arm.MAX_ARM_SPEED
@@ -77,7 +44,14 @@ object Arm : Subsystem() {
         m_arm.set(ControlMode.PercentOutput, speed)
     }
 
-    public fun stopArm() {
+    fun setIntake(speed: Double) {
+        m_left_intake.setNeutralMode(NeutralMode.Brake)
+        m_right_intake.setNeutralMode(NeutralMode.Brake)
+        m_left_intake.set(ControlMode.PercentOutput, speed)
+        m_right_intake.set(ControlMode.PercentOutput, speed)
+    }
+
+    fun stopArm() {
         System.out.println("stop")
         m_arm.set(ControlMode.PercentOutput, 0.0)
     }

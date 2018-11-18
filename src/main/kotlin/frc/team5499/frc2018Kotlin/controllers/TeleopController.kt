@@ -12,45 +12,40 @@ object TeleopController : Controller() {
     val driver = XboxController(Constants.Input.DRIVER_PORT)
     val codriver = XboxController(Constants.Input.CODRIVER_PORT)
 
-    public fun handle () {
+    @Suppress("ComplexMethod")
+    public fun handle() {
         var base: Double = driver.getY(Hand.kLeft)
-        if(Constants.Controller.XBOX_DEADBAND > Math.abs(driver.getY(Hand.kLeft))) {
+        if (Constants.Controller.XBOX_DEADBAND > Math.abs(driver.getY(Hand.kLeft))) {
             base = 0.0
         }
-
         var turn: Double = driver.getX(Hand.kRight)
-        if(Constants.Controller.XBOX_DEADBAND > Math.abs(driver.getX(Hand.kRight))) {
+        if (Constants.Controller.XBOX_DEADBAND > Math.abs(driver.getX(Hand.kRight))) {
             turn = 0.0
         }
-        if(driver.getBumper(Hand.kRight)) {
+        if (driver.getBumper(Hand.kRight)) {
             turn *= Constants.Controller.XBOX_TURN_MULTIPLIER
         }
 
         var arm: Double = codriver.getY(Hand.kLeft) * Constants.Arm.MAX_ARM_SPEED
-        if(Constants.Controller.XBOX_DEADBAND > codriver.getY(Hand.kLeft)) {
+        if (Constants.Controller.XBOX_DEADBAND > codriver.getY(Hand.kLeft)) {
             arm = 0.0
         }
 
         Drivetrain.setPercent(-base + turn, -base + turn)
         Arm.setArm(arm)
 
-        if(codriver.getBumper(Hand.kRight)) {
+        if (codriver.getBumper(Hand.kRight)) {
             Arm.intake()
-        } else if(codriver.getTriggerAxis(Hand.kLeft) > Constants.Controller.XBOX_DEADBAND) {
+        } else if (codriver.getTriggerAxis(Hand.kLeft) > Constants.Controller.XBOX_DEADBAND) {
             Arm.spit()
-        } else if(codriver.getTriggerAxis(Hand.kRight) > Constants.Controller.XBOX_DEADBAND) {
+        } else if (codriver.getTriggerAxis(Hand.kRight) > Constants.Controller.XBOX_DEADBAND) {
             Arm.hold()
-        } else if(codriver.getBumper(Hand.kLeft)) {
+        } else if (codriver.getBumper(Hand.kLeft)) {
             Arm.drop()
         } else {
             Arm.stopIntake()
         }
     }
-
-    public val getRotateAuto: Boolean = codriver.getXButton()
-
-    public val getRotateCube: Boolean = codriver.getAButton()
-    
 
     public override fun start() {
         Drivetrain.isBrakeMode = false
