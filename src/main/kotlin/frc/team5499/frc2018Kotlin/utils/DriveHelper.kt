@@ -111,7 +111,7 @@ class DriveHelper {
         } else {
             mNegInertiaAccumlator = 0.0
         }
-        linearPower = throttle
+        linearPower = newThrottle
 
         if (isQuickTurn) {
             if (Math.abs(linearPower) < kQuickStopDeadband) {

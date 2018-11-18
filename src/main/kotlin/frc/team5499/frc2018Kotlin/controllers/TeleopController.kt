@@ -42,8 +42,10 @@ object TeleopController : Controller() {
                     driver.getX(Hand.kRight),
                     driver.getBumper(Hand.kRight))
             }
-            else -> {
-                signal = DriveSignal(-driver.getY(Hand.kLeft), -driver.getY(Hand.kRight))
+            DriveConfig.TANK -> {
+                signal = driverHelper.tankDrive(-driver.getY(Hand.kLeft),
+                    -driver.getY(Hand.kRight),
+                    driver.getBumper(Hand.kRight))
             }
         }
 
