@@ -1,5 +1,6 @@
 package frc.team5499.frc2018Kotlin.path
 
+import java.io.FileNotFoundException
 import java.io.FileReader
 
 import com.opencsv.CSVReader
@@ -33,16 +34,24 @@ public class Path(filepath: String, backwards: Boolean = false) {
                 coordinates[i] = tempCoords.get(i)
                 targetVelocities[i] = tempVelo.get(i)
             }
-        } catch (e: Exception) {
+        } catch (e: FileNotFoundException) {
             e.printStackTrace()
             System.exit(1)
         }
 
         // extend the last line segment by the lookahead distance
-        var lastSegmentUnitDirection: Vector2 = Vector2.unitDirectionVector(coordinates[coordinates.size - 2] - coordinates[coordinates.size - 3])
-        coordinates[coordinates.size - 1] = coordinates[coordinates.size - 2] + (lastSegmentUnitDirection * Constants.LOOK_AHEAD_DISTANCE)
-        var pointDistance: Double = Vector2.distanceBetween(coordinates[coordinates.size - 3], coordinates[coordinates.size - 2])
-        targetVelocities[targetVelocities.size - 2] = targetVelocities[targetVelocities.size - 3] * pointDistance / (pointDistance + Constants.LOOK_AHEAD_DISTANCE)
+        @Suppress("MagicNumber")
+        var lastSegmentUnitDirection: Vector2 = Vector2.unitDirectionVector(
+            coordinates[coordinates.size - 2] - coordinates[coordinates.size - 3])
+        coordinates[coordinates.size - 1] =
+            coordinates[coordinates.size - 2] + (lastSegmentUnitDirection * Constants.LOOK_AHEAD_DISTANCE)
+        @Suppress("MagicNumber")
+        var pointDistance: Double = Vector2.distanceBetween(
+            coordinates[coordinates.size - 3], coordinates[coordinates.size - 2])
+        @Suppress("MagicNumber")
+        targetVelocities[targetVelocities.size - 2] =
+            targetVelocities[targetVelocities.size - 3] *
+            pointDistance / (pointDistance + Constants.LOOK_AHEAD_DISTANCE)
     }
 
     public fun getPoint(index: Int): Vector2 {
