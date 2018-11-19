@@ -2,35 +2,7 @@ package frc.team5499.frc2018Kotlin.utils
 
 import frc.team5499.frc2018Kotlin.Constants
 
-class DriveHelper {
-
-    companion object {
-        // cheesy
-        private var kThrottleDeadband = 0.02
-        private var kWheelDeadband = 0.02
-
-        private var kHighWheelNonLinearity = 0.65
-        private var kLowWheelNonLinearity = 0.65
-
-        private var kHighNegInertiaScalar = 4.0
-        private var kLowNegInertiaThreshold = 0.65
-        private var kLowNegInertiaTurnScalar = 3.5
-        private var kLowNegInertiaCloseScalar = 4.0
-        private var kLowNegInertiaFarScalar = 5.0
-
-        private var kHighSensitivity = 0.65
-        private var kLowSensitiity = 0.65
-
-        private var kQuickStopDeadband = 0.5
-        private var kQuickStopWeight = 0.1
-        private var kQuickStopScalar = 5.0
-
-        // space
-        private var kTurnMult = 0.6
-
-        // tank
-        private var kSlowMult = 0.4
-    }
+object DriveHelper {
 
     private var mOldWheel = 0.0
     private var mQuickStopAccumlator = 0.0
@@ -38,68 +10,40 @@ class DriveHelper {
     private var mDebugCounter = 0
 
     fun spaceDrive(throttle: Double, wheel: Double, isQuickTurn: Boolean): DriveSignal {
-        val newThottle = handleDeadband(throttle, kThrottleDeadband)
-        var newWheel = handleDeadband(wheel, kWheelDeadband)
-        val mult = if (!isQuickTurn) kTurnMult else 1.0
+        val newThottle = handleDeadband(throttle, Constants.Input.THROTTLE_DEADBAND)
+        var newWheel = handleDeadband(wheel, Constants.Input.WHEEL_DEADBAND)
+        val mult = if (!isQuickTurn) Constants.Input.TURN_MULT else 1.0
         newWheel *= mult
         return DriveSignal(newThottle + newWheel, newThottle - newWheel)
     }
 
     fun tankDrive(left: Double, right: Double, isSlow: Boolean): DriveSignal {
-        val newLeft = handleDeadband(left, kThrottleDeadband)
-        val newRight = handleDeadband(right, kThrottleDeadband)
-        val mult = if (isSlow) kSlowMult else 1.0
+        val newLeft = handleDeadband(left, Constants.Input.THROTTLE_DEADBAND)
+        val newRight = handleDeadband(right, Constants.Input.THROTTLE_DEADBAND)
+        val mult = if (isSlow) Constants.Input.SLOW_MULT else 1.0
         return DriveSignal(newLeft * mult, newRight * mult)
     }
 
     @Suppress("LongMethod", "ComplexMethod")
     fun cheesyDrive(throttle: Double, wheel: Double, isQuickTurn: Boolean, isHighGear: Boolean): DriveSignal {
-        var newWheel = handleDeadband(wheel, Constants.Input.DEADBAND)
-        var newThrottle = handleDeadband(throttle, Constants.Input.DEADBAND)
+        var newWheel = handleDeadband(wheel, Constants.Input.WHEEL_DEADBAND)
+        var newThrottle = handleDeadband(throttle, Constants.Input.THROTTLE_DEADBAND)
 
         val negInertia = newWheel - mOldWheel
         mOldWheel = newWheel
 
-        val wheelNonLinearity: Double
-        if (isHighGear) {
-            wheelNonLinearity = kHighWheelNonLinearity
-            val denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity)
-            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
-            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
-        } else {
-            wheelNonLinearity = kLowWheelNonLinearity
-            val denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity)
-            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
-            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
-            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
-        }
+        newWheel = calculateCheesyNonlinearity(newWheel, isHighGear)
 
         var leftPwm: Double
         var rightPwm: Double
         var overPower: Double
-        var sensitivity: Double
         var angularPower: Double
         var linearPower: Double
 
-        var negInertiaScalar: Double
+        val pair = calculateCheesyNegIntertialScalar(newWheel, negInertia, isHighGear)
+        val negInertiaScalar = pair.first
+        val sensitivity = pair.second
 
-        if (isHighGear) {
-            negInertiaScalar = kHighNegInertiaScalar
-            sensitivity = kHighSensitivity
-        } else {
-            if (wheel * negInertia > 0) {
-                // If we are moving away from 0.0, aka, trying to get more wheel.
-                negInertiaScalar = kLowNegInertiaTurnScalar
-            } else {
-                // Otherwise, we are attempting to go back to 0.0.
-                if (Math.abs(wheel) > kLowNegInertiaThreshold) {
-                    negInertiaScalar = kLowNegInertiaFarScalar
-                } else {
-                    negInertiaScalar = kLowNegInertiaCloseScalar
-                }
-            }
-            sensitivity = kLowSensitiity
-        }
         val negInertiaPower = negInertia * negInertiaScalar
         mNegInertiaAccumlator += negInertiaPower
 
@@ -114,10 +58,10 @@ class DriveHelper {
         linearPower = newThrottle
 
         if (isQuickTurn) {
-            if (Math.abs(linearPower) < kQuickStopDeadband) {
-                val alpha = kQuickStopWeight
+            if (Math.abs(linearPower) < Constants.Input.QUICKSTOP_DEADBAND) {
+                val alpha = Constants.Input.QUICKSTOP_WEIGHT
                 mQuickStopAccumlator = (1 - alpha) * mQuickStopAccumlator
-                        + alpha * Utils.limit(wheel, 1.0) * kQuickStopScalar
+                        + alpha * Utils.limit(wheel, 1.0) * Constants.Input.QUICKSTOP_SCALAR
             }
             overPower = 1.0
             angularPower = newWheel
@@ -152,6 +96,50 @@ class DriveHelper {
         }
 
         return DriveSignal(leftPwm, rightPwm)
+    }
+
+    private fun calculateCheesyNonlinearity(wheel: Double, isHighGear: Boolean): Double {
+        var newWheel = wheel
+        if (isHighGear) {
+            val wheelNonLinearity = Constants.Input.HIGH_WHEEL_NONLINEARITY
+            val denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity)
+            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
+            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
+        } else {
+            val wheelNonLinearity = Constants.Input.LOW_WHEEL_NONLINEARITY
+            val denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity)
+            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
+            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
+            newWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * newWheel) / denominator
+        }
+        return newWheel
+    }
+
+    private fun calculateCheesyNegIntertialScalar(
+        wheel: Double,
+        negInertia: Double,
+        isHighGear: Boolean
+    ): Pair<Double, Double> {
+        val sensitivity: Double
+        val negInertiaScalar: Double
+        if (isHighGear) {
+            negInertiaScalar = Constants.Input.HIGH_NEGINERTIA_SCALAR
+            sensitivity = Constants.Input.HIGH_SENSITIVITY
+        } else {
+            if (wheel * negInertia > 0) {
+                // If we are moving away from 0.0, aka, trying to get more wheel.
+                negInertiaScalar = Constants.Input.LOW_NEGINERTIA_TURN_SCALAR
+            } else {
+                // Otherwise, we are attempting to go back to 0.0.
+                if (Math.abs(wheel) > Constants.Input.LOW_NEGINERTIA_THRESHOLD) {
+                    negInertiaScalar = Constants.Input.LOW_NEGINERTIA_FAR_SCALAR
+                } else {
+                    negInertiaScalar = Constants.Input.LOW_NEGINERTIA_CLOSE_SCALAR
+                }
+            }
+            sensitivity = Constants.Input.LOW_SENSITIVITY
+        }
+        return Pair<Double, Double>(negInertiaScalar, sensitivity)
     }
 
     private fun handleDeadband(value: Double, deadband: Double): Double {

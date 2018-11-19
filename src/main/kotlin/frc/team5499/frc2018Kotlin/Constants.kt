@@ -23,15 +23,34 @@ object Constants {
         const val DRIVER_PORT: Int = 1
         const val CODRIVER_PORT: Int = 2
 
+        // change to change drive mode
         val DRIVE_CONFIG: DriveConfig = DriveConfig.TANK
 
-        const val DEADBAND: Double = 0.02
-        const val WHEEL_NON_LINEARITY: Double = 0.65
-        const val INERTIA_SCALAR: Double = 4.0
-        const val SENSITIVITY: Double = 0.90
-        const val QUICK_STOP_DEADBAND: Double = 0.5
-        const val QUICK_STOP_WEIGHT: Double = 0.1
-        const val QUICK_STOP_SCALAR: Double = 4.0
+        // cheesy
+        const val THROTTLE_DEADBAND = 0.02
+        const val WHEEL_DEADBAND = 0.02
+
+        const val HIGH_WHEEL_NONLINEARITY = 0.65
+        const val LOW_WHEEL_NONLINEARITY = 0.65
+
+        const val HIGH_NEGINERTIA_SCALAR = 4.0
+        const val LOW_NEGINERTIA_THRESHOLD = 0.65
+        const val LOW_NEGINERTIA_TURN_SCALAR = 3.5
+        const val LOW_NEGINERTIA_CLOSE_SCALAR = 4.0
+        const val LOW_NEGINERTIA_FAR_SCALAR = 5.0
+
+        const val HIGH_SENSITIVITY = 0.65
+        const val LOW_SENSITIVITY = 0.65
+
+        const val QUICKSTOP_DEADBAND = 0.5
+        const val QUICKSTOP_WEIGHT = 0.1
+        const val QUICKSTOP_SCALAR = 5.0
+
+        // space
+        const val TURN_MULT = 0.6
+
+        // tank
+        const val SLOW_MULT = 0.4
     }
 
     object PID {

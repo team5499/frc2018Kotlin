@@ -21,8 +21,6 @@ object TeleopController : Controller() {
     val driver = XboxController(Constants.Input.DRIVER_PORT)
     val codriver = XboxController(Constants.Input.CODRIVER_PORT)
 
-    val driverHelper = DriveHelper()
-
     override fun start() {
         driveConfig = Constants.Input.DRIVE_CONFIG
         Drivetrain.isBrakeMode = false
@@ -32,20 +30,24 @@ object TeleopController : Controller() {
         val signal: DriveSignal
         when (driveConfig) {
             DriveConfig.CHEESY -> {
-                signal = driverHelper.cheesyDrive(-driver.getY(Hand.kLeft),
+                signal = DriveHelper.cheesyDrive(-driver.getY(Hand.kLeft),
                     driver.getX(Hand.kRight),
                     driver.getBumper(Hand.kRight),
                     false)
             }
             DriveConfig.SPACE -> {
-                signal = driverHelper.spaceDrive(-driver.getY(Hand.kLeft),
+                signal = DriveHelper.spaceDrive(-driver.getY(Hand.kLeft),
                     driver.getX(Hand.kRight),
                     driver.getBumper(Hand.kRight))
             }
             DriveConfig.TANK -> {
-                signal = driverHelper.tankDrive(-driver.getY(Hand.kLeft),
+                signal = DriveHelper.tankDrive(-driver.getY(Hand.kLeft),
                     -driver.getY(Hand.kRight),
                     driver.getBumper(Hand.kRight))
+            }
+            else -> {
+                println("Invalid drive mode")
+                signal = DriveSignal(0.0, 0.0)
             }
         }
 
