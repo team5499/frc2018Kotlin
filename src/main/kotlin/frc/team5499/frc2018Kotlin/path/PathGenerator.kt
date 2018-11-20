@@ -5,10 +5,20 @@ import frc.team5499.frc2018Kotlin.utils.Vector2
 @SuppressWarnings("MagicNumber")
 object PathGenerator {
 
+    private enum class PathType {
+        QUINTIC_SPLINE,
+        CUBIC_SPLINE,
+        SMOOTH_POINTS // idk what else to call this. Just the normal smoothing of points
+    }
+
     // function for generating path
     // can have multiple methods for this. Maybe using enum
     // quintic splines, cubic splines, method we are currently using, etc
-    private fun generatePath(initialPoints: MutableList<Vector2>, reversed: Boolean): Path {
+    private fun generatePath(
+        initialPoints: MutableList<Vector2>,
+        reversed: Boolean,
+        type: PathType = PathType.SMOOTH_POINTS
+    ): Path {
         // need to add this
         return Path(mutableListOf(Vector2(0, 0), Vector2(0, 0)), mutableListOf(0.0, 0.0), false)
     }
