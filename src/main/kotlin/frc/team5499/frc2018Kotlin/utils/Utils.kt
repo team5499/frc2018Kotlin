@@ -17,7 +17,7 @@ object Utils {
 
     fun inchesToEncoderTicks(inches: Double): Int {
         // val temp = (Constants.ENCODERS_TICKS_PER_ROTATION / Constants.WHEEL_CIR ) * inches
-        return ((Constants.ENCODERS_TICKS_PER_ROTATION / Constants.WHEEL_CIR) * inches).toInt()
+        return ((Constants.ENCODER_TICKS_PER_ROTATION / Constants.WHEEL_CIR) * inches).toInt()
     }
 
     fun encoderTicksToInches(ticks: Int): Double {
