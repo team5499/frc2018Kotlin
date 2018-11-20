@@ -32,7 +32,8 @@ object TeleopController : Controller() {
             DriveConfig.CHEESY -> {
                 signal = DriveHelper.cheesyDrive(-driver.getY(Hand.kLeft),
                     driver.getX(Hand.kRight),
-                    driver.getBumper(Hand.kRight))
+                    driver.getBumper(Hand.kRight),
+                    false)
             }
             DriveConfig.SPACE -> {
                 signal = DriveHelper.spaceDrive(-driver.getY(Hand.kLeft),
