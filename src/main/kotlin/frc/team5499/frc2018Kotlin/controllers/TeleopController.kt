@@ -32,8 +32,7 @@ object TeleopController : Controller() {
             DriveConfig.CHEESY -> {
                 signal = DriveHelper.cheesyDrive(-driver.getY(Hand.kLeft),
                     driver.getX(Hand.kRight),
-                    driver.getBumper(Hand.kRight),
-                    false)
+                    driver.getBumper(Hand.kRight))
             }
             DriveConfig.SPACE -> {
                 signal = DriveHelper.spaceDrive(-driver.getY(Hand.kLeft),
@@ -44,10 +43,6 @@ object TeleopController : Controller() {
                 signal = DriveHelper.tankDrive(-driver.getY(Hand.kLeft),
                     -driver.getY(Hand.kRight),
                     driver.getBumper(Hand.kRight))
-            }
-            else -> {
-                println("Invalid drive mode")
-                signal = DriveSignal(0.0, 0.0)
             }
         }
 
