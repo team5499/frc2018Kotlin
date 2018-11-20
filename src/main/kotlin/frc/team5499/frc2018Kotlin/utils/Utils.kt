@@ -24,11 +24,12 @@ object Utils {
     }
 
     fun inchesToEncoderTicks(inches: Double): Int {
-        return ((Constants.WHEEL_CIR / Constants.ENCODERS_TICKS_PER_ROTATION) * inches).toInt()
+        // val temp = (Constants.ENCODERS_TICKS_PER_ROTATION / Constants.WHEEL_CIR ) * inches
+        return ((Constants.ENCODERS_TICKS_PER_ROTATION / Constants.WHEEL_CIR) * inches).toInt()
     }
 
     fun encoderTicksToInches(ticks: Int): Double {
-        return (Constants.WHEEL_CIR / Constants.ENCODERS_TICKS_PER_ROTATION) * ticks
+        return (Constants.WHEEL_CIR / Constants.ENCODER_TICKS_PER_ROTATION) * ticks
     }
 
     fun talonAngleToDegrees(ticks: Int): Double {
