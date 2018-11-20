@@ -21,6 +21,8 @@ object PathGenerator {
 
     // paths
     object Paths {
+        // dont know if to make these "by lazy" or not. Maybe not a good idea
+        // because we want them loading before auto, not during it
         val centerToSwitchLeft: Path
             get() {
                 val list: MutableList<Vector2> = mutableListOf(
