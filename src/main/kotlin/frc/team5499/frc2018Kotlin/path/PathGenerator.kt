@@ -62,12 +62,5 @@ object PathGenerator {
                 )
                 return generatePath(list, false)
             }
-
-        init {
-            // centerToSwitchLeft = getCenterToSwitchLeft()
-            // centerToSwitchRight = getCenterToSwitchRight()
-            // leftSwitchToPyramid = getLeftSwitchToPyramid()
-            // rightSwitchToPyramid = getRightSwitchToPyramid()
-        }
     }
 }
