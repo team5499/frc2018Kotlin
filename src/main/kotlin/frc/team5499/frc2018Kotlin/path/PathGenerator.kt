@@ -6,8 +6,10 @@ import frc.team5499.frc2018Kotlin.utils.Vector2
 object PathGenerator {
 
     // function for generating path
+    // can have multiple methods for this. Maybe using enum
+    // quintic splines, cubic splines, method we are currently using, etc
     private fun generatePath(initialPoints: MutableList<Vector2>, reversed: Boolean): Path {
-
+        // need to add this
         return Path(mutableListOf(Vector2(0, 0), Vector2(0, 0)), mutableListOf(0.0, 0.0), false)
     }
 
