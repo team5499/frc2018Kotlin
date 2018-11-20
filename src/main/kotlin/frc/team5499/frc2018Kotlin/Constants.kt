@@ -1,5 +1,7 @@
 package frc.team5499.frc2018Kotlin
 
+import frc.team5499.frc2018Kotlin.controllers.TeleopController.DriveConfig
+
 object Constants {
     object Talons {
         const val TALON_UPDATE_PERIOD_MS: Int = 1
@@ -20,6 +22,35 @@ object Constants {
     object Input {
         const val DRIVER_PORT: Int = 1
         const val CODRIVER_PORT: Int = 2
+
+        // change to change drive mode
+        val DRIVE_CONFIG: DriveConfig = DriveConfig.TANK
+
+        // cheesy
+        const val THROTTLE_DEADBAND = 0.02
+        const val WHEEL_DEADBAND = 0.02
+
+        const val HIGH_WHEEL_NONLINEARITY = 0.65
+        const val LOW_WHEEL_NONLINEARITY = 0.65
+
+        const val HIGH_NEGINERTIA_SCALAR = 4.0
+        const val LOW_NEGINERTIA_THRESHOLD = 0.65
+        const val LOW_NEGINERTIA_TURN_SCALAR = 3.5
+        const val LOW_NEGINERTIA_CLOSE_SCALAR = 4.0
+        const val LOW_NEGINERTIA_FAR_SCALAR = 5.0
+
+        const val HIGH_SENSITIVITY = 0.65
+        const val LOW_SENSITIVITY = 0.65
+
+        const val QUICKSTOP_DEADBAND = 0.5
+        const val QUICKSTOP_WEIGHT = 0.1
+        const val QUICKSTOP_SCALAR = 5.0
+
+        // space
+        const val TURN_MULT = 0.6
+
+        // tank
+        const val SLOW_MULT = 0.4
     }
 
     object PID {

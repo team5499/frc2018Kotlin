@@ -16,6 +16,7 @@ import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.Position
 import frc.team5499.frc2018Kotlin.utils.Vector2
 import frc.team5499.frc2018Kotlin.utils.Utils
+import frc.team5499.frc2018Kotlin.utils.DriveSignal
 
 @Suppress("LargeClass", "TooManyFunctions")
 object Drivetrain : Subsystem() {
@@ -362,9 +363,18 @@ object Drivetrain : Subsystem() {
 
     // drive funcs
     fun setPercent(left: Double, right: Double) {
+        setPercent(left, right, false)
+    }
+
+    fun setPercent(left: Double, right: Double, brakeMode: Boolean) {
         driveMode = DriveMode.OPEN_LOOP
         mLeftMaster.set(ControlMode.PercentOutput, left)
         mRightMaster.set(ControlMode.PercentOutput, right)
+        isBrakeMode = brakeMode
+    }
+
+    fun setPercent(signal: DriveSignal) {
+        setPercent(signal.left, signal.right, signal.brakeMode)
     }
 
     fun setPosition(distance: Double) {

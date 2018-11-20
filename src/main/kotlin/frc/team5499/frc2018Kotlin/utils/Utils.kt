@@ -7,6 +7,14 @@ object Utils {
     const val INCHES_PER_SECOND_PER_ENCODER_TICKS_PER_100MS = 10.0
     const val DEGREES_PER_ROTATION = 360.0
 
+    fun limit(value: Double, limit: Double): Double {
+        return limit(value, -limit, limit)
+    }
+
+    fun limit(value: Double, min: Double, max: Double): Double {
+        return Math.min(max, Math.max(min, value))
+    }
+
     fun inchesPerSecondToEncoderTicksPer100Ms(ips: Double): Double {
         return inchesToEncoderTicks(ips) / INCHES_PER_SECOND_PER_ENCODER_TICKS_PER_100MS
     }
