@@ -20,7 +20,25 @@ object PathGenerator {
         type: PathType = PathType.SMOOTH_POINTS
     ): Path {
         // need to add this
-        return Path(mutableListOf(Vector2(0, 0), Vector2(0, 0)), mutableListOf(0.0, 0.0), false)
+        when (type) {
+            PathType.SMOOTH_POINTS -> {
+                val temp = generateSmoothPath(initialPoints)
+                return Path(temp.first, temp.second, reversed)
+            }
+            else -> {
+                // in the future, this method will throw an error
+                println("These methods have not been implimented yet. Using supported method!")
+                val temp = generateSmoothPath(initialPoints)
+                return Path(temp.first, temp.second, reversed)
+            }
+        }
+    }
+
+    private fun generateSmoothPath(initialPoints: MutableList<Vector2>):
+        Pair<MutableList<Vector2>, MutableList<Double>>
+    {
+
+        return Pair(initialPoints, mutableListOf(0.0, 0.0))
     }
 
     // points

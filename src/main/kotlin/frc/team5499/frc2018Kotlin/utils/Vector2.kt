@@ -3,8 +3,9 @@ package frc.team5499.frc2018Kotlin.utils
 data class Vector2(val x: Double, val y: Double) {
 
     constructor(other: Vector2): this(other.x, other.y)
-
+    constructor(): this(0.0, 0.0)
     constructor(x: Int, y: Int): this(x.toDouble(), y.toDouble())
+
     val magnitude by lazy { Math.hypot(y, x) }
     val angle by lazy { Math.atan2(y, x) }
     val normalized by lazy {
