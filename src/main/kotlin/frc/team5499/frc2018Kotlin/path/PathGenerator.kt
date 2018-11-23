@@ -15,84 +15,36 @@ object PathGenerator {
     // function for generating path
     // can have multiple methods for this. Maybe using enum
     // quintic splines, cubic splines, method we are currently using, etc
-    private fun generatePath(
+    fun generatePath(
         initialPoints: MutableList<Vector2>,
         reversed: Boolean,
         type: PathType = PathType.SMOOTH_POINTS
     ): Path {
         if (initialPoints.size < 2) throw IllegalArgumentException("Need >= 2 points to create a valid path")
-        when (type) {
-            PathType.SMOOTH_POINTS -> {
-                val temp = generateSmoothPath(initialPoints)
-                return Path(temp.first, temp.second, reversed)
-            }
-            else -> {
-                // in the future, this method will throw an error
-                println("These methods have not been implimented yet. Using supported method!")
-                val temp = generateSmoothPath(initialPoints)
-                return Path(temp.first, temp.second, reversed)
-            }
-        }
-    }
-
-    fun generateSmoothPath(initialPoints: MutableList<Vector2>):
-        Pair<MutableList<Vector2>, MutableList<Double>>
-    {
-        var newPoints: MutableList<Vector2> = mutableListOf()
-        // inject points
-        for (i in 0..(initialPoints.size - 2)) {
-            val start = initialPoints.get(i)
-            val end = initialPoints.get(i + 1)
-            var segment = end - start
-            val numberOfFittingPoints = Math.ceil(segment.magnitude / Constants.Path.SMOOTH_POINT_SPACING).toInt()
-            segment = segment.normalized * Constants.Path.SMOOTH_POINT_SPACING
-            for (j in 0..numberOfFittingPoints) {
-                newPoints.add(start + (segment * j))
-            }
-        }
-        newPoints.add(Vector2(initialPoints.get(initialPoints.size - 1)))
-
-        // smooth points
-            var tempPoints: MutableList<Vector2> = newPoints
-            var change = Constants.Path.SMOOTHING_TOLERANCE
-
-            while (change >= Constants.Path.SMOOTHING_TOLERANCE) {
-                change = 0.0
-                for (i in 1..newPoints.size - 2) {
-                    val aux1 = tempPoints.get(i).x
-                    val x = Constants.Path.CURVE_VAL * (newPoints.get(i).x - aux1)
-                        + (1 - Constants.Path.CURVE_VAL) * (tempPoints.get(i - 1).x +
-                        tempPoints.get(i + 1).x - (2.0 * aux1))
-                    tempPoints[i] = Vector2(x, tempPoints.get(i).y)
-                    change += Math.abs(aux1 - tempPoints.get(i).x)
-
-                    val aux2 = tempPoints.get(i).y
-                    val y = Constants.Path.CURVE_VAL * (newPoints.get(i).y - aux2)
-                        + (1 - Constants.Path.CURVE_VAL) * (tempPoints.get(i - 1).y +
-                        tempPoints.get(i + 1).y - (2.0 * aux2))
-                    tempPoints[i] = Vector2(tempPoints.get(i).x, y)
-                    change += Math.abs(aux2 - tempPoints.get(i).y)
+            val path: MutableList<Vector2>
+            when (type) {
+                PathType.SMOOTH_POINTS -> {
+                    path = smoothPath(initialPoints)
+                }
+                else -> {
+                    println("ERROR: SPLINES NOT IMPLIMENTED YET. USING SMOOTH BOIS INSTEAD")
+                    path = smoothPath(initialPoints)
                 }
             }
-            newPoints = tempPoints
 
-        // extend last point by lookahead distance
-        val lastSegment = (newPoints.get(newPoints.size - 1) - newPoints.get(newPoints.size - 2)).normalized
-        newPoints[newPoints.size - 1] = newPoints[newPoints.size - 1] + lastSegment * Constants.Path.LOOK_AHEAD_DISTANCE
-
-        // calculate curvature
+                // calculate curvature
         var curvatures: MutableList<Double> = mutableListOf()
         curvatures.add(0.0)
-        for (i in 1..(newPoints.size - 2)) {
+        for (i in 1..(path.size - 2)) {
             // P
-            var x1 = newPoints.get(i + 0).x
-            val y1 = newPoints.get(i + 0).y
+            var x1 = path.get(i + 0).x
+            val y1 = path.get(i + 0).y
             // Q
-            val x2 = newPoints.get(i - 1).x
-            val y2 = newPoints.get(i - 1).y
+            val x2 = path.get(i - 1).x
+            val y2 = path.get(i - 1).y
             // R
-            val x3 = newPoints.get(i + 1).x
-            val y3 = newPoints.get(i + 1).y
+            val x3 = path.get(i + 1).x
+            val y3 = path.get(i + 1).y
 
             if (x1 == x2) x1 += Constants.EPSILON
             val k1 = 0.5 * (x1 * x1 + y1 * y1 - x2 * x2 - y2 * y2) / (x1 - x2)
@@ -104,8 +56,8 @@ object PathGenerator {
             curvatures.add(1 / r)
         }
         curvatures.add(0.0)
-        // println("Points: ${newPoints.size}")
-        // println("Curvatures: ${curvatures.size}")
+        // println("Points: ${path.size}")
+        // println("Curvatures: $curvatures")
 
         var velocities: MutableList<Double> = mutableListOf()
         // max velo
@@ -115,12 +67,60 @@ object PathGenerator {
 
         // limited velo
         for (i in ((velocities.size - 2).downTo(0))) {
-            val distance = newPoints.get(i).distanceTo(newPoints.get(i + 1))
+            val distance = path.get(i).distanceTo(path.get(i + 1))
             velocities[i] = Math.min(velocities[i], Math.sqrt(Math.pow(velocities[i + 1], 2.0) + 2 *
                 Constants.Path.MAX_ACCELERATION * distance))
         }
 
-        return Pair(newPoints, velocities)
+        return Path(path, velocities, reversed)
+    }
+
+    private fun smoothPath(initialPoints: MutableList<Vector2>):
+        MutableList<Vector2>
+    {
+        var path: MutableList<Vector2> = mutableListOf()
+        // inject points
+        for (i in 0..(initialPoints.size - 2)) {
+            val start = initialPoints.get(i)
+            val end = initialPoints.get(i + 1)
+            var segment = end - start
+            println(segment)
+            val numberOfFittingPoints = Math.ceil(segment.magnitude / Constants.Path.SMOOTH_POINT_SPACING).toInt()
+            segment = segment.normalized * Constants.Path.SMOOTH_POINT_SPACING
+            for (j in 0..numberOfFittingPoints) {
+                path.add(start + (segment * j))
+            }
+        }
+        path.add(Vector2(initialPoints.get(initialPoints.size - 1)))
+        // println(path)
+
+        var change = Constants.Path.SMOOTHING_TOLERANCE
+        var newPath = path.toMutableList()
+        while (change >= Constants.Path.SMOOTHING_TOLERANCE) {
+            change = 0.0
+            for (i in 1..path.size - 2) {
+                val aux1 = newPath.get(i).x
+                val nx = (1.0 - Constants.Path.CURVE_VAL) * (path.get(i).x - newPath.get(i).x)
+                    + Constants.Path.CURVE_VAL * (newPath.get(i - 1).x + newPath.get(i + 1).x -
+                    (2.0 * newPath.get(i).x))
+                val aux2 = newPath.get(i).y
+                val ny = (1.0 - Constants.Path.CURVE_VAL) * (path.get(i).y - newPath.get(i).y)
+                    + (Constants.Path.CURVE_VAL) * (newPath.get(i - 1).y + newPath.get(i + 1).y -
+                    (2.0 * newPath.get(i).y))
+                println("nx: $nx, ny: $ny")
+                newPath.set(i, newPath.get(i).translateBy(nx, ny))
+                change += Math.abs(aux1 - newPath.get(i).x) + Math.abs(aux2 - newPath.get(i).y)
+            }
+        }
+        // println(newPath.toString())
+
+        path = newPath.toMutableList()
+
+        // extend last point by lookahead distance
+        val lastSegment = (path.get(path.size - 1) - path.get(path.size - 2)).normalized
+        path[path.size - 1] = path[path.size - 1] + lastSegment * Constants.Path.LOOK_AHEAD_DISTANCE
+
+        return path
     }
 
     // points
