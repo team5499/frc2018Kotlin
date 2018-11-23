@@ -53,6 +53,15 @@ object Constants {
         const val SLOW_MULT = 0.4
     }
 
+    object Path {
+        const val LOOK_AHEAD_DISTANCE = 18.0 // inches
+        const val CURVE_VAL = 0.85
+        const val SMOOTHING_TOLERANCE = 0.001
+        const val MAX_ACCELERATION = 12.0 // inches / s / s
+        const val SMOOTH_POINT_SPACING = 6.0 // inches
+        const val MAX_VELOCITY = 120.0 // inches / s
+    }
+
     object PID {
         const val VEL_KP = 2.5
         const val VEL_KI = 0.0
@@ -101,6 +110,4 @@ object Constants {
     const val TRACK_WIDTH = 20.0
     const val MAX_VELOCITY_SETPOINT = 120.0 // inches per second
     const val UPDATE_PERIOD = 0.005
-
-    const val LOOK_AHEAD_DISTANCE = 12.0
 }

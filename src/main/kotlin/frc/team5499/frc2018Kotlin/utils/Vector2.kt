@@ -17,6 +17,8 @@ data class Vector2(val x: Double, val y: Double) {
 
     operator fun minus(other: Vector2) = Vector2(x - other.x, y - other.y)
 
+    operator fun times(coef: Int) = Vector2(this * coef.toDouble())
+
     operator fun times(coef: Double) = Vector2(x * coef, y * coef)
 
     operator fun div(coef: Double) = when (coef) {
@@ -32,7 +34,7 @@ data class Vector2(val x: Double, val y: Double) {
 
     fun translateBy(x: Double, y: Double): Vector2 = Vector2(this.x + x, this.y + y)
 
-    override fun toString(): String = "X: $x, Y: $y"
+    override fun toString(): String = "(X: %.2f, Y: %.2f)".format(x, y)
 
     companion object {
         val Zero = Vector2(0, 0)
