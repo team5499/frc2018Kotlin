@@ -28,8 +28,8 @@ public class ArmAction(
     var intakeDirection: IntakeDirection
 
     init {
-        armDirection = armDirectionSt // ArmDirection.NONE
-        intakeDirection = intakeDirectionSt // IntakeDirection.NONE
+        armDirection = armDirectionSt
+        intakeDirection = intakeDirectionSt
     }
 
     public override fun start() {
@@ -47,7 +47,7 @@ public class ArmAction(
 
     public override fun finish() {
         println("finish arm")
-        // Arm.getInstance().stop()
+        Arm.stop()
     }
 
     public override fun reset() {
