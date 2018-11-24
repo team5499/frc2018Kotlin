@@ -12,6 +12,6 @@ public class PathGeneratorTest {
     fun test_generator_lengths() {
         val waypoints: MutableList<Vector2> = mutableListOf(Vector2(0.0, 0.0), Vector2(20.0, 0.0), Vector2(20.0, 20.0))
         val path = PathGenerator.generatePath(waypoints, false)
-        // println(path.)
+        println(path.toString())
     }
 }

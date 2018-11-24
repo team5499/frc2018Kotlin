@@ -1,5 +1,7 @@
 package frc.team5499.frc2018Kotlin.path
 
+import java.text.DecimalFormat
+
 import frc.team5499.frc2018Kotlin.utils.Vector2
 
 class Path(points: List<Vector2>, velocities: List<Double>, reverse: Boolean) {
@@ -53,8 +55,11 @@ class Path(points: List<Vector2>, velocities: List<Double>, reverse: Boolean) {
 
     override fun toString(): String {
         val builder = StringBuilder()
-        for (v in points) {
-            builder.append(v.toString() + "/n")
+        val format = DecimalFormat("###0.0#")
+        for (i in points.indices) {
+            builder.append("Point $i" +
+                " - Coords: ${points.get(i)}" +
+                " - Velo: ${format.format(velocities.get(i))} inches/second \n")
         }
         return builder.toString()
     }
