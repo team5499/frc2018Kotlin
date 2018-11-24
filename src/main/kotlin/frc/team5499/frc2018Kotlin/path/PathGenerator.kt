@@ -64,13 +64,16 @@ object PathGenerator {
         for (i in curvatures.indices) {
             velocities.add(Math.min(Constants.Path.MAX_VELOCITY, 3.0 / curvatures[i]))
         }
+        // println("Velo 1: $velocities")
 
         // limited velo
+        velocities[velocities.size - 1] = 0.0
         for (i in ((velocities.size - 2).downTo(0))) {
             val distance = path.get(i).distanceTo(path.get(i + 1))
             velocities[i] = Math.min(velocities[i], Math.sqrt(Math.pow(velocities[i + 1], 2.0) + 2 *
                 Constants.Path.MAX_ACCELERATION * distance))
         }
+        // println("Velo 2: $velocities")
 
         return Path(path, velocities, reversed)
     }
