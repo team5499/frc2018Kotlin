@@ -6,10 +6,10 @@ import frc.team5499.frc2018Kotlin.Constants
 @SuppressWarnings("MagicNumber")
 object PathGenerator {
 
-    private enum class PathType {
+    enum class PathType {
         QUINTIC_SPLINE,
         CUBIC_SPLINE,
-        SMOOTH_POINTS // idk what else to call this. Just the normal smoothing of points
+        SMOOTH_POINTS
     }
 
     // function for generating path
@@ -49,7 +49,7 @@ object PathGenerator {
             if (x1 == x2) x1 += Constants.EPSILON
             val k1 = 0.5 * (x1 * x1 + y1 * y1 - x2 * x2 - y2 * y2) / (x1 - x2)
             val k2 = (y1 - y2) / (x1 - x2)
-            var b = 0.5 * (x2 * x2 - 2 * x2 * k1 + y2 * y2 - x3 * x3 + 2.0 * x3 * k1 - y3 * y3)
+            var b = 0.5 * (x2 * x2 - 2.0 * x2 * k1 + y2 * y2 - x3 * x3 + 2.0 * x3 * k1 - y3 * y3)
             b /= (x3 * k2 - y3 + y2 - x2 * k2)
             val a = k2 - k1 * b
             val r = Math.hypot((x1 - a), (y1 - b))
@@ -78,13 +78,14 @@ object PathGenerator {
     private fun smoothPath(initialPoints: MutableList<Vector2>):
         MutableList<Vector2>
     {
+        // println("Initial points: $initialPoints")
         var path: MutableList<Vector2> = mutableListOf()
         // inject points
         for (i in 0..(initialPoints.size - 2)) {
             val start = initialPoints.get(i)
             val end = initialPoints.get(i + 1)
             var segment = end - start
-            println(segment)
+            // println(segment)
             val numberOfFittingPoints = Math.ceil(segment.magnitude / Constants.Path.SMOOTH_POINT_SPACING).toInt()
             segment = segment.normalized * Constants.Path.SMOOTH_POINT_SPACING
             for (j in 0..numberOfFittingPoints) {
@@ -92,7 +93,7 @@ object PathGenerator {
             }
         }
         path.add(Vector2(initialPoints.get(initialPoints.size - 1)))
-        // println(path)
+        // println("Path before smoothing: $path")
 
         var change = Constants.Path.SMOOTHING_TOLERANCE
         var newPath = path.toMutableList()
@@ -100,25 +101,25 @@ object PathGenerator {
             change = 0.0
             for (i in 1..path.size - 2) {
                 val aux1 = newPath.get(i).x
-                val nx = (1.0 - Constants.Path.CURVE_VAL) * (path.get(i).x - newPath.get(i).x)
-                    + Constants.Path.CURVE_VAL * (newPath.get(i - 1).x + newPath.get(i + 1).x -
-                    (2.0 * newPath.get(i).x))
+                val dx = ((1.0 - Constants.Path.CURVE_VAL) * (path.get(i).x - newPath.get(i).x) +
+                    Constants.Path.CURVE_VAL * (newPath.get(i - 1).x + newPath.get(i + 1).x - (2.0 * newPath.get(i).x)))
                 val aux2 = newPath.get(i).y
-                val ny = (1.0 - Constants.Path.CURVE_VAL) * (path.get(i).y - newPath.get(i).y)
-                    + (Constants.Path.CURVE_VAL) * (newPath.get(i - 1).y + newPath.get(i + 1).y -
-                    (2.0 * newPath.get(i).y))
-                println("nx: $nx, ny: $ny")
-                newPath.set(i, newPath.get(i).translateBy(nx, ny))
+                val dy = ((1.0 - Constants.Path.CURVE_VAL) * (path.get(i).y - newPath.get(i).y) +
+                    Constants.Path.CURVE_VAL * (newPath.get(i - 1).y + newPath.get(i + 1).y - (2.0 * newPath.get(i).y)))
+                newPath.set(i, newPath.get(i).translateBy(dx, dy))
                 change += Math.abs(aux1 - newPath.get(i).x) + Math.abs(aux2 - newPath.get(i).y)
             }
         }
-        // println(newPath.toString())
 
         path = newPath.toMutableList()
+        // println("Path after smoothing: $newPath")
 
         // extend last point by lookahead distance
         val lastSegment = (path.get(path.size - 1) - path.get(path.size - 2)).normalized
         path[path.size - 1] = path[path.size - 1] + lastSegment * Constants.Path.LOOK_AHEAD_DISTANCE
+
+        // println("final points: $path")
+        // println(lastSegment)
 
         return path
     }

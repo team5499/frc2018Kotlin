@@ -14,6 +14,9 @@ class Path(points: List<Vector2>, velocities: List<Double>, reverse: Boolean) {
         this.points = points
         this.velocities = velocities
         this.isReverse = reverse
+
+        if (this.points.size != this.velocities.size)
+            throw ArithmeticException("Velocities and Coordinates do not have same length!")
     }
 
     fun getPoint(index: Int): Vector2 {
