@@ -1,4 +1,4 @@
-package tests.utils
+package tests.utils.math
 
 import org.junit.jupiter.api.Test
 

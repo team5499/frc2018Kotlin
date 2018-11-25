@@ -1,6 +1,7 @@
 package frc.team5499.frc2018Kotlin.utils.math.splines
 
 import frc.team5499.frc2018Kotlin.utils.math.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.Pose2d
 import frc.team5499.frc2018Kotlin.utils.math.Rotation2d
 
 @SuppressWarnings("MagicNumber")
@@ -34,6 +35,9 @@ class CubicHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotation2
         yCoeffs[2] = dy0 // c
         yCoeffs[3] = y0 // d
     }
+
+    constructor(p0: Pose2d, p1: Pose2d): this(p0.translation, p0.rotation, p1.translation, p1.rotation)
+    constructor(): this(Pose2d(), Pose2d())
 
     override fun getPoint(t: Double): Vector2 {
         val x = t * t * t * xCoeffs[0] + t * t * xCoeffs[1] + t * xCoeffs[2] + xCoeffs[3]

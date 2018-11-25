@@ -27,7 +27,7 @@ object PathGenerator {
                     path = smoothPath(initialPoints)
                 }
                 else -> {
-                    println("ERROR: SPLINES NOT IMPLIMENTED YET. USING SMOOTH BOIS INSTEAD")
+                    println("ERROR: CHOSEN METHOD NOT IMPLIMENTED YET. USING SMOOTH BOIS INSTEAD")
                     path = smoothPath(initialPoints)
                 }
             }
