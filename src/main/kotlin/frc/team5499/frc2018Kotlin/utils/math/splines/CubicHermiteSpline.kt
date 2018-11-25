@@ -1,4 +1,7 @@
-package frc.team5499.frc2018Kotlin.utils.math
+package frc.team5499.frc2018Kotlin.utils.math.splines
+
+import frc.team5499.frc2018Kotlin.utils.math.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.Rotation2d
 
 @SuppressWarnings("MagicNumber")
 class CubicHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotation2d) : Spline() {
@@ -26,10 +29,10 @@ class CubicHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotation2
         xCoeffs[2] = dx0 // c
         xCoeffs[3] = x0 // d
 
-        yCoeffs[0] = dy0 + dy1 + 2.0 * y0 - 2.0 * y1
-        yCoeffs[1] = -2.0 * dy0 - dy1 - 3.0 * y0 + 3.0 * y1
-        yCoeffs[2] = dy0
-        yCoeffs[3] = y0
+        yCoeffs[0] = dy0 + dy1 + 2.0 * y0 - 2.0 * y1 // a
+        yCoeffs[1] = -2.0 * dy0 - dy1 - 3.0 * y0 + 3.0 * y1 // b
+        yCoeffs[2] = dy0 // c
+        yCoeffs[3] = y0 // d
     }
 
     override fun getPoint(t: Double): Vector2 {
@@ -47,8 +50,8 @@ class CubicHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotation2
     override fun getCurvature(t: Double): Double {
         val dx = 3.0 * t * t * xCoeffs[0] + 2.0 * t * xCoeffs[1] + xCoeffs[2]
         val dy = 3.0 * t * t * xCoeffs[0] + 2.0 * t * xCoeffs[1] + xCoeffs[2]
-        val ddx = 6 * t * xCoeffs[0] + 2 * xCoeffs[1]
-        val ddy = 6 * t * xCoeffs[1] + 2 * xCoeffs[1]
+        val ddx = 6.0 * t * xCoeffs[0] + 2.0 * xCoeffs[1]
+        val ddy = 6.0 * t * xCoeffs[1] + 2.0 * xCoeffs[1]
         return (dx * ddy - dy * ddx) / ((dx * dx + dy * dy) * Math.sqrt(dx * dx + dy * dy))
     }
 }

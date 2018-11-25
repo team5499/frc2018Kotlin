@@ -1,10 +1,11 @@
 package frc.team5499.frc2018Kotlin.utils.math
 
+@Suppress("TooManyFunctions")
 class Vector2(val x: Double, val y: Double) {
 
-    constructor(other: Vector2): this(other.x, other.y)
-    constructor(): this(0.0, 0.0)
-    constructor(x: Int, y: Int): this(x.toDouble(), y.toDouble())
+    companion object {
+        fun distanceBetween(a: Vector2, b: Vector2) = (a - b).magnitude
+    }
 
     val magnitude by lazy { Math.hypot(y, x) }
     val angle by lazy { Math.atan2(y, x) }
@@ -12,6 +13,11 @@ class Vector2(val x: Double, val y: Double) {
         val len = magnitude
         Vector2(x / len.toDouble(), y / len.toDouble())
     }
+
+    constructor(other: Vector2): this(other.x, other.y)
+    constructor(): this(0.0, 0.0)
+    constructor(x: Int, y: Int): this(x.toDouble(), y.toDouble())
+    constructor(start: Vector2, end: Vector2): this(end.x - start.x, end.y - start.y)
 
     operator fun plus(other: Vector2) = Vector2(x + other.x, y + other.y)
 
@@ -32,12 +38,9 @@ class Vector2(val x: Double, val y: Double) {
 
     fun distanceTo(other: Vector2) = (this - other).magnitude
 
-    fun translateBy(x: Double, y: Double): Vector2 = Vector2(this.x + x, this.y + y)
+    fun translateBy(x: Double, y: Double) = Vector2(this.x + x, this.y + y)
+
+    fun rotateBy(r: Rotation2d) = Vector2(x * r.cosAngle - y * r.sinAngle, x * r.sinAngle + y * r.cosAngle)
 
     override fun toString(): String = "(X: %.2f, Y: %.2f)".format(x, y)
-
-    companion object {
-        val Zero = Vector2(0, 0)
-        fun distanceBetween(a: Vector2, b: Vector2) = (a - b).magnitude
-    }
 }

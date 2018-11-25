@@ -63,15 +63,17 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) {
     operator fun plus(other: Rotation2d): Rotation2d = fromDegrees(degrees + other.degrees)
     operator fun minus(other: Rotation2d): Rotation2d = fromDegrees(degrees - other.degrees)
 
+    fun rotateBy(other: Rotation2d): Rotation2d {
+        return Rotation2d(
+            cosAngle * other.cosAngle - sinAngle * other.sinAngle,
+            cosAngle* other.sinAngle + sinAngle * other.cosAngle,
+            true
+        )
+    }
+
     fun normal() = Rotation2d(-sinAngle, cosAngle, false)
 
     fun inverse() = Rotation2d(sinAngle, -cosAngle, false)
-
-    // fun isParallel(other: Rotation2d): Boolean {
-    //     val diff = Math.abs(other.degrees - degrees)
-    //     if(diff < Constants.EPSILON) return false
-    //     return true
-    // }
 
     fun toVector(): Vector2 {
         return Vector2(cosAngle, sinAngle)
