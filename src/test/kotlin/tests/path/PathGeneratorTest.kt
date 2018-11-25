@@ -3,7 +3,7 @@ package tests.utils.path
 import org.junit.jupiter.api.Test
 // import org.junit.Assert
 
-import frc.team5499.frc2018Kotlin.utils.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.Vector2
 import frc.team5499.frc2018Kotlin.path.PathGenerator
 
 public class PathGeneratorTest {

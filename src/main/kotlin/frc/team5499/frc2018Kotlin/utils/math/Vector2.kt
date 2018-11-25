@@ -1,6 +1,6 @@
-package frc.team5499.frc2018Kotlin.utils
+package frc.team5499.frc2018Kotlin.utils.math
 
-data class Vector2(val x: Double, val y: Double) {
+class Vector2(val x: Double, val y: Double) {
 
     constructor(other: Vector2): this(other.x, other.y)
     constructor(): this(0.0, 0.0)

@@ -2,7 +2,7 @@ package frc.team5499.frc2018Kotlin.path
 
 import java.text.DecimalFormat
 
-import frc.team5499.frc2018Kotlin.utils.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.Vector2
 
 class Path(points: List<Vector2>, velocities: List<Double>, reverse: Boolean) {
 

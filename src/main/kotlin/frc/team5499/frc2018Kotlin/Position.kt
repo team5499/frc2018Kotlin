@@ -1,6 +1,6 @@
 package frc.team5499.frc2018Kotlin
 
-import frc.team5499.frc2018Kotlin.utils.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.Vector2
 
 object Position {
 

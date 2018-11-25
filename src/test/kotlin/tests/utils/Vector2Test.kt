@@ -2,7 +2,7 @@ package tests.utils
 
 import org.junit.jupiter.api.Test
 
-import frc.team5499.frc2018Kotlin.utils.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.Vector2
 
 public class Vector2Test {
     @Test
