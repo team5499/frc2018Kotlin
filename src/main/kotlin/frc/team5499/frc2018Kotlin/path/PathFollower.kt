@@ -77,7 +77,6 @@ public class PathFollower(path: Path) {
     }
 
     fun update(robotPos: Vector2, newRobotAngle: Double): Pair<Double, Double> {
-        var output: MutableList<Double> = mutableListOf<Double>()
         var robotAngle: Double = newRobotAngle
         robotAngle = Math.toRadians(robotAngle)
         if (robotAngle.equals(0)) { robotAngle = Constants.EPSILON }
