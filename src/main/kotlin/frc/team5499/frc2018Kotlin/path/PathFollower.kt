@@ -14,28 +14,24 @@ public class PathFollower(path: Path) {
     }
     @Suppress("ComplexMethod")
     private fun calculateLookahead(robotPos: Vector2, robotAngle: Double): Vector2 {
-    mLastClosestPointIndex = mPath.findClosestPointIndex(robotPos, mLastClosestPointIndex)
-    var lookahead: Vector2? = null
-    for (i in mLastClosestPointIndex..mPath.getPathLength()) {
-        var begin: Vector2 = mPath.getPoint(i)
-        var end: Vector2 = mPath.getPoint(i + 1)
-        var d: Vector2 = end - begin
-        var f: Vector2 = begin - robotPos
-
-        /**
-            * find the distance from the
-            */
-        var a: Double = d.dot(d)
-        var b: Double = 2.0 * d.dot(f)
-        var c: Double = f.dot(f) - Math.pow(Constants.LOOK_AHEAD_DISTANCE, 2.0)
-        @Suppress("MagicNumber")
-        var dis: Double = (b * b) - (4.0 * a * c)
-        if (dis < 0) {
-            continue
-        } else {
-            dis = Math.sqrt(dis)
-            var t1: Double = (-b - dis) / (2.0 * a)
-            var t2: Double = (-b + dis) / (2.0 * a)
+        mLastClosestPointIndex = mPath.findClosestPointIndex(robotPos, mLastClosestPointIndex)
+        var lookahead: Vector2? = null
+        for (i in mLastClosestPointIndex..mPath.getCoordinatesLength()) {
+            var begin: Vector2 = mPath.getPoint(i)
+            var end: Vector2 = mPath.getPoint(i + 1)
+            var d: Vector2 = end - begin
+            var f: Vector2 = begin - robotPos
+            var a: Double = d.dot(d)
+            var b: Double = 2.0 * d.dot(f)
+            var c: Double = f.dot(f) - Math.pow(Constants.LOOK_AHEAD_DISTANCE, 2.0)
+            @Suppress("MagicNumber")
+            var dis: Double = (b * b) - (4.0 * a * c)
+            if (dis < 0) {
+                continue
+            } else {
+                dis = Math.sqrt(dis)
+                var t1: Double = (-b - dis) / (2.0 * a)
+                var t2: Double = (-b + dis) / (2.0 * a)
 
                 if (t1 >= 0 && t1 <= 1) {
                     var temp: Vector2 = d * t1
@@ -50,12 +46,12 @@ public class PathFollower(path: Path) {
         }
         @Suppress("MagicNumber")
         if (lookahead == null) {
-            lookahead = mPath.getPoint(mPath.getPathLength() - 1)
+            lookahead = mPath.getPoint(mPath.getCoordinatesLength() - 1)
         } else {
             var distanceBetweenRobotEnd: Double = Vector2.distanceBetween(
-                robotPos, mPath.getPoint(mPath.getPathLength() - 1))
+                robotPos, mPath.getPoint(mPath.getCoordinatesLength() - 1))
             if (distanceBetweenRobotEnd < Constants.LOOK_AHEAD_DISTANCE) {
-                lookahead = mPath.getPoint(mPath.getPathLength() - 1)
+                lookahead = mPath.getPoint(mPath.getCoordinatesLength() - 1)
             }
         }
         return lookahead
@@ -80,7 +76,7 @@ public class PathFollower(path: Path) {
         return if (angleToLookahead <= 90.0) curvature * side else -curvature * side
     }
 
-    fun update(robotPos: Vector2, newRobotAngle: Double): MutableList<Double> {
+    fun update(robotPos: Vector2, newRobotAngle: Double): Pair<Double, Double> {
         var output: MutableList<Double> = mutableListOf<Double>()
         var robotAngle: Double = newRobotAngle
         robotAngle = Math.toRadians(robotAngle)
@@ -103,15 +99,15 @@ public class PathFollower(path: Path) {
         mPath.getPointVelocity(mLastClosestPointIndex)
         else -mPath.getPointVelocity(mLastClosestPointIndex)
 
-        output[0] = averageVelocity * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0
-        output[1] = averageVelocity * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0
+        val leftOutput: Double = averageVelocity * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0
+        val rightOutput: Double = averageVelocity * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0
 
-        return output
+        return Pair(leftOutput, rightOutput)
     }
 
     public fun doneWithPath(robotPos: Vector2): Boolean {
         var distanceBetweenRobotEnd: Double = Vector2.distanceBetween(
-            robotPos, mPath.getPoint(mPath.getPathLength() - 1))
+            robotPos, mPath.getPoint(mPath.getCoordinatesLength() - 1))
         return distanceBetweenRobotEnd < Constants.LOOK_AHEAD_DISTANCE
     }
 

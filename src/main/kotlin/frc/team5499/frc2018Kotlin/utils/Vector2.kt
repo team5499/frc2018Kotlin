@@ -29,30 +29,12 @@ data class Vector2(val x: Double, val y: Double) {
 
     fun distanceTo(other: Vector2) = (this - other).magnitude
 
-    fun getHeading(): Double {
-        @Suppress("MagicNumber")
-        var rawHeading: Double = 450.0 - Math.toDegrees(Math.atan2(y, x))
-        @Suppress("MagicNumber")
-        while (rawHeading < 0.0) {
-            @Suppress("MagicNumber")
-            rawHeading += 360.0
-        }
-        @Suppress("MagicNumber")
-        while (rawHeading > 360.0) {
-            @Suppress("MagicNumber")
-            rawHeading -= 360.0
-        }
-        return rawHeading
-    }
-
     override fun toString(): String = "X: $x, Y: $y"
 
     companion object {
-        val Zero = Vector2(0, 0)
+        val ZERO = Vector2(0, 0)
 
         fun distanceBetween(a: Vector2, b: Vector2) = (a - b).magnitude
-
-        fun unitDirectionVector(vector: Vector2): Vector2 = vector * 1.0 / vector.magnitude
 
         @Suppress("MagicNumber")
         fun copyVector(original: Vector2): Vector2 = Vector2(original.x, original.y)
@@ -62,18 +44,6 @@ data class Vector2(val x: Double, val y: Double) {
             Vector2(Math.cos(Math.toRadians(450 - heading)), Math.sin(Math.toRadians(450 - heading)))
 
         @Suppress("MagicNumber")
-        fun angleBetween(from: Vector2, to: Vector2): Double {
-        @Suppress("MagicNumber")
-        var rawAngleDelta: Double = from.getHeading() - to.getHeading()
-        @Suppress("MagicNumber")
-        var adjustedAngleDelta: Double = -360.0 - rawAngleDelta
-        while (adjustedAngleDelta > 180.0) {
-            adjustedAngleDelta -= 360.0
-        }
-        while (adjustedAngleDelta < -180.0) {
-            adjustedAngleDelta += 360.0
-        }
-        return adjustedAngleDelta
-    }
+        fun angleBetween(from: Vector2, to: Vector2): Double = to.angle - from.angle
     }
 }

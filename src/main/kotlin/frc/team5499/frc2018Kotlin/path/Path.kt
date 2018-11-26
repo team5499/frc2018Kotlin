@@ -10,8 +10,8 @@ import frc.team5499.frc2018Kotlin.utils.Vector2
 
 public class Path(filepath: String, backwards: Boolean = false) {
 
-    private var coordinates: MutableList<Vector2> = mutableListOf<Vector2>()
-    private var targetVelocities: MutableList<Double> = mutableListOf<Double>()
+    private var mCoordinates: MutableList<Vector2> = mutableListOf<Vector2>()
+    private var mTargetVelocities: MutableList<Double> = mutableListOf<Double>()
 
     private var backwards: Boolean = false
 
@@ -31,53 +31,55 @@ public class Path(filepath: String, backwards: Boolean = false) {
             reader.close()
 
             for (i in tempCoords.indices) {
-                coordinates[i] = tempCoords.get(i)
-                targetVelocities[i] = tempVelo.get(i)
+                mCoordinates[i] = tempCoords.get(i)
+                mTargetVelocities[i] = tempVelo.get(i)
             }
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-            System.exit(1)
+            // defaults to baseline auto
+            @Suppress("MagicNumber")
+            mCoordinates.add(Vector2(0.0, 0.0))
+            @Suppress("MagicNumber")
+            mCoordinates.add(Vector2(0.0, 100.0))
+            @Suppress("MagicNumber")
+            mTargetVelocities.add(10.0)
         }
 
         // extend the last line segment by the lookahead distance
         @Suppress("MagicNumber")
-        var lastSegmentUnitDirection: Vector2 = Vector2.unitDirectionVector(
-            coordinates[coordinates.size - 2] - coordinates[coordinates.size - 3])
-        coordinates[coordinates.size - 1] =
-            coordinates[coordinates.size - 2] + (lastSegmentUnitDirection * Constants.LOOK_AHEAD_DISTANCE)
+        var lastSegmentUnitDirection: Vector2 =
+            (mCoordinates[mCoordinates.size - 2] - mCoordinates[mCoordinates.size - 3]).normalized
+        mCoordinates[mCoordinates.size - 1] =
+            mCoordinates[mCoordinates.size - 2] + (lastSegmentUnitDirection * Constants.LOOK_AHEAD_DISTANCE)
         @Suppress("MagicNumber")
         var pointDistance: Double = Vector2.distanceBetween(
-            coordinates[coordinates.size - 3], coordinates[coordinates.size - 2])
+            mCoordinates[mCoordinates.size - 3], mCoordinates[mCoordinates.size - 2])
         @Suppress("MagicNumber")
-        targetVelocities[targetVelocities.size - 2] =
-            targetVelocities[targetVelocities.size - 3] *
+        mTargetVelocities[mTargetVelocities.size - 2] =
+            mTargetVelocities[mTargetVelocities.size - 3] *
             pointDistance / (pointDistance + Constants.LOOK_AHEAD_DISTANCE)
     }
 
     public fun getPoint(index: Int): Vector2 {
-        if (index >= coordinates.size || index < 0) {
+        if (index >= mCoordinates.size || index < 0) {
             throw IndexOutOfBoundsException()
         }
-        return Vector2.copyVector(coordinates[index])
-    }
-
-    public fun isBackwards(): Boolean {
-        return backwards
+        return Vector2.copyVector(mCoordinates[index])
     }
 
     public fun getPointVelocity(index: Int): Double {
-        if (index >= targetVelocities.size || index < 0) {
+        if (index >= mTargetVelocities.size || index < 0) {
             throw IndexOutOfBoundsException()
         }
-        return targetVelocities[index]
+        return mTargetVelocities[index]
     }
 
     public fun findClosestPointIndex(point: Vector2, lastIndex: Int): Int {
-        var lastClosest: Vector2 = coordinates[lastIndex]
+        var lastClosest: Vector2 = mCoordinates[lastIndex]
         var minDistance: Double = Vector2.distanceBetween(point, lastClosest)
         var index: Int = lastIndex
-        for (i in lastIndex..coordinates.size) {
-            var tempDistance: Double = Vector2.distanceBetween(point, coordinates[i])
+        for (i in lastIndex..mCoordinates.size) {
+            var tempDistance: Double = Vector2.distanceBetween(point, mCoordinates[i])
             if (tempDistance < minDistance) {
                 index = i
                 minDistance = tempDistance
@@ -88,13 +90,13 @@ public class Path(filepath: String, backwards: Boolean = false) {
 
     public override fun toString(): String {
         var tmp: String = ""
-        for (i in coordinates.indices) {
-            tmp += coordinates[i].toString() + " - " + targetVelocities[i] + "\n"
+        for (i in mCoordinates.indices) {
+            tmp += mCoordinates[i].toString() + " - " + mTargetVelocities[i] + "\n"
         }
         return tmp
     }
 
-    public fun getPathLength(): Int {
-        return coordinates.size
+    public fun getCoordinatesLength(): Int {
+        return mCoordinates.size
     }
 }
