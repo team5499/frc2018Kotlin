@@ -20,6 +20,6 @@ class Pose2dWithCurvature(
     constructor(): this(Vector2(), Rotation2d(), 0.0)
 
     override fun toString(): String {
-        return super.toString() + " - Curvature: $curvature"
+        return pose.toString() + " - Curvature: $curvature"
     }
 }

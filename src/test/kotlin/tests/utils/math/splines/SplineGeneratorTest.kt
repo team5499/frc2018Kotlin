@@ -30,6 +30,10 @@ class SplineGeneratorTest {
             curPose = pose
         }
 
+        // for (s in samples) {
+        //     println(s.toString())
+        // }
+
         assertEquals(curPose.pose.translation.x, 15.0, Constants.EPSILON)
         assertEquals(curPose.pose.translation.y, 10.0, Constants.EPSILON)
         assertEquals(curPose.pose.rotation.degrees, -78.69006752597981, Constants.EPSILON)
