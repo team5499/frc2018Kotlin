@@ -101,7 +101,7 @@ public class GeometryTests {
 
         val new_pose = Pose2d.exp(twist)
         assertEquals(new_pose.translation.x, pose.translation.x, testEpsilon)
-        // println("new pose y: ${new_pose.translation.y}, pose y: ${pose.translation.y}")
+        // println("pose y: ${new_pose.translation.y}, pose y: ${pose.translation.y}")
         assertEquals(new_pose.translation.y, pose.translation.y, testEpsilon)
         assertEquals(new_pose.rotation.degrees, pose.rotation.degrees, testEpsilon)
     }
@@ -250,5 +250,28 @@ public class GeometryTests {
         assertEquals(3.0, pose3.translation.x, testEpsilon)
         assertEquals(5.0, pose3.translation.y, testEpsilon)
         assertEquals(0.0, pose3.rotation.degrees, testEpsilon)
+
+        val identity = Pose2d()
+        pose1 = Pose2d(Vector2(3.51512152, 4.23), Rotation2d.fromDegrees(91.6))
+        pose2 = pose1.transformBy(pose1.inverse())
+        assertEquals(identity.translation.x, pose2.translation.x, testEpsilon)
+        assertEquals(identity.translation.y, pose2.translation.y, testEpsilon)
+        assertEquals(identity.rotation.degrees, pose2.rotation.degrees, testEpsilon)
+
+        pose1 = Pose2d(Vector2(3, 4), Rotation2d.fromDegrees(90.0))
+        pose2 = Pose2d(Vector2(13, -6), Rotation2d.fromDegrees(0.0))
+        pose3 = pose1.interpolate(pose2, 0.5)
+        var expected_angle_rads = Math.PI / 4.0
+        assertEquals(3.0 + 10.0 * Math.cos(expected_angle_rads), pose3.translation.x, testEpsilon)
+        assertEquals(-6.0 + 10.0 * Math.sin(expected_angle_rads), pose3.translation.y, testEpsilon)
+        assertEquals(expected_angle_rads, pose3.rotation.radians, testEpsilon)
+
+        pose1 = Pose2d(Vector2(3, 4), Rotation2d.fromDegrees(90.0))
+        pose2 = Pose2d(Vector2(13, -6), Rotation2d.fromDegrees(0.0))
+        pose3 = pose1.interpolate(pose2, 0.75)
+        expected_angle_rads = Math.PI / 8.0
+        assertEquals(3.0 + 10.0 * Math.cos(expected_angle_rads), pose3.translation.x, testEpsilon)
+        assertEquals(-6.0 + 10.0 * Math.sin(expected_angle_rads), pose3.translation.y, testEpsilon)
+        assertEquals(expected_angle_rads, pose3.rotation.radians, testEpsilon)
     }
 }
