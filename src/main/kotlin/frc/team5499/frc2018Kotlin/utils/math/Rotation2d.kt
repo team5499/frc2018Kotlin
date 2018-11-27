@@ -23,7 +23,7 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) {
         get() = field
     val tan: Double
         get() {
-            if (Math.abs(cosAngle) > Constants.EPSILON) {
+            if (Math.abs(cosAngle) < Constants.EPSILON) {
                 if (sinAngle > 0.0) return Double.POSITIVE_INFINITY
                 else return Double.NEGATIVE_INFINITY
             }
@@ -53,6 +53,7 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) {
     constructor(): this(1.0, 0.0, false)
     constructor(other: Rotation2d): this(other.cosAngle, other.sinAngle, false)
     constructor(translation: Vector2, normalize: Boolean): this(translation.x, translation.y, normalize)
+    constructor(x: Int, y: Int, normalize: Boolean): this(x.toDouble(), y.toDouble(), normalize)
 
     fun equals(other: Rotation2d): Boolean {
         val diff = Math.abs(other.degrees - degrees)
@@ -71,9 +72,9 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) {
         )
     }
 
-    fun normal() = Rotation2d(-sinAngle, cosAngle, false)
+    fun normal() = Rotation2d(-cosAngle, sinAngle, false)
 
-    fun inverse() = Rotation2d(sinAngle, -cosAngle, false)
+    fun inverse() = Rotation2d(cosAngle, -sinAngle, false)
 
     fun toVector(): Vector2 {
         return Vector2(cosAngle, sinAngle)

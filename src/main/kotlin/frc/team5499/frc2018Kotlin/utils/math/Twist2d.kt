@@ -25,6 +25,8 @@ class Twist2d(dx: Double, dy: Double, dTheta: Double) {
 
     constructor(): this(0.0, 0.0, 0.0)
 
+    operator fun times(other: Double) = Twist2d(dx * other, dy * other, dTheta * other)
+
     fun scaled(scale: Double): Twist2d {
         return Twist2d(dx * scale, dy * scale, dTheta * scale)
     }
@@ -32,7 +34,6 @@ class Twist2d(dx: Double, dy: Double, dTheta: Double) {
     fun norm(): Double {
         if (dy == 0.0)
             return Math.abs(dx)
-
         return Math.hypot(dx, dy)
     }
 
@@ -44,7 +45,7 @@ class Twist2d(dx: Double, dy: Double, dTheta: Double) {
     }
 
     override fun toString(): String {
-        val format = DecimalFormat("#0.000")
+        val format = DecimalFormat("###0.000")
         return "(${format.format(dx)}, ${format.format(dy)}, ${format.format(Math.toDegrees(dTheta))} deg)"
     }
 }

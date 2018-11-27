@@ -38,6 +38,7 @@ class Vector2(val x: Double, val y: Double) {
 
     fun distanceTo(other: Vector2) = (this - other).magnitude
 
+    fun translateBy(other: Vector2) = Vector2(this + other)
     fun translateBy(x: Double, y: Double) = Vector2(this.x + x, this.y + y)
 
     fun rotateBy(r: Rotation2d) = Vector2(x * r.cosAngle - y * r.sinAngle, x * r.sinAngle + y * r.cosAngle)

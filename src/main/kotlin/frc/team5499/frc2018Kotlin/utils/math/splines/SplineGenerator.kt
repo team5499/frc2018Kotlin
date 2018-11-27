@@ -85,10 +85,10 @@ object SplineGenerator {
         val transformation = Pose2d(Vector2(p0, p1).rotateBy(r0.inverse()), r1.rotateBy(r0.inverse()))
         val twist = Pose2d.log(transformation)
         if (twist.dy > maxDy || twist.dx > maxDx || twist.dTheta > maxDTheta) {
-            getSegmentArc(s, rv, t0, (t0 + t1) / 2.0, maxDx, maxDy, maxDTheta)
-            getSegmentArc(s, rv, (t0 + t1) / 2.0, t1, maxDx, maxDy, maxDTheta)
+            getSegmentArc(s, rv, t0, (t0 + t1) / 2, maxDx, maxDy, maxDTheta)
+            getSegmentArc(s, rv, (t0 + t1) / 2, t1, maxDx, maxDy, maxDTheta)
         } else {
-            println(twist)
+            // println(twist)
             rv.add(s.getPoseWithCurvature(t1))
         }
     }

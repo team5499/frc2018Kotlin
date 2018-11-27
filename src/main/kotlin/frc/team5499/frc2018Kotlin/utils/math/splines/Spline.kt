@@ -13,6 +13,10 @@ abstract class Spline {
 
     abstract fun getCurvature(t: Double): Double
 
+    abstract fun getDCurvature(t: Double): Double
+
+    abstract fun getVelocity(t: Double): Double
+
     fun getPose(t: Double): Pose2d {
         return Pose2d(getPoint(t), getHeading(t))
     }

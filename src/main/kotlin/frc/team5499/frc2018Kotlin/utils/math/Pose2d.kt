@@ -22,6 +22,23 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) {
             )
             return Twist2d(translationPart.x, translationPart.y, dTheta)
         }
+
+        @Suppress("MagicNumber")
+        fun exp(delta: Twist2d): Pose2d {
+            val sinTheta = Math.sin(delta.dTheta)
+            val cosTheta = Math.cos(delta.dTheta)
+            val s: Double
+            val c: Double
+            if (Math.abs(delta.dTheta) < Constants.EPSILON) {
+                s = 1.0 - 1.0 / 6.0 * delta.dTheta * delta.dTheta
+                c = .5 * delta.dTheta
+            } else {
+                s = sinTheta / delta.dTheta
+                c = (1.0 - cosTheta) / delta.dTheta
+            }
+            return Pose2d(Vector2(delta.dx * s - delta.dy * c, delta.dx * c + delta.dy * s),
+                Rotation2d(cosTheta, sinTheta, false))
+        }
     }
 
     val translation: Vector2
@@ -35,6 +52,15 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) {
     }
 
     constructor(): this(Vector2(), Rotation2d())
+
+    fun inverse(): Pose2d {
+        val rotationInverted = rotation.inverse()
+        return Pose2d((-translation).rotateBy(rotationInverted), rotationInverted)
+    }
+
+    fun transformBy(other: Pose2d): Pose2d {
+        return Pose2d(translation.translateBy(other.translation.rotateBy(rotation)), rotation.rotateBy(other.rotation))
+    }
 
     override fun toString(): String {
         return "Translation: $translation, Rotation: $rotation"
