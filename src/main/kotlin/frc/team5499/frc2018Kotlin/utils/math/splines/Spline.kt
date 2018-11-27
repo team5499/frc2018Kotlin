@@ -1,9 +1,9 @@
 package frc.team5499.frc2018Kotlin.utils.math.splines
 
-import frc.team5499.frc2018Kotlin.utils.math.Rotation2d
-import frc.team5499.frc2018Kotlin.utils.math.Vector2
-import frc.team5499.frc2018Kotlin.utils.math.Pose2d
-import frc.team5499.frc2018Kotlin.utils.math.Pose2dWithCurvature
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2dWithCurvature
 
 abstract class Spline {
 
@@ -22,6 +22,6 @@ abstract class Spline {
     }
 
     fun getPoseWithCurvature(t: Double): Pose2dWithCurvature {
-        return Pose2dWithCurvature(getPose(t), getCurvature(t))
+        return Pose2dWithCurvature(getPose(t), getCurvature(t), getDCurvature(t))
     }
 }

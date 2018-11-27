@@ -1,7 +1,7 @@
-package frc.team5499.frc2018Kotlin.utils.math
+package frc.team5499.frc2018Kotlin.utils.math.geometry
 
 @Suppress("TooManyFunctions")
-class Vector2(val x: Double, val y: Double) {
+class Vector2(val x: Double, val y: Double) : Geometric<Vector2> {
 
     companion object {
         fun distanceBetween(a: Vector2, b: Vector2) = (a - b).magnitude
@@ -49,11 +49,20 @@ class Vector2(val x: Double, val y: Double) {
     )
 
     @Suppress("ReturnCount")
-    fun interpolate(other: Vector2, x: Double): Vector2 {
+    override fun interpolate(other: Vector2, x: Double): Vector2 {
         if (x <= 0) return Vector2(this)
         else if (x >= 1) return Vector2(other)
         else return extrapolate(other, x)
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is Vector2) return false
+        return x == other.x && y == other.y
+    }
+
+    override fun hashCode() = super.hashCode()
+
     override fun toString(): String = "(X: %.2f, Y: %.2f)".format(x, y)
+
+    override fun toCSV() = "$x,$y"
 }

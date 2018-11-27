@@ -14,7 +14,7 @@ import com.ctre.phoenix.ParamEnum
 
 import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.Position
-import frc.team5499.frc2018Kotlin.utils.math.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
 import frc.team5499.frc2018Kotlin.utils.Utils
 import frc.team5499.frc2018Kotlin.utils.DriveSignal
 

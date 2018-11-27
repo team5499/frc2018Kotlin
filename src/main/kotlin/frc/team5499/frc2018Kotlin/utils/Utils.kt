@@ -15,6 +15,11 @@ object Utils {
         return Math.min(max, Math.max(min, value))
     }
 
+    fun interpolate(a: Double, b: Double, x: Double): Double {
+        val newX = limit(x, 0.0, 1.0)
+        return a + (b - a) * newX
+    }
+
     fun inchesPerSecondToEncoderTicksPer100Ms(ips: Double): Double {
         return inchesToEncoderTicks(ips) / INCHES_PER_SECOND_PER_ENCODER_TICKS_PER_100MS
     }

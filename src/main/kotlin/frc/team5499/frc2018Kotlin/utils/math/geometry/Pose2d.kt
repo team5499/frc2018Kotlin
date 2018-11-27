@@ -1,8 +1,8 @@
-package frc.team5499.frc2018Kotlin.utils.math
+package frc.team5499.frc2018Kotlin.utils.math.geometry
 
 import frc.team5499.frc2018Kotlin.Constants
 
-open class Pose2d(translation: Vector2, rotation: Rotation2d) {
+open class Pose2d(translation: Vector2, rotation: Rotation2d) : Geometric<Pose2d> {
 
     companion object {
 
@@ -64,7 +64,7 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) {
     }
 
     @Suppress("ReturnCount")
-    fun interpolate(other: Pose2d, x: Double): Pose2d {
+    override fun interpolate(other: Pose2d, x: Double): Pose2d {
         if (x <= 0) {
             return Pose2d(this)
         } else if (x >= 1) {
@@ -85,4 +85,13 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) {
     override fun toString(): String {
         return "Translation: $translation, Rotation: $rotation"
     }
+
+    override fun toCSV() = "${translation.toCSV()},${rotation.toCSV()}"
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is Pose2d) return false
+        return (other.translation.equals(translation) && other.rotation.equals(rotation))
+    }
+
+    override fun hashCode() = super.hashCode()
 }

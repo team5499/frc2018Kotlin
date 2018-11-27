@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 
 import frc.team5499.frc2018Kotlin.Constants
 
-import frc.team5499.frc2018Kotlin.utils.math.Vector2
-import frc.team5499.frc2018Kotlin.utils.math.Rotation2d
-import frc.team5499.frc2018Kotlin.utils.math.Pose2d
-import frc.team5499.frc2018Kotlin.utils.math.Pose2dWithCurvature
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2dWithCurvature
 
 import frc.team5499.frc2018Kotlin.utils.math.splines.SplineGenerator
 import frc.team5499.frc2018Kotlin.utils.math.splines.QuinticHermiteSpline

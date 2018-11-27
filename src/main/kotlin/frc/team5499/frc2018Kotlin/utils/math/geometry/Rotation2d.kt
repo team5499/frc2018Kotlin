@@ -1,8 +1,11 @@
-package frc.team5499.frc2018Kotlin.utils.math
+package frc.team5499.frc2018Kotlin.utils.math.geometry
 
 import frc.team5499.frc2018Kotlin.Constants
 
-class Rotation2d(x: Double, y: Double, normalize: Boolean) {
+import java.text.DecimalFormat
+
+@Suppress("TooManyFunctions")
+class Rotation2d(x: Double, y: Double, normalize: Boolean) : Geometric<Rotation2d> {
 
     companion object {
         val identity = Rotation2d()
@@ -77,7 +80,7 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) {
     fun inverse() = Rotation2d(cosAngle, -sinAngle, false)
 
     @Suppress("ReturnCount")
-    fun interpolate(other: Rotation2d, x: Double): Rotation2d {
+    override fun interpolate(other: Rotation2d, x: Double): Rotation2d {
         if (x <= 0) {
             return Rotation2d(this)
         } else if (x >= 1) {
@@ -96,7 +99,20 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) {
         return Vector2(cosAngle, sinAngle)
     }
 
-    override fun toString(): String {
-        return "Degrees: $degrees"
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is Rotation2d) return false
+        return degrees == other.degrees
     }
+
+    override fun toCSV(): String {
+        val format = DecimalFormat("#0.000")
+        return format.format(degrees)
+    }
+
+    override fun toString(): String {
+        val format = DecimalFormat("#0.000")
+        return "Degrees: ${format.format(degrees)}"
+    }
+
+    override fun hashCode() = super.hashCode()
 }

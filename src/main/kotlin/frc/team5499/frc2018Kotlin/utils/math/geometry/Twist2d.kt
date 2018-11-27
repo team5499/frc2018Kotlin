@@ -1,10 +1,10 @@
-package frc.team5499.frc2018Kotlin.utils.math
+package frc.team5499.frc2018Kotlin.utils.math.geometry
 
 import java.text.DecimalFormat
 
 import frc.team5499.frc2018Kotlin.Constants
 
-class Twist2d(dx: Double, dy: Double, dTheta: Double) {
+class Twist2d(dx: Double, dy: Double, dTheta: Double) : Geometric<Twist2d> {
 
     companion object {
         val identity = Twist2d()
@@ -44,8 +44,22 @@ class Twist2d(dx: Double, dy: Double, dTheta: Double) {
         return dTheta / norm()
     }
 
+    override fun interpolate(other: Twist2d, x: Double): Twist2d {
+        println("Cant interpolate Twist2d")
+        return Twist2d()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is Twist2d) return false
+        return dx == other.dx && dy == other.dy && dTheta == other.dTheta
+    }
+
     override fun toString(): String {
         val format = DecimalFormat("###0.000")
         return "(${format.format(dx)}, ${format.format(dy)}, ${format.format(Math.toDegrees(dTheta))} deg)"
     }
+
+    override fun toCSV() = "$dx,$dy,$dTheta"
+
+    override fun hashCode() = super.hashCode()
 }
