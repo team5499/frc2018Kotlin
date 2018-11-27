@@ -5,6 +5,7 @@ class Vector2(val x: Double, val y: Double) {
 
     companion object {
         fun distanceBetween(a: Vector2, b: Vector2) = (a - b).magnitude
+        fun cross(a: Vector2, b: Vector2) = a.x * b.y - a.y * b.x
     }
 
     val magnitude by lazy { Math.hypot(y, x) }
@@ -42,6 +43,17 @@ class Vector2(val x: Double, val y: Double) {
     fun translateBy(x: Double, y: Double) = Vector2(this.x + x, this.y + y)
 
     fun rotateBy(r: Rotation2d) = Vector2(x * r.cosAngle - y * r.sinAngle, x * r.sinAngle + y * r.cosAngle)
+
+    fun extrapolate(other: Vector2, x: Double) = Vector2(
+        x * (other.x - this.x) + this.x, x * (other.y - this.y) + this.y
+    )
+
+    @Suppress("ReturnCount")
+    fun interpolate(other: Vector2, x: Double): Vector2 {
+        if (x <= 0) return Vector2(this)
+        else if (x >= 1) return Vector2(other)
+        else return extrapolate(other, x)
+    }
 
     override fun toString(): String = "(X: %.2f, Y: %.2f)".format(x, y)
 }

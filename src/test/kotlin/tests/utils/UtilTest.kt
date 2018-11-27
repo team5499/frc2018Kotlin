@@ -11,6 +11,5 @@ public class UtilTest {
         val inches = 2.0
         val output = Utils.inchesToEncoderTicks(inches)
         assert(output == (2.0 * Constants.ENCODER_TICKS_PER_ROTATION / Constants.WHEEL_CIR).toInt())
-        println("$output")
     }
 }

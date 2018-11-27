@@ -52,14 +52,34 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) {
     }
 
     constructor(): this(Vector2(), Rotation2d())
+    constructor(other: Pose2d): this(other.translation, other.rotation)
 
     fun inverse(): Pose2d {
         val rotationInverted = rotation.inverse()
         return Pose2d((-translation).rotateBy(rotationInverted), rotationInverted)
     }
 
+    fun normal(): Pose2d {
+        return Pose2d(translation, rotation.normal())
+    }
+
+    @Suppress("ReturnCount")
+    fun interpolate(other: Pose2d, x: Double): Pose2d {
+        if (x <= 0) {
+            return Pose2d(this)
+        } else if (x >= 1) {
+            return Pose2d(other)
+        }
+        val twist = Pose2d.log(inverse().transformBy(other))
+        return transformBy(Pose2d.exp(twist.scaled(x)))
+    }
+
     fun transformBy(other: Pose2d): Pose2d {
         return Pose2d(translation.translateBy(other.translation.rotateBy(rotation)), rotation.rotateBy(other.rotation))
+    }
+
+    fun mirror(): Pose2d {
+        return Pose2d(Vector2(translation.x, -translation.y), rotation.inverse())
     }
 
     override fun toString(): String {

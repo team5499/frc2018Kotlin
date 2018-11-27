@@ -33,7 +33,6 @@ class SplineGeneratorTest {
         assertEquals(curPose.pose.translation.x, 15.0, Constants.EPSILON)
         assertEquals(curPose.pose.translation.y, 10.0, Constants.EPSILON)
         assertEquals(curPose.pose.rotation.degrees, -78.69006752597981, Constants.EPSILON)
-        println("Arc length: $arclength")
         assertEquals(arclength, 23.17291953186379, Constants.EPSILON)
     }
 }

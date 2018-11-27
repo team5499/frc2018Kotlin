@@ -76,6 +76,22 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) {
 
     fun inverse() = Rotation2d(cosAngle, -sinAngle, false)
 
+    @Suppress("ReturnCount")
+    fun interpolate(other: Rotation2d, x: Double): Rotation2d {
+        if (x <= 0) {
+            return Rotation2d(this)
+        } else if (x >= 1) {
+            return Rotation2d(other)
+        }
+        val angleDiff = inverse().rotateBy(other).radians
+        return this.rotateBy(Rotation2d.fromRadians(angleDiff * x))
+    }
+
+    fun isParallel(other: Rotation2d): Boolean {
+        val temp = Vector2.cross(toVector(), other.toVector())
+        return Math.abs(temp) < Constants.EPSILON
+    }
+
     fun toVector(): Vector2 {
         return Vector2(cosAngle, sinAngle)
     }
