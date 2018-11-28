@@ -72,12 +72,13 @@ object Constants {
         const val INTAKE_SPEED: Double = -0.7
         const val INTAKE_HOLD_SPEED: Double = -0.3
         const val INTAKE_SPIT_SPEED: Double = 0.7
+        const val INTAKE_DROP_SPEED: Double = 0.3
         const val MAX_ARM_SPEED: Double = 0.7
 
         const val ARM_UP_SPEED = 1.0
         const val ARM_DOWN_SPEED = -1.0
-        const val ARM_HOLD_UP_SPEED = 0.2
-        const val ARM_HOLD_DOWN_SPEED = -0.2
+        const val ARM_UP_HOLD_SPEED = 0.2
+        const val ARM_DOWN_HOLD_SPEED = -0.2
 
         const val INVERT_ARM: Boolean = false
         const val INVERT_INTAKE: Boolean = false
