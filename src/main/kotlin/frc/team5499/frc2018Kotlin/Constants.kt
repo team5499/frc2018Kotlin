@@ -1,5 +1,7 @@
 package frc.team5499.frc2018Kotlin
 
+import frc.team5499.frc2018Kotlin.controllers.TeleopController.DriveConfig
+
 object Constants {
     object Talons {
         const val TALON_UPDATE_PERIOD_MS: Int = 1
@@ -25,6 +27,35 @@ object Constants {
         const val CODRIVER_PORT: Int = 2
         const val XBOX_DEADBAND: Double = 0.1
         const val XBOX_TURN_MULTIPLIER: Double = 0.4
+
+        // change to change drive mode
+        val DRIVE_CONFIG: DriveConfig = DriveConfig.TANK
+
+        // cheesy
+        const val THROTTLE_DEADBAND = 0.02
+        const val WHEEL_DEADBAND = 0.02
+
+        const val HIGH_WHEEL_NONLINEARITY = 0.65
+        const val LOW_WHEEL_NONLINEARITY = 0.65
+
+        const val HIGH_NEGINERTIA_SCALAR = 4.0
+        const val LOW_NEGINERTIA_THRESHOLD = 0.65
+        const val LOW_NEGINERTIA_TURN_SCALAR = 3.5
+        const val LOW_NEGINERTIA_CLOSE_SCALAR = 4.0
+        const val LOW_NEGINERTIA_FAR_SCALAR = 5.0
+
+        const val HIGH_SENSITIVITY = 0.65
+        const val LOW_SENSITIVITY = 0.65
+
+        const val QUICKSTOP_DEADBAND = 0.5
+        const val QUICKSTOP_WEIGHT = 0.1
+        const val QUICKSTOP_SCALAR = 5.0
+
+        // space
+        const val TURN_MULT = 0.6
+
+        // tank
+        const val SLOW_MULT = 0.4
     }
 
     object PID {
@@ -35,7 +66,7 @@ object Constants {
         const val VEL_IZONE = 10
         const val VEL_MAX_OUTPUT = 1.0
 
-        const val POS_KP = 0.7
+        const val POS_KP = 0.79
         const val POS_KI = 0.0
         const val POS_KD = 0.3
         const val POS_KF = 0.0
@@ -84,9 +115,9 @@ object Constants {
     }
 
     const val EPSILON = 1E-10
-    const val ENCODERS_TICKS_PER_ROTATION = 1028
+    const val ENCODER_TICKS_PER_ROTATION = 1024
     const val WHEEL_DIAMETER = 6.0 // inches
-    const val WHEEL_CIR = WHEEL_DIAMETER * 2.0
+    const val WHEEL_CIR = WHEEL_DIAMETER * Math.PI
     const val TRACK_WIDTH = 20.0
     const val MAX_VELOCITY_SETPOINT = 120.0 // inches per second
     const val UPDATE_PERIOD = 0.005
