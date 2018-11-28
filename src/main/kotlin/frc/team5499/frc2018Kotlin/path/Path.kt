@@ -15,7 +15,7 @@ public class Path(filepath: String, backwards: Boolean = false) {
     private var mCoordinates: MutableList<Vector2> = mutableListOf<Vector2>()
     private var mTargetVelocities: MutableList<Double> = mutableListOf<Double>()
 
-    private var backwards: Boolean = false
+    private var backwards: Boolean
 
     init {
         this.backwards = backwards
