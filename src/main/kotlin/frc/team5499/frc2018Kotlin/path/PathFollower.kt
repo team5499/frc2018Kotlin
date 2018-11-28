@@ -3,6 +3,8 @@ package frc.team5499.frc2018Kotlin.path
 import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.utils.Vector2
 
+@SuppressWarnings("MagicNumber")
+
 public class PathFollower(path: Path) {
 
     private var mPath: Path
@@ -12,6 +14,7 @@ public class PathFollower(path: Path) {
         mPath = path
         mLastClosestPointIndex = 0
     }
+
     @Suppress("ComplexMethod")
     private fun calculateLookahead(robotPos: Vector2, robotAngle: Double): Vector2 {
         mLastClosestPointIndex = mPath.findClosestPointIndex(robotPos, mLastClosestPointIndex)
@@ -24,7 +27,7 @@ public class PathFollower(path: Path) {
             var a: Double = d.dot(d)
             var b: Double = 2.0 * d.dot(f)
             var c: Double = f.dot(f) - Math.pow(Constants.LOOK_AHEAD_DISTANCE, 2.0)
-            @Suppress("MagicNumber")
+
             var dis: Double = (b * b) - (4.0 * a * c)
             if (dis < 0) {
                 continue
@@ -44,7 +47,7 @@ public class PathFollower(path: Path) {
                 }
             }
         }
-        @Suppress("MagicNumber")
+
         if (lookahead == null) {
             lookahead = mPath.getPoint(mPath.getCoordinatesLength() - 1)
         } else {
@@ -72,7 +75,7 @@ public class PathFollower(path: Path) {
 
         var side: Double = Math.signum(Math.sin(robotAngle) * (lookAhead.x - robotPos.x) -
             Math.cos(robotAngle) * (lookAhead.y - robotPos.y))
-        @Suppress("MagicNumber")
+
         return if (angleToLookahead <= 90.0) curvature * side else -curvature * side
     }
 
@@ -85,14 +88,12 @@ public class PathFollower(path: Path) {
 
         var robotToLookahead: Vector2 = lookahead - robotPos
 
-        @Suppress("MagicNumber")
         var robotDirection: Vector2 = Vector2.representHeadingWithUnitVector(
             -Math.toDegrees(robotAngle) + 90)
         var angleToLookahead: Double = Math.abs(Vector2.angleBetween(robotToLookahead, robotDirection))
 
         var curvature: Double = calculateCurvature(robotPos, lookahead, robotAngle, angleToLookahead)
 
-        @Suppress("MagicNumber")
         var averageVelocity: Double =
         if (angleToLookahead <= 90.0)
         mPath.getPointVelocity(mLastClosestPointIndex)

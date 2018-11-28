@@ -8,6 +8,8 @@ import com.opencsv.CSVReader
 import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.utils.Vector2
 
+@SuppressWarnings("MagicNumber")
+
 public class Path(filepath: String, backwards: Boolean = false) {
 
     private var mCoordinates: MutableList<Vector2> = mutableListOf<Vector2>()
@@ -37,24 +39,24 @@ public class Path(filepath: String, backwards: Boolean = false) {
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
             // defaults to baseline auto
-            @Suppress("MagicNumber")
+
             mCoordinates.add(Vector2(0.0, 0.0))
-            @Suppress("MagicNumber")
+
             mCoordinates.add(Vector2(0.0, 100.0))
-            @Suppress("MagicNumber")
+
             mTargetVelocities.add(10.0)
         }
 
         // extend the last line segment by the lookahead distance
-        @Suppress("MagicNumber")
+
         var lastSegmentUnitDirection: Vector2 =
             (mCoordinates[mCoordinates.size - 2] - mCoordinates[mCoordinates.size - 3]).normalized
         mCoordinates[mCoordinates.size - 1] =
             mCoordinates[mCoordinates.size - 2] + (lastSegmentUnitDirection * Constants.LOOK_AHEAD_DISTANCE)
-        @Suppress("MagicNumber")
+
         var pointDistance: Double = Vector2.distanceBetween(
             mCoordinates[mCoordinates.size - 3], mCoordinates[mCoordinates.size - 2])
-        @Suppress("MagicNumber")
+
         mTargetVelocities[mTargetVelocities.size - 2] =
             mTargetVelocities[mTargetVelocities.size - 3] *
             pointDistance / (pointDistance + Constants.LOOK_AHEAD_DISTANCE)
@@ -64,7 +66,7 @@ public class Path(filepath: String, backwards: Boolean = false) {
         if (index >= mCoordinates.size || index < 0) {
             throw IndexOutOfBoundsException()
         }
-        return Vector2.copyVector(mCoordinates[index])
+        return mCoordinates[index]
     }
 
     public fun getPointVelocity(index: Int): Double {
