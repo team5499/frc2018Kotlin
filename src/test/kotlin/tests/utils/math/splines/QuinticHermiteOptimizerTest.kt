@@ -48,8 +48,9 @@ class QuinticHermiteOptimizerTest {
         val s6 = QuinticHermiteSpline(i, j)
         val s7 = QuinticHermiteSpline(j, k)
         val s8 = QuinticHermiteSpline(k, l)
-
-        println("Took ${System.currentTimeMillis() - startTime} ms to generate 9 splines\n")
+        val dt = System.currentTimeMillis() - startTime
+        println("Took $dt ms to generate 9 splines")
+        println("Average: ${dt / 9.0} ms per spline\n")
 
         val splines = mutableListOf<QuinticHermiteSpline>()
         splines.add(s0)
