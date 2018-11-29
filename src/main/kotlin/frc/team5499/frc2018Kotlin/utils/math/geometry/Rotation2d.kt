@@ -113,7 +113,7 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) : Geometric<Rotation2
 
     override fun toString(): String {
         val format = DecimalFormat("#0.000")
-        return "Degrees: ${format.format(degrees)}"
+        return "${format.format(degrees)} degrees"
     }
 
     override fun hashCode() = super.hashCode()

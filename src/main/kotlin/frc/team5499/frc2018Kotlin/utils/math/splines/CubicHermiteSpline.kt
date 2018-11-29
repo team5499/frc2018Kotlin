@@ -7,9 +7,6 @@ import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 @SuppressWarnings("MagicNumber")
 class CubicHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotation2d) : Spline() {
 
-    // private val xCoeffs: Array<Double> // a, b, c, d
-    // private val yCoeffs: Array<Double> // a, b, c, d
-
     private val ax: Double
     private val bx: Double
     private val cx: Double
@@ -32,16 +29,6 @@ class CubicHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotation2
         val y1 = p1.y
         val dy0 = h0.sinAngle * scale
         val dy1 = h1.sinAngle * scale
-
-        // ax = dx0 + dx1 + 2.0 * x0 - 2.0 * x1 // a
-        // xCoeffs[1] = -2.0 * dx0 - dx1 - 3.0 * x0 + 3.0 * x1 // b
-        // cx = dx0 // c
-        // xCoeffs[3] = x0 // d
-
-        // ay = dy0 + dy1 + 2.0 * y0 - 2.0 * y1 // a
-        // by = -2.0 * dy0 - dy1 - 3.0 * y0 + 3.0 * y1 // b
-        // cy = dy0 // c
-        // yCoeffs[3] = y0 // d
 
         ax = dx0 + dx1 + 2.0 * x0 - 2.0 * x1
         bx = -2.0 * dx0 - dx1 - 3.0 * x0 + 3.0 * x1

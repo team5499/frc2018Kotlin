@@ -15,6 +15,10 @@ class Pose2dWithCurvature(
         get() = field
     val pose: Pose2d
         get() = field
+    val translation: Vector2
+        get() = pose.translation
+    val rotation: Rotation2d
+        get() = pose.rotation
 
     init {
         this.curvature = curvature
@@ -22,9 +26,10 @@ class Pose2dWithCurvature(
         this.pose = Pose2d(translation, rotation)
     }
 
-    constructor(pose: Pose2d, curvature: Double, dCurvature: Double):
-        this(pose.translation, pose.rotation, curvature, dCurvature = 0.0)
+    constructor(pose: Pose2d, curvature: Double, dCurvature: Double = 0.0):
+        this(pose.translation, pose.rotation, curvature, dCurvature)
     constructor(): this(Vector2(), Rotation2d(), 0.0, 0.0)
+    constructor(other: Pose2dWithCurvature): this(other.translation, other.rotation, other.curvature, other.dCurvature)
 
     override fun interpolate(other: Pose2dWithCurvature, x: Double): Pose2dWithCurvature {
         return Pose2dWithCurvature(pose.interpolate(other.pose, x),
@@ -39,7 +44,7 @@ class Pose2dWithCurvature(
     }
 
     override fun toString(): String {
-        return pose.toString() + " - Curvature: $curvature"
+        return pose.toString() + ", Curvature: $curvature, dCurvature: $dCurvature"
     }
 
     override fun toCSV() = "${pose.toCSV()},$curvature,$dCurvature"

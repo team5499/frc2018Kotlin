@@ -165,6 +165,11 @@ class QuinticHermiteSpline(
         return sum
     }
 
+    override fun toString(): String {
+        return "$ax*t^5 + $bx*t^4 + $cx*t^3 + $dx*t^2 + $ex*t * $fx \n" +
+                "$ay*t^5 + $by*t^4 + $cy*t^3 + $dy*t^2 + $ey*t * $fy"
+    }
+
     companion object {
         private const val kEpsilon = 1E-5
         private const val kStepSize = 1.0

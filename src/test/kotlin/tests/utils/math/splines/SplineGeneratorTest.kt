@@ -34,13 +34,8 @@ class SplineGeneratorTest {
         assertEquals(curPose.pose.rotation.degrees, -78.69006752597981, Constants.EPSILON)
         assertEquals(arclength, 23.17291953186379, Constants.EPSILON)
 
-        // val p3 = Pose2d(Vector2(100.0, 0.0), Rotation2d())
-        // s = QuinticHermiteSpline(p1, p3)
-        // var t = 0.0
-        // while (t <= 1.0) {
-        //     println("Pos at time $t: ${s.getPoint(t)} ")
-        //     println("Velo at time $t: ${s.getVelocity(t)}")
-        //     t += 0.1
+        // for (p in samples) {
+        //     println(p.toString())
         // }
     }
 }

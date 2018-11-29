@@ -1,46 +1,48 @@
 package frc.team5499.frc2018Kotlin.path
 
-import java.text.DecimalFormat
+import frc.team5499.frc2018Kotlin.utils.CSVWritable
 
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2dWithCurvature
 
-class Path(points: List<Vector2>, velocities: List<Double>, reverse: Boolean) {
+class Path(points: MutableList<Pose2dWithCurvature>, reversed: Boolean = false) : CSVWritable {
 
-    private val points: List<Vector2>
-    private val velocities: List<Double>
+    private val mPoints: MutableList<Pose2dWithCurvature>
 
-    public val isReverse: Boolean
+    val pathLength: Int
+        get() = mPoints.size
+
+    val reversed: Boolean
         get() = field
 
+    val startPose: Pose2dWithCurvature
+        get() = Pose2dWithCurvature(mPoints.get(0))
+
+    val endPose: Pose2dWithCurvature
+        get() = Pose2dWithCurvature(mPoints.get(pathLength - 1))
+
     init {
-        this.points = points
-        this.velocities = velocities
-        this.isReverse = reverse
-
-        if (this.points.size != this.velocities.size)
-            throw ArithmeticException("Velocities and Coordinates do not have same length!")
-    }
-
-    fun getPoint(index: Int): Vector2 {
-        if (index >= points.size || index < 0) {
-            throw IndexOutOfBoundsException("Desired Index ($index) does not exist.")
+        if (points.size < 2) throw IllegalArgumentException("Needs to be more than 2 points for a path")
+        this.reversed = reversed
+        mPoints = mutableListOf()
+        for (p in points) {
+            mPoints.add(p)
         }
-        return Vector2(points.get(index))
     }
 
-    fun getPointVelocity(index: Int): Double {
-        if (index >= points.size || index < 0) {
-            throw IndexOutOfBoundsException("Desired Index ($index) does not exist.")
+    fun getPose(index: Int): Pose2dWithCurvature {
+        if (index >= mPoints.size || index < 0) {
+            throw IndexOutOfBoundsException("Point $index not in path")
         }
-        return velocities.get(index)
+        return mPoints.get(index)
     }
 
-    fun getClosestPointIndex(point: Vector2, lastIndex: Int): Int {
-        val lastClosest = Vector2(points.get(lastIndex))
-        var minDistance = lastClosest.distanceTo(point)
-        var index = lastIndex
-        for (i in lastIndex..points.size) {
-            val tempDistance = point.distanceTo(points.get(i))
+    fun findClosestPointIndex(point: Vector2, lastIndex: Int): Int {
+        val lastPose: Vector2 = mPoints.get(lastIndex).translation
+        var minDistance: Double = Vector2.distanceBetween(point, lastPose)
+        var index: Int = lastIndex
+        for (i in lastIndex..mPoints.size - 1) {
+            val tempDistance: Double = Vector2.distanceBetween(point, mPoints.get(i).translation)
             if (tempDistance < minDistance) {
                 index = i
                 minDistance = tempDistance
@@ -49,18 +51,21 @@ class Path(points: List<Vector2>, velocities: List<Double>, reverse: Boolean) {
         return index
     }
 
-    fun getNumberOfPointsInPath(): Int {
-        return points.size
+    override fun toString(): String {
+        val buffer: StringBuilder = StringBuilder()
+        for (i in 0..mPoints.size - 1) {
+            buffer.append(mPoints.get(i).toString())
+            buffer.append(System.lineSeparator())
+        }
+        return buffer.toString()
     }
 
-    override fun toString(): String {
-        val builder = StringBuilder()
-        val format = DecimalFormat("###0.0#")
-        for (i in points.indices) {
-            builder.append("Point $i" +
-                " - Coords: ${points.get(i)}" +
-                " - Velo: ${format.format(velocities.get(i))} inches/second \n")
+    override fun toCSV(): String {
+        val buffer: StringBuilder = StringBuilder()
+        for (pose in mPoints) {
+            buffer.append(pose.toCSV())
+            buffer.append(System.lineSeparator())
         }
-        return builder.toString()
+        return buffer.toString()
     }
 }

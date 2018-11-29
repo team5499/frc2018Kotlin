@@ -2,7 +2,8 @@ package frc.team5499.frc2018Kotlin.utils.math.geometry
 
 import frc.team5499.frc2018Kotlin.Constants
 
-open class Pose2d(translation: Vector2, rotation: Rotation2d) : Geometric<Pose2d> {
+@Suppress("TooManyFunctions")
+class Pose2d(translation: Vector2, rotation: Rotation2d) : Geometric<Pose2d> {
 
     companion object {
 
@@ -13,7 +14,7 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) : Geometric<Pose2d
             val cosMinusOne = transform.rotation.cosAngle - 1.0
             val halftheta_by_tan_of_halfdtheta: Double
             if (Math.abs(cosMinusOne) < Constants.EPSILON) {
-                halftheta_by_tan_of_halfdtheta = 1.0 - 1.0 / 12.0 * dTheta * dTheta
+                halftheta_by_tan_of_halfdtheta = 1.0 - ((1.0 / 12.0) * (dTheta * dTheta))
             } else {
                 halftheta_by_tan_of_halfdtheta = -(halfTheta * transform.rotation.sinAngle) / cosMinusOne
             }
@@ -39,6 +40,8 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) : Geometric<Pose2d
             return Pose2d(Vector2(delta.dx * s - delta.dy * c, delta.dx * c + delta.dy * s),
                 Rotation2d(cosTheta, sinTheta, false))
         }
+
+        fun fromRotation(rotation: Rotation2d) = Pose2d(Vector2(), rotation)
     }
 
     val translation: Vector2
@@ -82,6 +85,10 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) : Geometric<Pose2d
 
     fun transformBy(other: Pose2d): Pose2d {
         return Pose2d(translation.translateBy(other.translation.rotateBy(rotation)), rotation.rotateBy(other.rotation))
+    }
+
+    fun transformBy(other: Vector2): Pose2d {
+        return Pose2d(translation.translateBy(other), rotation)
     }
 
     fun mirror(): Pose2d {
