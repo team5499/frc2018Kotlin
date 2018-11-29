@@ -4,56 +4,97 @@ import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
 
+// yes external contructors are disgusting. but they work bitch
+@Suppress("FunctionNaming", "MagicNumber")
+fun QuinticHermiteSpline(p0: Vector2, p1: Vector2, h0: Rotation2d, h1: Rotation2d): QuinticHermiteSpline {
+    val scale = 1.2 * p0.distanceTo(p1)
+
+    val x0 = p0.x
+    val x1 = p1.x
+    val dx0 = h0.cosAngle * scale
+    val dx1 = h1.cosAngle * scale
+    val ddx0 = 0.0
+    val ddx1 = 0.0
+
+    // y vars
+    val y0 = p0.y
+    val y1 = p1.y
+    val dy0 = h0.sinAngle * scale
+    val dy1 = h1.sinAngle * scale
+    val ddy0 = 0.0
+    val ddy1 = 0.0
+
+    return QuinticHermiteSpline(x0, x1, dx0, dx1, ddx0, ddx1, y0, y1, dy0, dy1, ddy0, ddy1)
+}
+
+@Suppress("FunctionNaming")
+fun QuinticHermiteSpline(p0: Pose2d, p1: Pose2d): QuinticHermiteSpline {
+    return QuinticHermiteSpline(p0.translation, p1.translation, p0.rotation, p1.rotation)
+}
+
 @SuppressWarnings("MagicNumber", "TooManyFunctions")
-class QuinticHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotation2d) : Spline() {
+class QuinticHermiteSpline(
+    x0: Double,
+    x1: Double,
+    dx0: Double,
+    dx1: Double,
+    ddx0: Double,
+    ddx1: Double,
+    y0: Double,
+    y1: Double,
+    dy0: Double,
+    dy1: Double,
+    ddy0: Double,
+    ddy1: Double
+) : Spline() {
 
-    private val ax: Double
-    private val bx: Double
-    private val cx: Double
-    private val dx: Double
-    private val ex: Double
-    private val fx: Double
+    private var ax: Double = 0.0
+    private var bx: Double = 0.0
+    private var cx: Double = 0.0
+    private var dx: Double = 0.0
+    private var ex: Double = 0.0
+    private var fx: Double = 0.0
 
-    private val ay: Double
-    private val by: Double
-    private val cy: Double
-    private val dy: Double
-    private val ey: Double
-    private val fy: Double
+    private var ay: Double = 0.0
+    private var by: Double = 0.0
+    private var cy: Double = 0.0
+    private var dy: Double = 0.0
+    private var ey: Double = 0.0
+    private var fy: Double = 0.0
 
-    private val x0: Double
-    private val x1: Double
-    private val dx0: Double
-    private val dx1: Double
-    private val ddx0: Double
-    private val ddx1: Double
+    private var x0: Double
+    private var x1: Double
+    private var dx0: Double
+    private var dx1: Double
+    private var ddx0: Double
+    private var ddx1: Double
 
-    private val y0: Double
-    private val y1: Double
-    private val dy0: Double
-    private val dy1: Double
-    private val ddy0: Double
-    private val ddy1: Double
+    private var y0: Double
+    private var y1: Double
+    private var dy0: Double
+    private var dy1: Double
+    private var ddy0: Double
+    private var ddy1: Double
 
     init {
-        val scale = 1.2 * p0.distanceTo(p1)
+        this.x0 = x0
+        this.x1 = x1
+        this.dx0 = dx0
+        this.dx1 = dx1
+        this.ddx0 = ddx0
+        this.ddx1 = ddx1
 
-        // x vars
-        x0 = p0.x
-        x1 = p1.x
-        dx0 = h0.cosAngle * scale
-        dx1 = h1.cosAngle * scale
-        ddx0 = 0.0
-        ddx1 = 0.0
+        this.y0 = y0
+        this.y1 = y1
+        this.dy0 = dy0
+        this.dy1 = dy1
+        this.ddy0 = ddy0
+        this.ddy1 = ddy1
 
-        // y vars
-        y0 = p0.y
-        y1 = p1.y
-        dy0 = h0.sinAngle * scale
-        dy1 = h1.sinAngle * scale
-        ddy0 = 0.0
-        ddy1 = 0.0
+        calcCoeffs()
+    }
 
+    private fun calcCoeffs() {
         ax = -6 * x0 - 3 * dx0 - 0.5 * ddx0 + 0.5 * ddx1 - 3 * dx1 + 6 * x1
         bx = 15 * x0 + 8 * dx0 + 1.5 * ddx0 - ddx1 + 7 * dx1 - 15 * x1
         cx = -10 * x0 - 6 * dx0 - 1.5 * ddx0 + 0.5 * ddx1 - 4 * dx1 + 10 * x1
@@ -69,10 +110,10 @@ class QuinticHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotatio
         fy = y0
     }
 
-    constructor(p0: Pose2d, p1: Pose2d): this(p0.translation, p0.rotation, p1.translation, p1.rotation)
-
-    fun getStartPose() = Pose2d(Vector2(x0, y0), Rotation2d(dx0, dy0, true))
-    fun getEndPose() = Pose2d(Vector2(x1, y1), Rotation2d(dx1, dy1, true))
+    val startPose: Pose2d
+        get() = Pose2d(Vector2(x0, y0), Rotation2d(dx0, dy0, true))
+    val endPose: Pose2d
+        get() = Pose2d(Vector2(x1, y1), Rotation2d(dx1, dy1, true))
 
     override fun getPoint(t: Double): Vector2 {
         val x = ax * t * t * t * t * t + bx * t * t * t * t + cx * t * t * t + dx * t * t + ex * t + fx
@@ -113,7 +154,7 @@ class QuinticHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotatio
 
     override fun getHeading(t: Double) = Rotation2d(dx(t), dy(t), true)
 
-    private fun sumDCurvature2(): Double {
+    public fun sumDCurvature2(): Double {
         val dt = 1.0 / kSamples
         var sum = 0.0
         var t = 0.0
@@ -125,9 +166,152 @@ class QuinticHermiteSpline(p0: Vector2, h0: Rotation2d, p1: Vector2, h1: Rotatio
     }
 
     companion object {
+        private const val kEpsilon = 1E-5
         private const val kStepSize = 1.0
         private const val kMinDelta = 0.001
         private const val kSamples = 100
         private const val kMaxIterations = 100
+
+        private data class ControlPoint(var ddx: Double = 0.0, var ddy: Double = 0.0)
+
+        public fun sumDCurvature2(splines: MutableList<QuinticHermiteSpline>): Double {
+            var sum: Double = 0.0
+            for (s in splines) {
+                sum += s.sumDCurvature2()
+            }
+            return sum
+        }
+
+        public fun optimizeSpline(splines: MutableList<QuinticHermiteSpline>): Double {
+            // println()
+            var count = 0
+            var prev = sumDCurvature2(splines) // good
+            // println("Prev DCurvaure: $prev")
+            while (count < kMaxIterations) {
+                runOptimizationIteration(splines)
+                var current = sumDCurvature2(splines) // current
+                // println("Current DCurvaure: $current")
+                if (prev - current < kMinDelta)
+                    // println("exiting count: $count")
+                    return current
+                prev = current
+                count++
+            }
+            return prev
+        }
+
+        @Suppress("ComplexMethod")
+        private fun runOptimizationIteration(splines: MutableList<QuinticHermiteSpline>) {
+            if (splines.size <= 1) return
+            val controlPoints = arrayOfNulls<ControlPoint>(splines.size - 1)
+            var magnitude = 0.0
+
+            for (i in 0..splines.size - 2) {
+                val temp = splines.get(i)
+                val temp1 = splines.get(i + 1)
+
+                val original = sumDCurvature2(splines)
+                controlPoints[i] = ControlPoint()
+
+                splines.set(i, QuinticHermiteSpline(
+                    temp.x0, temp.x1, temp.dx0, temp.dx1, temp.ddx0, temp.ddx1 + kEpsilon,
+                    temp.y0, temp.y1, temp.dy0, temp.dy1, temp.ddy0, temp.ddy1
+                ))
+                splines.set(i + 1, QuinticHermiteSpline(
+                    temp1.x0, temp1.x1, temp1.dx0, temp1.dx1, temp1.ddx0 + kEpsilon, temp1.ddx1,
+                    temp1.y0, temp1.y1, temp1.dy0, temp1.dy1, temp1.ddy0, temp1.ddy1
+                ))
+                controlPoints[i]?.ddx = (sumDCurvature2(splines) - original) / kEpsilon
+
+                splines.set(i, QuinticHermiteSpline(
+                    temp.x0, temp.x1, temp.dx0, temp.dx1, temp.ddx0, temp.ddx1,
+                    temp.y0, temp.y1, temp.dy0, temp.dy1, temp.ddy0, temp.ddy1 + kEpsilon
+                ))
+                splines.set(i + 1, QuinticHermiteSpline(
+                    temp1.x0, temp1.x1, temp1.dx0, temp1.dx1, temp1.ddx0, temp1.ddx1,
+                    temp1.y0, temp1.y1, temp1.dy0, temp1.dy1, temp1.ddy0 + kEpsilon, temp1.ddy1
+                ))
+                controlPoints[i]?.ddy = (sumDCurvature2(splines) - original) / kEpsilon
+
+                splines.set(i, temp)
+                splines.set(i + 1, temp1)
+                magnitude += (controlPoints[i]!!.ddx * controlPoints[i]!!.ddx +
+                    controlPoints[i]!!.ddy * controlPoints[i]!!.ddy)
+            }
+            magnitude = Math.sqrt(magnitude)
+
+            val p2 = Vector2(0.0, sumDCurvature2(splines))
+
+            for (i in 0..splines.size - 2) {
+                if (splines.get(i).startPose.isColinear(splines.get(i + 1).startPose) &&
+                        splines.get(i).endPose.isColinear(splines.get(i + 1).endPose)) {
+                    continue
+                }
+                controlPoints[i]!!.ddx *= (kStepSize / magnitude)
+                controlPoints[i]!!.ddy *= (kStepSize / magnitude)
+
+                splines.get(i).ddx1 -= controlPoints[i]!!.ddx
+                splines.get(i).ddy1 -= controlPoints[i]!!.ddy
+                splines.get(i + 1).ddx0 -= controlPoints[i]!!.ddx
+                splines.get(i + 1).ddy0 -= controlPoints[i]!!.ddy
+
+                splines.get(i).calcCoeffs()
+                splines.get(i + 1).calcCoeffs()
+            }
+
+            val p1 = Vector2(-kStepSize, sumDCurvature2(splines))
+
+            for (i in 0..splines.size - 2) {
+                if (splines.get(i).startPose.isColinear(splines.get(i + 1).startPose) &&
+                        splines.get(i).endPose.isColinear(splines.get(i + 1).endPose)) {
+                    continue
+                }
+                splines.get(i).ddx1 += (2.0 * controlPoints[i]!!.ddx)
+                splines.get(i).ddy1 += (2.0 * controlPoints[i]!!.ddy)
+
+                splines.get(i + 1).ddx0 += (2.0 * controlPoints[i]!!.ddx)
+                splines.get(i + 1).ddy0 += (2.0 * controlPoints[i]!!.ddy)
+
+                splines.get(i).calcCoeffs()
+                splines.get(i + 1).calcCoeffs()
+            }
+
+            val p3 = Vector2(kStepSize, sumDCurvature2(splines))
+
+            val stepSize = fitParabola(p1, p2, p3)
+            for (i in 0..splines.size - 2) {
+                if (splines.get(i).startPose.isColinear(splines.get(i + 1).startPose) &&
+                        splines.get(i).endPose.isColinear(splines.get(i + 1).endPose)) {
+                    continue
+                }
+                controlPoints[i]!!.ddx *= (1.0 + stepSize / kStepSize)
+                controlPoints[i]!!.ddy *= (1.0 + stepSize / kStepSize)
+
+                splines.get(i).ddx1 += controlPoints[i]!!.ddx
+                splines.get(i).ddy1 += controlPoints[i]!!.ddy
+
+                splines.get(i + 1).ddx0 += controlPoints[i]!!.ddx
+                splines.get(i + 1).ddy0 += controlPoints[i]!!.ddy
+
+                splines.get(i).calcCoeffs()
+                splines.get(i + 1).calcCoeffs()
+            }
+        }
+
+        fun fitParabola(p1: Vector2, p2: Vector2, p3: Vector2): Double {
+            // println("$p1 - $p2 - $p3")
+            val t1 = p3.x * (p2.y - p1.y)
+            val t2 = p2.x * (p1.y - p3.y)
+            val t3 = p1.x * (p3.y - p2.y)
+            val A = (t1 + t2 + t3)
+
+            val t4 = (p3.x * p3.x) * (p1.y - p2.y)
+            val t5 = (p2.x * p2.x) * (p3.y - p1.y)
+            val t6 = (p1.x * p1.x) * (p2.y - p3.y)
+            val B = (t4 + t5 + t6)
+            // println("$t1, $t2, $t3, $t4, $t5, $t6")
+            // println("a:$A, b:$B, result: ${-B / (2 * A)}")
+            return -B / (2 * A)
+        }
     }
 }

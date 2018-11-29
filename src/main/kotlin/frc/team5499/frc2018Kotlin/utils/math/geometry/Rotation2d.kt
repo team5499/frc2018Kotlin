@@ -18,6 +18,8 @@ class Rotation2d(x: Double, y: Double, normalize: Boolean) : Geometric<Rotation2
         fun fromDegrees(degrees: Double): Rotation2d {
             return fromRadians(Math.toRadians(degrees))
         }
+
+        fun fromDegrees(degrees: Int) = fromDegrees(degrees.toDouble())
     }
 
     val cosAngle: Double

@@ -62,7 +62,7 @@ class Vector2(val x: Double, val y: Double) : Geometric<Vector2> {
 
     override fun hashCode() = super.hashCode()
 
-    override fun toString(): String = "(X: %.2f, Y: %.2f)".format(x, y)
+    override fun toString(): String = "(X: %.3f, Y: %.3f)".format(x, y)
 
     override fun toCSV() = "$x,$y"
 }

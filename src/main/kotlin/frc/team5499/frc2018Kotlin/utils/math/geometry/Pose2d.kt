@@ -63,6 +63,12 @@ open class Pose2d(translation: Vector2, rotation: Rotation2d) : Geometric<Pose2d
         return Pose2d(translation, rotation.normal())
     }
 
+    fun isColinear(other: Pose2d): Boolean {
+        if (other.rotation.isParallel(rotation)) return false
+        val twist = log(inverse().transformBy(other))
+        return Math.abs(twist.dx) < Constants.EPSILON && Math.abs(twist.dTheta) < Constants.EPSILON
+    }
+
     @Suppress("ReturnCount")
     override fun interpolate(other: Pose2d, x: Double): Pose2d {
         if (x <= 0) {
