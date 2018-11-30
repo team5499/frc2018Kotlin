@@ -32,7 +32,18 @@ data class Vector2(val x: Double, val y: Double) {
     override fun toString(): String = "X: $x, Y: $y"
 
     companion object {
-        val Zero = Vector2(0, 0)
+        val ZERO = Vector2(0, 0)
+
         fun distanceBetween(a: Vector2, b: Vector2) = (a - b).magnitude
+
+        @Suppress("MagicNumber")
+        fun copyVector(original: Vector2): Vector2 = Vector2(original.x, original.y)
+
+        @Suppress("MagicNumber")
+        fun representHeadingWithUnitVector(heading: Double): Vector2 =
+            Vector2(Math.cos(Math.toRadians(450 - heading)), Math.sin(Math.toRadians(450 - heading)))
+
+        @Suppress("MagicNumber")
+        fun angleBetween(from: Vector2, to: Vector2): Double = to.angle - from.angle
     }
 }

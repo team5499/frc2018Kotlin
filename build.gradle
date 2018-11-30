@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     compile 'org.jetbrains.kotlin:kotlin-stdlib'
+    compile group: 'com.opencsv', name: 'opencsv', version: '4.0'
 
     compile wpilib()
     compile ctre()
