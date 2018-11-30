@@ -11,5 +11,6 @@ public class PathGeneratorTest {
         PathGenerator.generatePathSet()
         assert(PathGenerator.pathSet!!.startLeftSwitchPath.reversed == true)
         // assert(PathGenerator.pathSet!!.startLeftSwitchPath.startPose)
+        println(PathGenerator.pathSet!!.startLeftSwitchPath.toCSV())
     }
 }

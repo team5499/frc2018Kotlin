@@ -5,6 +5,8 @@ import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 
+import frc.team5499.frc2018Kotlin.Constants
+
 import frc.team5499.frc2018Kotlin.utils.math.splines.SplineGenerator
 import frc.team5499.frc2018Kotlin.utils.math.splines.QuinticHermiteSpline
 
@@ -60,6 +62,16 @@ object PathGenerator {
             }
             samples = flipped
         }
+
+        // extend last segment by lookahead distance
+        val lastNorm = (samples.get(samples.size - 1).translation -
+            samples.get(samples.size - 2).translation).normalized
+        val newSegment = samples.get(samples.size - 1).translation + (lastNorm * Constants.Path.LOOK_AHEAD_DISTANCE)
+        samples.set(samples.size - 1, Pose2dWithCurvature(
+            Pose2d(newSegment, samples.get(samples.size - 1).rotation),
+            samples.get(samples.size - 1).curvature,
+            samples.get(samples.size - 1).dCurvature)
+        )
 
         return Path(samples, reversed)
     }
