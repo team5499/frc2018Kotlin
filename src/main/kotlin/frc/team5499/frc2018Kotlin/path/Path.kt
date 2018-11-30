@@ -30,6 +30,8 @@ class Path(points: MutableList<Pose2dWithCurvature>, reversed: Boolean = false) 
         }
     }
 
+    constructor(other: Path): this(other.mPoints.toMutableList(), other.reversed)
+
     fun getPose(index: Int): Pose2dWithCurvature {
         if (index >= mPoints.size || index < 0) {
             throw IndexOutOfBoundsException("Point $index not in path")

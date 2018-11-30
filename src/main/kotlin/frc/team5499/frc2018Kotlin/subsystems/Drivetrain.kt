@@ -15,6 +15,8 @@ import com.ctre.phoenix.ParamEnum
 import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.Position
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 import frc.team5499.frc2018Kotlin.utils.Utils
 import frc.team5499.frc2018Kotlin.utils.DriveSignal
 
@@ -76,6 +78,14 @@ object Drivetrain : Subsystem() {
         }
         get() = field
 
+    val position: Vector2
+        get() = Position.positionVector
+
+    val pose: Pose2d
+        get() = Pose2d(position, Rotation2d.fromDegrees(gyroAngle))
+
+    // hardware functions
+
     var isBrakeMode = false
         set(value) {
             if (value == field) return
@@ -87,8 +97,6 @@ object Drivetrain : Subsystem() {
             field = value
         }
         get() = field
-
-    // hardware functions
 
     var gyroAngle: Double
         get() {
@@ -400,8 +408,6 @@ object Drivetrain : Subsystem() {
     }
 
     // misc functions
-    val position: Vector2
-        get() = Position.positionVector
 
     // super class methods
     override fun update() {
