@@ -28,11 +28,14 @@ object PathGenerator {
         }
     }
 
+    @Suppress("LongParameterList", "ComplexMethod")
     private fun generatePath(
         reversed: Boolean,
         waypoints: MutableList<Pose2d>,
         maxVelo: Double,
-        maxAccel: Double
+        maxAccel: Double,
+        startVelo: Double,
+        endVelo: Double
     ): Path {
         val waypointsMaybeFlipped = waypoints.toMutableList()
         val flip = Pose2d.fromRotation(Rotation2d(-1.0, 0.0, false))
@@ -73,11 +76,33 @@ object PathGenerator {
             samples.get(samples.size - 1).dCurvature)
         )
 
-        return Path(samples, reversed)
+        val velocities = mutableListOf<Double>()
+        for (i in 0..samples.size - 1) {
+            velocities.add(Math.min(maxVelo, Math.abs(3.0 / samples.get(i).curvature)))
+        }
+        velocities.set(velocities.size - 1, endVelo)
+        for (i in (samples.size - 2).downTo(0)) {
+            val distance = samples.get(i).translation.distanceTo(samples.get(i + 1).translation)
+            val value = Math.min(
+                velocities.get(i),
+                Math.sqrt(Math.pow(velocities.get(i + 1), 2.0) + 2.0 * maxAccel * distance)
+            )
+            velocities.set(i, value)
+        }
+
+        velocities.set(0, startVelo)
+        for (i in 0..samples.size - 2) {
+            val distance = samples.get(i).translation.distanceTo(samples.get(i + 1).translation)
+            val value = Math.sqrt(Math.pow(velocities.get(i), 2.0) + 2.0 * maxAccel * distance)
+            if (value < velocities.get(i + 1))
+                velocities.set(i + 1, value)
+        }
+
+        return Path(samples, velocities, reversed)
     }
 
     private fun generatePath(reversed: Boolean, waypoints: MutableList<Pose2d>): Path {
-        return generatePath(reversed, waypoints, kMaxVelocity, kMaxAccel)
+        return generatePath(reversed, waypoints, kMaxVelocity, kMaxAccel, 10.0, 0.0)
     }
 
     private val kCenterStartPose = Pose2d(Vector2(0.0, -4.0), Rotation2d.fromDegrees(180.0))
