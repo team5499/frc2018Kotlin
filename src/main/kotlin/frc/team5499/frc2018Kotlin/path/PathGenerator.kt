@@ -13,12 +13,6 @@ import frc.team5499.frc2018Kotlin.utils.math.splines.QuinticHermiteSpline
 @SuppressWarnings("MagicNumber")
 object PathGenerator {
 
-    // can probably crank these up in the future
-    private const val kMaxVelocity = 50.0
-    private const val kMaxAccel = 50.0
-    private const val kDefaultStartVelocity = 10.0
-    private const val kDefaultEndVelocity = 0.0
-
     private val kCenterStartPose = Pose2d(Vector2(0.0, -4.0), Rotation2d.fromDegrees(180.0))
     private val kLeftSwitch = Pose2d(Vector2(100.0, 60.0), Rotation2d.fromDegrees(180.0))
     private val kRightSwitch = Pose2d(Vector2(100, -60), Rotation2d.fromDegrees(180.0))
@@ -129,6 +123,12 @@ object PathGenerator {
     }
 
     private fun generatePath(reversed: Boolean, waypoints: MutableList<Pose2d>): Path {
-        return generatePath(reversed, waypoints, kMaxVelocity, kMaxAccel, kDefaultStartVelocity, kDefaultEndVelocity)
+        return generatePath(
+            reversed, waypoints,
+            Constants.Path.MAX_VELOCITY,
+            Constants.Path.MAX_ACCELERATION,
+            Constants.Path.DEFAULT_START_VELOCITY,
+            Constants.Path.DEFAULT_END_VELOCITY
+        )
     }
 }

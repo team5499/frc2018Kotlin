@@ -58,10 +58,10 @@ object Constants {
 
     object Path {
         const val LOOK_AHEAD_DISTANCE = 18.0 // inches
-        const val CURVE_VAL = 0.88
-        const val SMOOTHING_TOLERANCE = 0.001
-        const val MAX_ACCELERATION = 12.0 // inches / s / s
-        const val MAX_VELOCITY = 120.0 // inches / s
+        const val MAX_ACCELERATION = 50.0 // inches / s / s
+        const val MAX_VELOCITY = 50.0 // inches / s
+        const val DEFAULT_START_VELOCITY = 10.0
+        const val DEFAULT_END_VELOCITY = 0.0
     }
 
     object PID {
