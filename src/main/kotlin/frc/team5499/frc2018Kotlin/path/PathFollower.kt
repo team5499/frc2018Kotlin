@@ -10,12 +10,10 @@ class PathFollower(path: Path) {
 
     private val mPath: Path
     private var mLastClosestPointIndex: Int
-    // private var mLookahead: Vector2?
 
     init {
         mPath = path
         mLastClosestPointIndex = 0
-        // mLookahead = null
     }
 
     fun update(currentRobotPose: Pose2d): PathFollowerOutput {
@@ -24,9 +22,12 @@ class PathFollower(path: Path) {
         val lookahead = calculateLookahead(currentRobotPose)
         val curvature = calculateCurvature(currentRobotPose, lookahead, robotAngle)
         val velocityTarget = mPath.getVelocity(mLastClosestPointIndex)
-        val leftVelo = velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0
-        val rightVelo = velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0
-
+        // this line will theorhetically allow backwards following
+        // remove it if it doent work
+        val negateVelo = if (mPath.reversed) -1.0 else 1.0
+        // calculate Velo for both sides
+        val leftVelo = negateVelo * (velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0)
+        val rightVelo = negateVelo * (velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0)
         return PathFollowerOutput(leftVelo, rightVelo)
     }
 
