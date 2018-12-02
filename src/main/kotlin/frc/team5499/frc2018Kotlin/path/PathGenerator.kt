@@ -13,8 +13,8 @@ import frc.team5499.frc2018Kotlin.utils.math.splines.QuinticHermiteSpline
 @SuppressWarnings("MagicNumber")
 object PathGenerator {
 
-    private const val kMaxVelocity = 130.0
-    private const val kMaxAccel = 130.0
+    private const val kMaxVelocity = 50.0
+    private const val kMaxAccel = 50.0
 
     var pathSet: PathSet? = null
         get() {

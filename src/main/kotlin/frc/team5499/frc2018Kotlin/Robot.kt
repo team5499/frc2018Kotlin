@@ -14,7 +14,9 @@ class Robot : TimedRobot() {
 
     override fun robotPeriodic() {}
 
-    override fun disabledInit() {}
+    override fun disabledInit() {
+        Drivetrain.isBrakeMode = false
+    }
 
     override fun disabledPeriodic() {
     }

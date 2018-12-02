@@ -65,7 +65,7 @@ object Constants {
     object PID {
         const val VEL_KP = 2.5
         const val VEL_KI = 0.0
-        const val VEL_KD = 1.0
+        const val VEL_KD = 0.0
         const val VEL_KF = 0.95
         const val VEL_IZONE = 10
         const val VEL_MAX_OUTPUT = 1.0

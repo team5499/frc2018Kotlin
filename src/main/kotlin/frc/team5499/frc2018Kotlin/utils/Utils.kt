@@ -2,10 +2,8 @@ package frc.team5499.frc2018Kotlin.utils
 
 import frc.team5499.frc2018Kotlin.Constants
 
+@SuppressWarnings("MagicNumber")
 object Utils {
-
-    const val INCHES_PER_SECOND_PER_ENCODER_TICKS_PER_100MS = 10.0
-    const val DEGREES_PER_ROTATION = 360.0
 
     fun limit(value: Double, limit: Double): Double {
         return limit(value, -limit, limit)
@@ -21,11 +19,11 @@ object Utils {
     }
 
     fun inchesPerSecondToEncoderTicksPer100Ms(ips: Double): Double {
-        return inchesToEncoderTicks(ips) / INCHES_PER_SECOND_PER_ENCODER_TICKS_PER_100MS
+        return inchesToEncoderTicks(ips) / 10.0
     }
 
     fun encoderTicksPer100MsToInchesPerSecond(eps: Int): Double {
-        return eps * INCHES_PER_SECOND_PER_ENCODER_TICKS_PER_100MS
+        return encoderTicksToInches(eps) * 10.0
     }
 
     fun inchesToEncoderTicks(inches: Double): Int {
@@ -38,10 +36,10 @@ object Utils {
     }
 
     fun talonAngleToDegrees(ticks: Int): Double {
-        return (DEGREES_PER_ROTATION / Constants.Gyro.TURN_UNITS_PER_ROTATION) * ticks
+        return (360.0 / Constants.Gyro.TURN_UNITS_PER_ROTATION) * ticks
     }
 
     fun degreesToTalonAngle(degrees: Double): Int {
-        return ((Constants.Gyro.TURN_UNITS_PER_ROTATION / DEGREES_PER_ROTATION) * degrees).toInt()
+        return ((Constants.Gyro.TURN_UNITS_PER_ROTATION / 360.0) * degrees).toInt()
     }
 }

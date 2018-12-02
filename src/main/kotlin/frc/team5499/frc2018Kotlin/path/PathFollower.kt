@@ -61,17 +61,16 @@ class PathFollower(path: Path) {
                     break
                 }
             }
-            if (lookahead == null) {
+        }
+        if (lookahead == null) {
+            lookahead = mPath.endPose.translation
+        } else {
+            val distanceToEnd = robotPose.translation.distanceTo(mPath.endPose.translation)
+            if (distanceToEnd < Constants.Path.LOOK_AHEAD_DISTANCE) {
                 lookahead = mPath.endPose.translation
-            } else {
-                val distanceToEnd = robotPose.translation.distanceTo(mPath.endPose.translation)
-                if (distanceToEnd < Constants.Path.LOOK_AHEAD_DISTANCE) {
-                    lookahead = mPath.endPose.translation
-                }
             }
         }
-
-        return lookahead!!
+        return lookahead
     }
 
     private fun calculateCurvature(robotPose: Pose2d, lookahead: Vector2, robotAngle: Double): Double {

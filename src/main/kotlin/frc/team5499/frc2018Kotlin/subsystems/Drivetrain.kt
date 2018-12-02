@@ -142,6 +142,9 @@ object Drivetrain : Subsystem() {
     val rightVelocity: Double
         get() = Utils.encoderTicksPer100MsToInchesPerSecond(mRightMaster.sensorCollection.quadratureVelocity)
 
+    val averageVelocity: Double
+        get() = (leftVelocity + rightVelocity) / 2.0
+
     val leftVelocityError: Double
         get() = Utils.encoderTicksPer100MsToInchesPerSecond(mLeftMaster.getClosedLoopError(0))
 
@@ -165,6 +168,7 @@ object Drivetrain : Subsystem() {
 
     // setup funcs
     private fun configForPercent() {
+        isBrakeMode = false
         mLeftMaster.apply {
             // follow(null)
             configNominalOutputForward(0.0, 0)
@@ -194,6 +198,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForVelocity() {
+        isBrakeMode = true
         mLeftMaster.apply {
             setInverted(false)
             // follow(null)
@@ -261,6 +266,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForTurn() {
+        isBrakeMode = true
         mLeftMaster.apply {
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
@@ -315,6 +321,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForPosition() {
+        isBrakeMode = true
         mLeftMaster.apply {
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             configPeakOutputForward(+1.0, 0)
@@ -412,6 +419,14 @@ object Drivetrain : Subsystem() {
     // super class methods
     override fun update() {
         Position.update(leftDistance, rightDistance, gyroAngle)
+        val avgVoltage = mLeftMaster.getMotorOutputVoltage() +
+            mLeftSlave.getMotorOutputVoltage() +
+            mRightMaster.getMotorOutputVoltage() +
+            mRightSlave.getMotorOutputVoltage()
+        val avgRawVelocity = mLeftMaster.getSensorCollection().getQuadratureVelocity()
+        @Suppress("MagicNumber")
+        // println("${(avgVoltage / 4.0) / avgRawVelocity}")
+        println(averageVelocity)
     }
 
     override fun reset() {
