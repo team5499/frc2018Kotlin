@@ -6,13 +6,12 @@ import frc.team5499.frc2018Kotlin.controllers.TeleopController
 import frc.team5499.frc2018Kotlin.controllers.AutoController
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
-import frc.team5499.frc2018Kotlin.auto.routines.Routines
-
 class Robot : TimedRobot() {
+
+    private var canRotateAuto = true
 
     override fun robotInit() {
         super.setPeriod(Constants.UPDATE_PERIOD)
-        Routines.generateRoutineSet()
     }
 
     override fun robotPeriodic() {}
@@ -22,6 +21,12 @@ class Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
+        if (TeleopController.rotateAuto() && canRotateAuto) {
+            AutoController.rotateAuto()
+            canRotateAuto = false
+        } else if (!TeleopController.rotateAuto()) {
+            canRotateAuto = true
+        }
     }
 
     override fun autonomousInit() {

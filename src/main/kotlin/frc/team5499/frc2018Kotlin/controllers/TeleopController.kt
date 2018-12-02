@@ -50,5 +50,9 @@ object TeleopController : Controller() {
         Drivetrain.setPercent(signal)
     }
 
+    fun rotateAuto(): Boolean {
+        return codriver.getXButton()
+    }
+
     override fun reset() {}
 }

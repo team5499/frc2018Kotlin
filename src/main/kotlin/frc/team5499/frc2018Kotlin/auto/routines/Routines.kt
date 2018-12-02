@@ -52,4 +52,12 @@ object Routines {
         r.addAction(NothingAction(10.0))
         return r
     }
+
+    public fun resetAll() {
+        centerLeftSwitch.reset()
+        centerRightSwitch.reset()
+        leftOuterSwitch.reset()
+        rightOuterSwitch.reset()
+        baseline.reset()
+    }
 }
