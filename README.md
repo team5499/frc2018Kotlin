@@ -1,3 +1,28 @@
+<<<<<<< HEAD
+# frc2018Kotlin
+
+## Usage
+
+Installing pre-commit hooks (**do this immediately after cloning!**)
+```
+./gradlew install_hooks
+```
+
+Building
+```
+./gradlew build
+```
+
+Deploying
+```
+./gradlew deploy
+```
+
+Testing
+```
+./gradlew test
+```
+=======
 # frc2018Kotlin
 
 [![Build Status](https://travis-ci.org/team5499/frc2018Kotlin.svg?branch=master)](https://travis-ci.org/team5499/frc2018Kotlin) [![Code Coverage](https://codecov.io/gh/team5499/frc2018Kotlin/branch/master/graph/badge.svg)](https://codecov.io/gh/team5499/frc2018Kotlin)
@@ -43,3 +68,4 @@ To deploy your code, run:
   +        args: [--config .detekt-config.yml]
   ```
   Then save the [default detekt configuration](https://github.com/arturbosch/detekt/blob/master/detekt-cli/src/main/resources/default-detekt-config.yml) as `.detekt-config.yml` and edit it as desired.
+>>>>>>> origin/master

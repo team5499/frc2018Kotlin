@@ -11,6 +11,9 @@ object Constants {
         const val LEFT_SLAVE_PORT: Int = 1
         const val RIGHT_MASTER_PORT: Int = 8
         const val RIGHT_SLAVE_PORT: Int = 9
+        const val ARM_PORT: Int = 5
+        const val LEFT_INTAKE_PORT: Int = 4
+        const val RIGHT_INTAKE_PORT: Int = 6
     }
 
     object Gyro {
@@ -101,6 +104,22 @@ object Constants {
         const val INVERT_FIXED_AUX_PIDF = true
         const val INVERT_ANGLE_AUX_PIDF = true
         const val INVERT_TURN_AUX_PIDF = false
+    }
+
+    object Arm {
+        const val INTAKE_SPEED: Double = -0.7
+        const val INTAKE_HOLD_SPEED: Double = -0.3
+        const val INTAKE_SPIT_SPEED: Double = 0.7
+        const val INTAKE_DROP_SPEED: Double = 0.3
+        const val MAX_ARM_SPEED: Double = 0.7
+
+        const val ARM_UP_SPEED = 1.0
+        const val ARM_DOWN_SPEED = -1.0
+        const val ARM_UP_HOLD_SPEED = 0.2
+        const val ARM_DOWN_HOLD_SPEED = -0.2
+
+        const val INVERT_ARM: Boolean = false
+        const val INVERT_INTAKE: Boolean = false
     }
 
     const val EPSILON = 1E-10

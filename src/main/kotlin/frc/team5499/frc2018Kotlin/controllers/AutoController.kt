@@ -19,8 +19,6 @@ object AutoController : Controller() {
         follower = PathFollower(PathGenerator.pathSet!!.startRightSwitchPath)
         val output = follower!!.update(Drivetrain.pose)
         Drivetrain.setVelocity(output.leftVelocity, output.rightVelocity)
-        // @Suppress("MagicNumber")
-        // Drivetrain.setVelocity(20.0, 20.0)
     }
 
     override fun update() {
@@ -29,5 +27,7 @@ object AutoController : Controller() {
         Drivetrain.setVelocity(output.leftVelocity, output.rightVelocity)
     }
 
-    override fun reset() {}
+    public override fun reset() {}
+
+    // private _instance: AutoController = AutoController()
 }
