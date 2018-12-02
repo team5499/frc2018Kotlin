@@ -6,6 +6,8 @@ import frc.team5499.frc2018Kotlin.controllers.TeleopController
 import frc.team5499.frc2018Kotlin.controllers.AutoController
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
+
 class Robot : TimedRobot() {
 
     private var canRotateAuto = true
@@ -31,6 +33,8 @@ class Robot : TimedRobot() {
 
     override fun autonomousInit() {
         Drivetrain.reset()
+        @Suppress("MagicNumber")
+        Drivetrain.heading = Rotation2d.fromDegrees(180.0) // starting backwards
         AutoController.reset()
         AutoController.start()
     }
