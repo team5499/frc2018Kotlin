@@ -3,6 +3,7 @@ package frc.team5499.frc2018Kotlin.path
 import frc.team5499.frc2018Kotlin.Constants
 
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2dWithCurvature
 
 @SuppressWarnings("MagicNumber")
@@ -18,7 +19,7 @@ class PathFollower(path: Path) {
         // mLookahead = null
     }
 
-    fun update(currentRobotPose: Pose2dWithCurvature): PathFollowerOutput {
+    fun update(currentRobotPose: Pose2d): PathFollowerOutput {
         var robotAngle = currentRobotPose.rotation.radians
         if (robotAngle == 0.0) robotAngle = Constants.EPSILON
         val lookahead = calculateLookahead(currentRobotPose)
@@ -31,8 +32,8 @@ class PathFollower(path: Path) {
     }
 
     @Suppress("ComplexMethod")
-    private fun calculateLookahead(robotPose: Pose2dWithCurvature): Vector2 {
-        mLastClosestPointIndex = mPath.findClosestPointIndex(robotPose.pose, mLastClosestPointIndex)
+    private fun calculateLookahead(robotPose: Pose2d): Vector2 {
+        mLastClosestPointIndex = mPath.findClosestPointIndex(robotPose, mLastClosestPointIndex)
         var lookahead: Vector2? = null
         for (i in mLastClosestPointIndex..mPath.pathLength - 2) {
             val begin = mPath.getPose(i)
@@ -73,7 +74,7 @@ class PathFollower(path: Path) {
         return lookahead!!
     }
 
-    private fun calculateCurvature(robotPose: Pose2dWithCurvature, lookahead: Vector2, robotAngle: Double): Double {
+    private fun calculateCurvature(robotPose: Pose2d, lookahead: Vector2, robotAngle: Double): Double {
         val a = (1 / Math.tan(robotAngle))
         val b = -1
         val c = -(1 / Math.tan(robotAngle)) * robotPose.translation.y + robotPose.translation.x
