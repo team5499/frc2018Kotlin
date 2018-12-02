@@ -4,7 +4,7 @@ import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
 public class DriveStraightAction(timeout: Double, inches: Double) : Action(timeout) {
 
-    var mInches: Double
+    private val mInches: Double
 
     init {
         mInches = inches

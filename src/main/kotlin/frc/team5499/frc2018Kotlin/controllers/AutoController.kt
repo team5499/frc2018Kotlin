@@ -1,10 +1,8 @@
 package frc.team5499.frc2018Kotlin.controllers
 
-import java.util.Arrays
-
 import frc.team5499.frc2018Kotlin.auto.actions.Action
 import frc.team5499.frc2018Kotlin.auto.actions.ArmAction
-//import frc.team5499.frc2018Kotlin.auto.actions.DrivePathAction
+// import frc.team5499.frc2018Kotlin.auto.actions.DrivePathAction
 import frc.team5499.frc2018Kotlin.auto.actions.DriveStraightAction
 import frc.team5499.frc2018Kotlin.auto.actions.NothingAction
 import frc.team5499.frc2018Kotlin.auto.actions.ParallelAction
@@ -12,11 +10,12 @@ import frc.team5499.frc2018Kotlin.auto.actions.TurnAction
 import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.ArmDirection
 import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.IntakeDirection
 import frc.team5499.frc2018Kotlin.auto.routines.Routine
-//import frc.team5499.frc2018Kotlin.path.Path
+// import frc.team5499.frc2018Kotlin.path.Path
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
 import edu.wpi.first.wpilibj.DriverStation
 
+@SuppressWarnings("MagicNumber", "ObjectPropertyNaming")
 object AutoController : Controller() {
 
     private var left_one_cube: Routine = Routine("left_one_cube")
@@ -29,38 +28,26 @@ object AutoController : Controller() {
     private var left_outer_one_cube: Routine = Routine("left_outer_one_cube")
     private var right_outer_one_cube: Routine = Routine("right_outer_one_cube")
 
-    private var current_routine: Routine
-    private var current_action: Action
+    private var currentRoutine: Routine
+    private var currentAction: Action
 
-    private var is_finished: Boolean
+    private var isFinished: Boolean
 
     init {
-        is_finished = false
-        current_routine = baseline
-    }
-
-    public enum class AutoMode {
-        LEFT,
-        ONE_CENTER,
-        TWO_CENTER,
-        RIGHT,
-        BASELINE
-    }
-
-    private var m_mode: AutoMode = AutoMode.ONE_CENTER
-    private fun AutoController(){
-        //left_one_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/center_to_left.csv", true), 10))
+        isFinished = false
+        currentRoutine = baseline
+        // left_one_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/center_to_left.csv", true), 10))
         left_one_cube.addAction(ArmAction(ArmDirection.HOLD_UP, IntakeDirection.DROP, 0.5))
-        
-        //right_one_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/center_to_right.csv", true), 10))
+
+        // right_one_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/center_to_right.csv", true), 10))
         right_one_cube.addAction(ArmAction(ArmDirection.HOLD_UP, IntakeDirection.DROP, 0.5))
 
-        //left_two_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/center_to_left.csv", true), 10))
+        // left_two_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/center_to_left.csv", true), 10))
         left_two_cube.addAction(ArmAction(ArmDirection.HOLD_UP, IntakeDirection.DROP, 0.3))
         left_two_cube.addAction(ArmAction(ArmDirection.HOLD_DOWN, IntakeDirection.NONE, 0.7))
-        //left_two_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/left_to_pyramid.csv", false) , 10))
-        //left_two_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/pyramid_to_left.csv", true), 10))
-        
+        // left_two_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/left_to_pyramid.csv", false) , 10))
+        // left_two_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/pyramid_to_left.csv", true), 10))
+
         /*left_two_cube.addAction(ParallelAction(5, Arrays.asList(
             DrivePathAction(Path("home/lvuser/paths/left_to_pyramid.csv", false) , 5),
             ArmAction(ArmDirection.NONE, IntakeDirection.INTAKE, 5)
@@ -73,21 +60,20 @@ object AutoController : Controller() {
         ))) // arm up, drive back to switch
         */
         left_two_cube.addAction(ArmAction(ArmDirection.HOLD_UP, IntakeDirection.DROP, 0.5))
-        //outtake
+        // outtake
 
-        //right_two_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/center_to_right.csv", true), 10))
+        // right_two_cube.addAction(DrivePathAction(Path("/home/lvuser/paths/center_to_right.csv", true), 10))
         right_two_cube.addAction(ArmAction(ArmDirection.HOLD_UP, IntakeDirection.DROP, 0.5))
         right_two_cube.addAction(ArmAction(ArmDirection.DOWN, IntakeDirection.NONE, 0.5))
         right_two_cube.addAction(ParallelAction(5.0, mutableListOf<Action>(
-            //DrivePathAction(Path("/home/lvuser/paths/right_to_pyramind.csv", false) , 5),
+            // DrivePathAction(Path("/home/lvuser/paths/right_to_pyramind.csv", false) , 5),
             ArmAction(ArmDirection.NONE, IntakeDirection.INTAKE, 5.0)
         ))) // arm down, drive path to pyramid, intake
         right_two_cube.addAction(ParallelAction(5.0, mutableListOf<Action>(
             ArmAction(ArmDirection.HOLD_UP, IntakeDirection.HOLD, 2.0)
-            //DrivePathAction(Path("/home/lvuser/paths/pyramid_to_right.csv", true), 5)
+            // DrivePathAction(Path("/home/lvuser/paths/pyramid_to_right.csv", true), 5)
         ))) // arm up, drive back to switch
         right_two_cube.addAction(ArmAction(ArmDirection.HOLD_UP, IntakeDirection.DROP, 0.5))
-
 
         baseline.addAction(ArmAction(ArmDirection.UP, IntakeDirection.HOLD, 0.2))
         baseline.addAction(DriveStraightAction(3.0, -106.0))
@@ -110,109 +96,111 @@ object AutoController : Controller() {
         println("CUBE MODE: One Cube!")
     }
 
+    public enum class AutoMode {
+        LEFT,
+        ONE_CENTER,
+        TWO_CENTER,
+        RIGHT,
+        BASELINE
+    }
+
+    private var mMode: AutoMode = AutoMode.ONE_CENTER
+
     public fun rotateAuto() {
-        when(m_mode) {
+        when (mMode) {
             AutoMode.TWO_CENTER -> {
-                m_mode = AutoMode.ONE_CENTER
+                mMode = AutoMode.ONE_CENTER
                 println("AUTO MODE: Selected One Cube Center Auto!")
             }
-            
+
             AutoMode.ONE_CENTER -> {
-                m_mode = AutoMode.RIGHT
+                mMode = AutoMode.RIGHT
                 println("AUTO MODE: Selected Right Auto!")
             }
-               
+
             AutoMode.RIGHT -> {
-                m_mode = AutoMode.LEFT
-                println("AUTO MODE: Selected Left Auto!")  
+                mMode = AutoMode.LEFT
+                println("AUTO MODE: Selected Left Auto!")
             }
- 
+
             AutoMode.LEFT -> {
-                m_mode = AutoMode.BASELINE
+                mMode = AutoMode.BASELINE
                 println("AUTO MODE: Selected Baseline Auto!")
-                
             }
 
             AutoMode.BASELINE -> {
-                m_mode = AutoMode.TWO_CENTER
-                println("AUTO MODE: Selected Two Cube Center Auto!") 
-            }
-
-            else -> {
-                m_mode = AutoMode.BASELINE
-                println("AUTO MODE: Enum Not Recognised. Baseline Selected!")          
+                mMode = AutoMode.TWO_CENTER
+                println("AUTO MODE: Selected Two Cube Center Auto!")
             }
         }
     }
-    
+
     init {
         Drivetrain.reset()
         var is_left: Boolean = DriverStation.getInstance().getGameSpecificMessage().substring(0, 1).equals("L")
-        when(m_mode) {
+        when (mMode) {
             AutoMode.ONE_CENTER -> {
-                if(is_left) {
-                    current_routine = left_one_cube
+                if (is_left) {
+                    currentRoutine = left_one_cube
                 } else {
-                    current_routine = right_one_cube
+                    currentRoutine = right_one_cube
                 }
             }
-                
+
             AutoMode.TWO_CENTER -> {
                 if (is_left) {
-                    current_routine = left_two_cube
+                    currentRoutine = left_two_cube
                 } else {
-                    current_routine = right_two_cube
+                    currentRoutine = right_two_cube
                 }
             }
-                
+
             AutoMode.LEFT -> {
                 if (is_left) {
-                    current_routine = left_outer_one_cube
+                    currentRoutine = left_outer_one_cube
                 } else {
-                    current_routine = baseline
+                    currentRoutine = baseline
                 }
             }
-                
+
             AutoMode.RIGHT -> {
                 if (is_left) {
-                    current_routine = right_outer_one_cube
+                    currentRoutine = right_outer_one_cube
                 } else {
-                    current_routine = baseline
+                    currentRoutine = baseline
                 }
-            }   
+            }
             AutoMode.BASELINE -> {}
-
-           else -> current_routine = baseline   
         }
 
-        current_action = current_routine.getCurrentAction()
-        current_action.start()
+        currentAction = currentRoutine.getCurrentAction()
+        currentAction.start()
     }
 
     public fun handle() {
-        if(is_finished) {
+        if (isFinished) {
             return
         }
-        if(current_routine.isLastStep() && current_action.next()) {
-            current_action.finish()
+        if (currentRoutine.isLastStep() && currentAction.next()) {
+            currentAction.finish()
             return
         }
-        if(current_action == null){ 
-            current_action = current_routine.getCurrentAction()
-            current_action.start()
-        } else if(current_action.next()) {
-            current_action.finish()
-            current_routine.advanceRoutine()
-            current_action = current_routine.getCurrentAction()
-            current_action.start()
+        if (currentAction == null) {
+            currentAction = currentRoutine.getCurrentAction()
+            currentAction.start()
+        } else if (currentAction.next()) {
+            currentAction.finish()
+            currentRoutine.advanceRoutine()
+            currentAction = currentRoutine.getCurrentAction()
+            currentAction.start()
         } else {
-            current_action.update()
+            currentAction.update()
         }
     }
 
-    override fun start(){}
+    override fun start() {}
 
-    override fun update(){}
+    override fun update() {}
 
     public override fun reset() {
         baseline.reset()
@@ -224,5 +212,5 @@ object AutoController : Controller() {
         right_two_cube.reset()
     }
 
-    //private _instance: AutoController = AutoController()
+    // private _instance: AutoController = AutoController()
 }

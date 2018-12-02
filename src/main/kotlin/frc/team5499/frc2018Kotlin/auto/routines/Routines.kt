@@ -1,13 +1,17 @@
 package frc.team5499.frc2018Kotlin.auto.routines
 
-import frc.team5499.frc2018Kotlin.auto.routines.Routine
-import frc.team5499.frc2018Kotlin.auto.actions.*
+import frc.team5499.frc2018Kotlin.auto.actions.ArmAction
+import frc.team5499.frc2018Kotlin.auto.actions.DriveStraightAction
+import frc.team5499.frc2018Kotlin.auto.actions.NothingAction
+// import frc.team5499.frc2018Kotlin.auto.actions.DriveStraight
+import frc.team5499.frc2018Kotlin.auto.actions.TurnAction
 import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.ArmDirection
 import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.IntakeDirection
 
+@SuppressWarnings("MagicNumber")
 object Routines {
         var routineList: MutableList<Routine> = mutableListOf<Routine>()
-        
+
         var ro_oc: Routine = Routine("rightouter_onecube")
         var ri_tc: Routine = Routine("rightinner_twocube")
         var m_tc_l: Routine = Routine("middle_twocube_left")
@@ -44,7 +48,6 @@ object Routines {
                 lo_oc.addAction(TurnAction(1.5, -90.0))
                 lo_oc.addAction(DriveStraightAction(1.5, -35.0))
                 lo_oc.addAction(ArmAction(ArmDirection.NONE, IntakeDirection.DROP, 0.4))
-
 
                 // m_tc_l.addAction(NothingCommand(0))
                 // m_tc_l.addAction(ArmAction(0, true, true, 110))
@@ -100,25 +103,22 @@ object Routines {
                 // m_tc_r.addAction(ArmAction(0, true, false, 110))
                 // m_tc_r.addAction(OuttakeDriveCommand(1, true, 0.4))
 
-
-
                 // drives 90 inches(just enough to cross baseline)
                 // lo_nc.addAction(NothingCommand(7.0))
 
                 baseline.addAction(ArmAction(ArmDirection.UP, IntakeDirection.HOLD, 0.2))
                 baseline.addAction(DriveStraightAction(3.0, -106.0))
-                //baseline.addAction(TurnCommand(10, false, 90))
+                // baseline.addAction(TurnCommand(10, false, 90))
 
                 nothing.addAction(NothingAction(0.0))
 
                 // tuning.addAction(ArmAction(1, true, true, 50))
-                //tuning.addAction(ArmAction(1, true, true, 80))
-                
+                // tuning.addAction(ArmAction(1, true, true, 80))
+
                 // tuning.addAction(DriveCommand(3, false, -20))
                 // tuning.addAction(TurnCommand(2, false, 90))
                 // tuning.addAction(ArmAction(0, true, false, 110))
                 // tuning.addAction(IntakeDriveCommand(10, false, 200, -1, true))
                 // tuning.addAction(NothingCommand(10))
         }
-
 }

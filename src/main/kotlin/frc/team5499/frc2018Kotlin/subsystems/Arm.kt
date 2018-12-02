@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX
 
 import frc.team5499.frc2018Kotlin.Constants
 
+@Suppress("TooManyFunctions")
 object Arm : Subsystem() {
     val m_arm: TalonSRX = TalonSRX(Constants.Talons.ARM_PORT).apply {
         setInverted(Constants.Arm.INVERT_ARM)
@@ -18,6 +19,8 @@ object Arm : Subsystem() {
         m_left_intake.setInverted(Constants.Arm.INVERT_INTAKE)
         m_right_intake.setInverted(Constants.Arm.INVERT_INTAKE)
     }
+
+    override fun update() {}
 
     override fun stop() {
         setArm(0.0)

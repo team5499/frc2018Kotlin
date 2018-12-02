@@ -2,7 +2,11 @@ package frc.team5499.frc2018Kotlin.auto.actions
 
 class ParallelAction(timeout: Double, actions: MutableList<Action>) : Action(timeout) {
 
-    var mActions: MutableList<Action> = actions
+    private val mActions: MutableList<Action>
+
+    init {
+        mActions = actions.toMutableList()
+    }
 
     override fun start() {
         super.start()
