@@ -82,7 +82,7 @@ object Drivetrain : Subsystem() {
         get() = Position.positionVector
 
     val pose: Pose2d
-        get() = Pose2d(position, Rotation2d.fromDegrees(gyroAngle))
+        get() = Pose2d(position, heading)
 
     // hardware functions
 
@@ -98,15 +98,18 @@ object Drivetrain : Subsystem() {
         }
         get() = field
 
-    var gyroAngle: Double
+    private var mGyroOffset: Rotation2d = Rotation2d.identity
+        get() = field
+        set(value) { field = value }
+
+    var heading: Rotation2d
         get() {
-            var ypr = doubleArrayOf(0.0, 0.0, 0.0)
-            mGyro.getYawPitchRoll(ypr)
-            return ypr[0]
+            return Rotation2d.fromDegrees(mGyro.getFusedHeading()).rotateBy(mGyroOffset)
         }
         set(value) {
-            @Suppress("MagicNumber")
-            mGyro.setYaw(value * 64.0, 0)
+            println("SET HEADING: ${heading.degrees}")
+            mGyroOffset = value.rotateBy(Rotation2d.fromDegrees(mGyro.getFusedHeading()).inverse())
+            println("Gyro offset: ${mGyroOffset.degrees}")
         }
 
     val gyroAngularVelocity: Double
@@ -115,10 +118,6 @@ object Drivetrain : Subsystem() {
             mGyro.getRawGyro(xyz)
             return xyz[1]
         }
-
-    fun zeroGyro() {
-        gyroAngle = 0.0
-    }
 
     var leftDistance: Double
         get() {
@@ -418,11 +417,11 @@ object Drivetrain : Subsystem() {
 
     // super class methods
     override fun update() {
-        Position.update(leftDistance, rightDistance, gyroAngle)
+        Position.update(leftDistance, rightDistance, heading.degrees)
     }
 
     override fun reset() {
-        zeroGyro()
+        // zeroGyro()
         leftDistance = 0.0
         rightDistance = 0.0
         Position.reset()

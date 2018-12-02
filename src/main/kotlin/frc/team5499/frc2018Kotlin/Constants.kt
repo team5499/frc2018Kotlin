@@ -61,7 +61,6 @@ object Constants {
         const val CURVE_VAL = 0.88
         const val SMOOTHING_TOLERANCE = 0.001
         const val MAX_ACCELERATION = 12.0 // inches / s / s
-        const val SMOOTH_POINT_SPACING = 6.0 // inches
         const val MAX_VELOCITY = 120.0 // inches / s
     }
 
