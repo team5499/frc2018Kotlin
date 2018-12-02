@@ -1,5 +1,7 @@
 package frc.team5499.frc2018Kotlin.utils
 
+@SuppressWarnings("MagicNumber")
+
 data class Vector2(val x: Double, val y: Double) {
 
     constructor(other: Vector2): this(other.x, other.y)
@@ -32,7 +34,13 @@ data class Vector2(val x: Double, val y: Double) {
     override fun toString(): String = "X: $x, Y: $y"
 
     companion object {
-        val Zero = Vector2(0, 0)
+        val ZERO = Vector2(0, 0)
+
         fun distanceBetween(a: Vector2, b: Vector2) = (a - b).magnitude
+
+        fun representHeadingWithUnitVector(heading: Double): Vector2 =
+            Vector2(Math.cos(Math.toRadians(450 - heading)), Math.sin(Math.toRadians(450 - heading)))
+
+        fun angleBetween(from: Vector2, to: Vector2): Double = to.angle - from.angle
     }
 }
