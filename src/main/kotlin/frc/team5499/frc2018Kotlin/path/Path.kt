@@ -12,13 +12,10 @@ import frc.team5499.frc2018Kotlin.utils.Vector2
 
 public class Path(filepath: String, backwards: Boolean = false) {
 
-    private var mCoordinates: MutableList<Vector2> = mutableListOf<Vector2>()
-    private var mTargetVelocities: MutableList<Double> = mutableListOf<Double>()
-
-    private var backwards: Boolean
+    private val mCoordinates: MutableList<Vector2> = mutableListOf<Vector2>()
+    private val mTargetVelocities: MutableList<Double> = mutableListOf<Double>()
 
     init {
-        this.backwards = backwards
 
         var tempCoords: MutableList<Vector2> = mutableListOf<Vector2>()
         var tempVelo: MutableList<Double> = mutableListOf<Double>()

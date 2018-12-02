@@ -19,7 +19,7 @@ public class PathFollower(path: Path) {
     private fun calculateLookahead(robotPos: Vector2, robotAngle: Double): Vector2 {
         mLastClosestPointIndex = mPath.findClosestPointIndex(robotPos, mLastClosestPointIndex)
         var lookahead: Vector2? = null
-        for (i in mLastClosestPointIndex..mPath.getCoordinatesLength()) {
+        for (i in mLastClosestPointIndex..mPath.getCoordinatesLength() - 2) {
             var begin: Vector2 = mPath.getPoint(i)
             var end: Vector2 = mPath.getPoint(i + 1)
             var d: Vector2 = end - begin
@@ -79,7 +79,7 @@ public class PathFollower(path: Path) {
         return if (angleToLookahead <= 90.0) curvature * side else -curvature * side
     }
 
-    fun update(robotPos: Vector2, newRobotAngle: Double): Pair<Double, Double> {
+    fun update(robotPos: Vector2, newRobotAngle: Double): PathFollowerOutput {
         var robotAngle: Double = newRobotAngle
         robotAngle = Math.toRadians(robotAngle)
         if (robotAngle.equals(0)) { robotAngle = Constants.EPSILON }
@@ -102,8 +102,9 @@ public class PathFollower(path: Path) {
         val leftOutput: Double = averageVelocity * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0
         val rightOutput: Double = averageVelocity * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0
 
-        return Pair(leftOutput, rightOutput)
+        return PathFollowerOutput(leftOutput, rightOutput)
     }
+    public data class PathFollowerOutput(val leftVelocity: Double, val rightVelocity: Double)
 
     public fun doneWithPath(robotPos: Vector2): Boolean {
         var distanceBetweenRobotEnd: Double = Vector2.distanceBetween(
