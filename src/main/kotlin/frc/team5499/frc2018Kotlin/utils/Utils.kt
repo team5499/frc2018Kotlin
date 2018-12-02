@@ -25,7 +25,7 @@ object Utils {
     }
 
     fun encoderTicksPer100MsToInchesPerSecond(eps: Int): Double {
-        return encoderTicksPer100MsToInchesPerSecond(eps) * INCHES_PER_SECOND_PER_ENCODER_TICKS_PER_100MS
+        return eps * INCHES_PER_SECOND_PER_ENCODER_TICKS_PER_100MS
     }
 
     fun inchesToEncoderTicks(inches: Double): Int {
