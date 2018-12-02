@@ -8,9 +8,7 @@ public class PathGeneratorTest {
 
     @Test
     fun test_generator() {
-        PathGenerator.generatePathSet()
-        assert(PathGenerator.pathSet!!.startLeftSwitchPath.reversed == true)
-        // assert(PathGenerator.pathSet!!.startLeftSwitchPath.startPose)
-        println(PathGenerator.pathSet!!.startLeftSwitchPath.toCSV())
+        assert(PathGenerator.Paths.startLeftSwitchPath.reversed == true)
+        println(PathGenerator.Paths.startLeftSwitchPath.toCSV())
     }
 }

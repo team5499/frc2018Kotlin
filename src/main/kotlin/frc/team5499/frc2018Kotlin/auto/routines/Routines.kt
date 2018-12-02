@@ -1,7 +1,5 @@
 package frc.team5499.frc2018Kotlin.auto.routines
 
-import frc.team5499.frc2018Kotlin.path.PathGenerator
-
 import frc.team5499.frc2018Kotlin.auto.actions.NothingAction
 
 @SuppressWarnings("MagicNumber")
@@ -14,10 +12,6 @@ object Routines {
     }
 
     fun generateRoutineSet() {
-        if (PathGenerator.pathSet == null) {
-            println("Path Set must be created before Routine Set")
-            return
-        }
         if (mRoutineSet == null) {
             mRoutineSet = RoutineSet()
         }

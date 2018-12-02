@@ -16,16 +16,42 @@ object PathGenerator {
     // can probably crank these up in the future
     private const val kMaxVelocity = 50.0
     private const val kMaxAccel = 50.0
+    private const val kDefaultStartVelocity = 10.0
+    private const val kDefaultEndVelocity = 0.0
 
-    var pathSet: PathSet? = null
-        get() {
-            return field
+    private val kCenterStartPose = Pose2d(Vector2(0.0, -4.0), Rotation2d.fromDegrees(180.0))
+    private val kLeftSwitch = Pose2d(Vector2(100.0, 60.0), Rotation2d.fromDegrees(180.0))
+    private val kRightSwitch = Pose2d(Vector2(100, -60), Rotation2d.fromDegrees(180.0))
+
+    // THE PATHS
+    public object Paths {
+        public val startLeftSwitchPath: Path
+        public val startRightSwitchPath: Path
+
+        init {
+            this.startLeftSwitchPath = generateStartLeftSwitch()
+            this.startRightSwitchPath = generateStartRightSwitch()
         }
-        private set
 
-    fun generatePathSet() {
-        if (pathSet == null) {
-            pathSet = PathSet()
+        fun generateStartLeftSwitch(): Path {
+            val waypoints: MutableList<Pose2d> = mutableListOf(
+                kCenterStartPose,
+                kCenterStartPose.transformBy(Vector2(12.0, 0.0)),
+                kLeftSwitch.transformBy(Vector2(-12.0, 0.0)),
+                kLeftSwitch
+            )
+            return generatePath(true, waypoints)
+        }
+
+        fun generateStartRightSwitch(): Path {
+            val waypoints: MutableList<Pose2d> = mutableListOf(
+                kCenterStartPose,
+                kCenterStartPose.transformBy(Vector2(12.0, 0.0)),
+                kRightSwitch.transformBy(Vector2(-12.0, 0.0)),
+                kRightSwitch
+            )
+
+            return generatePath(true, waypoints)
         }
     }
 
@@ -103,41 +129,6 @@ object PathGenerator {
     }
 
     private fun generatePath(reversed: Boolean, waypoints: MutableList<Pose2d>): Path {
-        return generatePath(reversed, waypoints, kMaxVelocity, kMaxAccel, 10.0, 0.0)
-    }
-
-    private val kCenterStartPose = Pose2d(Vector2(0.0, -4.0), Rotation2d.fromDegrees(180.0))
-    private val kLeftSwitch = Pose2d(Vector2(100.0, 60.0), Rotation2d.fromDegrees(180.0))
-    private val kRightSwitch = Pose2d(Vector2(100, -60), Rotation2d.fromDegrees(180.0))
-
-    public class PathSet {
-        public val startLeftSwitchPath: Path
-        public val startRightSwitchPath: Path
-        init {
-            this.startLeftSwitchPath = generateStartLeftSwitch()
-            this.startRightSwitchPath = generateStartRightSwitch()
-        }
-
-        fun generateStartLeftSwitch(): Path {
-            val waypoints: MutableList<Pose2d> = mutableListOf(
-                kCenterStartPose,
-                kCenterStartPose.transformBy(Vector2(12.0, 0.0)),
-                kLeftSwitch.transformBy(Vector2(-12.0, 0.0)),
-                kLeftSwitch
-            )
-
-            return generatePath(true, waypoints)
-        }
-
-        fun generateStartRightSwitch(): Path {
-            val waypoints: MutableList<Pose2d> = mutableListOf(
-                kCenterStartPose,
-                kCenterStartPose.transformBy(Vector2(12.0, 0.0)),
-                kRightSwitch.transformBy(Vector2(-12.0, 0.0)),
-                kRightSwitch
-            )
-
-            return generatePath(true, waypoints)
-        }
+        return generatePath(reversed, waypoints, kMaxVelocity, kMaxAccel, kDefaultStartVelocity, kDefaultEndVelocity)
     }
 }
