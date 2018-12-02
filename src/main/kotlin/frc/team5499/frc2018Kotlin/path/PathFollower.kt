@@ -4,7 +4,6 @@ import frc.team5499.frc2018Kotlin.Constants
 
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2dWithCurvature
 
 @SuppressWarnings("MagicNumber")
 class PathFollower(path: Path) {
@@ -86,7 +85,7 @@ class PathFollower(path: Path) {
         return curvature * side
     }
 
-    fun doneWithPath(robotPos: Pose2dWithCurvature): Boolean {
+    fun doneWithPath(robotPos: Pose2d): Boolean {
         val distance = robotPos.translation.distanceTo(mPath.endPose.translation)
         return distance < Constants.Path.LOOK_AHEAD_DISTANCE
     }

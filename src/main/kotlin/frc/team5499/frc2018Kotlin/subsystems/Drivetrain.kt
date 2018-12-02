@@ -419,14 +419,6 @@ object Drivetrain : Subsystem() {
     // super class methods
     override fun update() {
         Position.update(leftDistance, rightDistance, gyroAngle)
-        val avgVoltage = mLeftMaster.getMotorOutputVoltage() +
-            mLeftSlave.getMotorOutputVoltage() +
-            mRightMaster.getMotorOutputVoltage() +
-            mRightSlave.getMotorOutputVoltage()
-        val avgRawVelocity = mLeftMaster.getSensorCollection().getQuadratureVelocity()
-        @Suppress("MagicNumber")
-        // println("${(avgVoltage / 4.0) / avgRawVelocity}")
-        println(averageVelocity)
     }
 
     override fun reset() {
