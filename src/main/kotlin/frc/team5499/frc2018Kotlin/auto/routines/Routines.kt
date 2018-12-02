@@ -16,7 +16,7 @@ object Routines {
     val baseline: Routine
 
     init {
-        this.centerLeftSwitch = generateCenterLeftSwitchRoutine()
+        centerLeftSwitch = generateCenterLeftSwitchRoutine()
         centerRightSwitch = generateCenterRightSwitchRoutine()
         leftOuterSwitch = leftOuterSwitchRoutine()
         rightOuterSwitch = rightOuterSwitchRoutine()
