@@ -6,10 +6,16 @@ import frc.team5499.frc2018Kotlin.controllers.TeleopController
 import frc.team5499.frc2018Kotlin.controllers.AutoController
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
+import frc.team5499.frc2018Kotlin.path.PathGenerator
+import frc.team5499.frc2018Kotlin.auto.routines.Routines
+
 class Robot : TimedRobot() {
 
     override fun robotInit() {
         super.setPeriod(Constants.UPDATE_PERIOD)
+        // generate shit
+        PathGenerator.generatePathSet()
+        Routines.generateRoutineSet()
     }
 
     override fun robotPeriodic() {}
