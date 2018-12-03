@@ -6,7 +6,7 @@ import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 
 class Routine(name: String, startHeading: Rotation2d, vararg actions: Action) {
 
-    val actions: MutableList<Action>
+    val actions: Array<out Action>
     var stepNumber: Int
         private set
         get() = field
@@ -19,7 +19,7 @@ class Routine(name: String, startHeading: Rotation2d, vararg actions: Action) {
         stepNumber = 0
         mName = name
         this.startHeading = startHeading
-        this.actions = actions.toMutableList()
+        this.actions = actions.copyOf()
     }
 
     @Suppress("SpreadOperator")
