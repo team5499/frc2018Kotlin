@@ -28,7 +28,7 @@ object PathGenerator {
         }
 
         fun generateStartLeftSwitch(): Path {
-            val waypoints: MutableList<Pose2d> = mutableListOf(
+            val waypoints: Array<Pose2d> = arrayOf(
                 kCenterStartPose,
                 kCenterStartPose.transformBy(Vector2(12.0, 0.0)),
                 kLeftSwitch.transformBy(Vector2(-12.0, 0.0)),
@@ -38,7 +38,7 @@ object PathGenerator {
         }
 
         fun generateStartRightSwitch(): Path {
-            val waypoints: MutableList<Pose2d> = mutableListOf(
+            val waypoints: Array<Pose2d> = arrayOf(
                 kCenterStartPose,
                 kCenterStartPose.transformBy(Vector2(12.0, 0.0)),
                 kRightSwitch.transformBy(Vector2(-12.0, 0.0)),
@@ -52,7 +52,7 @@ object PathGenerator {
     @Suppress("LongParameterList", "ComplexMethod")
     private fun generatePath(
         reversed: Boolean,
-        waypoints: MutableList<Pose2d>,
+        waypoints: Array<Pose2d>,
         maxVelo: Double,
         maxAccel: Double,
         startVelo: Double,
@@ -122,7 +122,7 @@ object PathGenerator {
         return Path(samples, velocities, reversed)
     }
 
-    private fun generatePath(reversed: Boolean, waypoints: MutableList<Pose2d>): Path {
+    private fun generatePath(reversed: Boolean, waypoints: Array<Pose2d>): Path {
         return generatePath(
             reversed, waypoints,
             Constants.Path.MAX_VELOCITY,

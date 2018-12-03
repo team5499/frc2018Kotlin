@@ -7,6 +7,7 @@ public open class Action(timeoutSeconds: Double) {
     private var mTimeoutSeconds: Double = timeoutSeconds
 
     public open fun start() {
+        mTimer.stop()
         mTimer.reset()
         mTimer.start()
     }
@@ -23,9 +24,4 @@ public open class Action(timeoutSeconds: Double) {
     }
 
     public open fun finish() {}
-
-    public open fun reset() {
-        mTimer.stop()
-        mTimer.reset()
-    }
 }

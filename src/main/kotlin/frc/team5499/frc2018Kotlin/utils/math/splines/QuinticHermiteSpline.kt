@@ -188,16 +188,12 @@ class QuinticHermiteSpline(
         }
 
         public fun optimizeSpline(splines: MutableList<QuinticHermiteSpline>): Double {
-            // println()
             var count = 0
-            var prev = sumDCurvature2(splines) // good
-            // println("Prev DCurvaure: $prev")
+            var prev = sumDCurvature2(splines)
             while (count < kMaxIterations) {
                 runOptimizationIteration(splines)
-                var current = sumDCurvature2(splines) // current
-                // println("Current DCurvaure: $current")
+                var current = sumDCurvature2(splines)
                 if (prev - current < kMinDelta)
-                    // println("exiting count: $count")
                     return current
                 prev = current
                 count++

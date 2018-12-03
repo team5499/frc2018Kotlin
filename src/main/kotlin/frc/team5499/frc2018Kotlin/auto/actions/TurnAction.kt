@@ -2,7 +2,8 @@ package frc.team5499.frc2018Kotlin.auto.actions
 
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
-// ADD 'TYPE: TURNTYPE' WHEN ABOSUTLE TURN IS INITIALIZED
+import frc.team5499.frc2018Kotlin.Constants
+
 public class TurnAction(timeout: Double, angle: Double) : Action(timeout) {
 
     public enum class TurnType {
@@ -28,13 +29,11 @@ public class TurnAction(timeout: Double, angle: Double) : Action(timeout) {
 
     public override fun next(): Boolean {
         @Suppress("MagicNumber")
-        if (super.timedOut() || Drivetrain.turnError < 3) {
+        if (super.timedOut() ||
+            (Math.abs(Drivetrain.turnError) < Constants.PID.ACCEPTABLE_TURN_ERROR &&
+            Math.abs(Drivetrain.averageVelocity) < Constants.PID.ACCEPTABLE_VELOCITY_THRESHOLD)) {
             return true
         }
         return false
-    }
-
-    public override fun reset() {
-        super.reset()
     }
 }

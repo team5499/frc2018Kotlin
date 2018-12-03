@@ -51,7 +51,7 @@ object TeleopController : Controller() {
     }
 
     fun rotateAuto(): Boolean {
-        return codriver.getXButton()
+        return codriver.getXButtonPressed()
     }
 
     override fun reset() {}

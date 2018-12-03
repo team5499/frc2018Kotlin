@@ -2,23 +2,32 @@ package frc.team5499.frc2018Kotlin.auto.routines
 
 import frc.team5499.frc2018Kotlin.auto.actions.Action
 
-open class Routine(name: String) {
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 
-    val actions: MutableList<Action> = mutableListOf<Action>()
+class Routine(name: String, startHeading: Rotation2d, vararg actions: Action) {
+
+    val actions: MutableList<Action>
     var stepNumber: Int
         private set
         get() = field
     val mName: String
         get() = field
+    val startHeading: Rotation2d
+        get() = field
 
     init {
         stepNumber = 0
         mName = name
+        this.startHeading = startHeading
+        this.actions = actions.toMutableList()
     }
 
-    public fun addAction(action: Action) {
-        actions.add(action)
-    }
+    @Suppress("SpreadOperator")
+    constructor(
+        name: String,
+        degreesHeading: Double,
+        vararg actions: Action
+    ): this(name, Rotation2d.fromDegrees(degreesHeading), *actions)
 
     public fun getCurrentAction(): Action {
         return actions.get(stepNumber)
@@ -36,10 +45,7 @@ open class Routine(name: String) {
         stepNumber = index
     }
 
-    public open fun reset() {
-        for (i: Action in actions) {
-            i.reset()
-        }
+    public fun reset() {
         stepNumber = 0
     }
 

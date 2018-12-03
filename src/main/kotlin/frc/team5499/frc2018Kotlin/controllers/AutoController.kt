@@ -5,6 +5,8 @@ import frc.team5499.frc2018Kotlin.auto.routines.Routine
 import frc.team5499.frc2018Kotlin.auto.routines.Routines
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
+
 import edu.wpi.first.wpilibj.DriverStation
 
 @SuppressWarnings("MagicNumber")
@@ -56,7 +58,6 @@ object AutoController : Controller() {
 
     @Suppress("ComplexMethod")
     override fun start() {
-        Drivetrain.reset()
         var is_left: Boolean = DriverStation.getInstance().getGameSpecificMessage().substring(0, 1).equals("L")
         when (mMode) {
             AutoMode.CENTER -> {
@@ -87,7 +88,7 @@ object AutoController : Controller() {
                 currentRoutine = Routines.baseline
             }
         }
-
+        Drivetrain.heading = Rotation2d(currentRoutine.startHeading)
         currentAction = currentRoutine.getCurrentAction()
         currentAction!!.start()
     }
@@ -98,6 +99,7 @@ object AutoController : Controller() {
         }
         if (currentRoutine.isLastStep() && currentAction!!.next()) {
             currentAction!!.finish()
+            isFinished = true
             return
         }
         if (currentAction == null) {

@@ -1,11 +1,11 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
-class ParallelAction(timeout: Double, actions: MutableList<Action>) : Action(timeout) {
+class ParallelAction(timeout: Double, vararg actions: Action) : Action(timeout) {
 
-    private val mActions: MutableList<Action>
+    private val mActions: Array<out Action>
 
     init {
-        mActions = actions.toMutableList()
+        mActions = actions.copyOf()
     }
 
     override fun start() {
@@ -39,13 +39,6 @@ class ParallelAction(timeout: Double, actions: MutableList<Action>) : Action(tim
         super.finish()
         for (a: Action in mActions) {
             a.finish()
-        }
-    }
-
-    override fun reset() {
-        super.reset()
-        for (a: Action in mActions) {
-            a.reset()
         }
     }
 }

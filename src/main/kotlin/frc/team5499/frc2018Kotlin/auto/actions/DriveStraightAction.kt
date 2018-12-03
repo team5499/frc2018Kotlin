@@ -1,6 +1,7 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
+import frc.team5499.frc2018Kotlin.Constants
 
 public class DriveStraightAction(timeout: Double, inches: Double) : Action(timeout) {
 
@@ -20,7 +21,9 @@ public class DriveStraightAction(timeout: Double, inches: Double) : Action(timeo
     }
 
     public override fun next(): Boolean {
-        if (super.timedOut() || Drivetrain.positionError < 2.0) {
+        if (super.timedOut() ||
+            (Math.abs(Drivetrain.positionError) < Constants.PID.ACCEPTABLE_DISTANCE_ERROR &&
+            Math.abs(Drivetrain.averageVelocity) < Constants.PID.ACCEPTABLE_VELOCITY_THRESHOLD)) {
             return true
         }
         return false
@@ -28,9 +31,5 @@ public class DriveStraightAction(timeout: Double, inches: Double) : Action(timeo
 
     public override fun finish() {
         super.finish()
-    }
-
-    public override fun reset() {
-        super.reset()
     }
 }

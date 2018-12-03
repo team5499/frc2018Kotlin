@@ -28,6 +28,7 @@ class PathFollower(path: Path) {
         // calculate Velo for both sides
         val leftVelo = negateVelo * (velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0)
         val rightVelo = negateVelo * (velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0)
+        // maybe need to flip left and right if following backwards. need to check
         return PathFollowerOutput(leftVelo, rightVelo)
     }
 

@@ -45,8 +45,4 @@ public class ArmAction(
     public override fun next(): Boolean {
         return super.next()
     }
-
-    public override fun reset() {
-        super.reset()
-    }
 }

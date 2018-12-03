@@ -24,32 +24,37 @@ object Routines {
     }
 
     private fun generateCenterLeftSwitchRoutine(): Routine {
-        val r = Routine("center_switch_left")
-        r.addAction(NothingAction(10.0))
+        val r = Routine("center_switch_left", 180.0,
+            NothingAction(10.0)
+        )
         return r
     }
 
     private fun generateCenterRightSwitchRoutine(): Routine {
-        val r = Routine("center_switch_right")
-        r.addAction(NothingAction(10.0))
+        val r = Routine("center_switch_right", 180.0,
+            NothingAction(10.0)
+        )
         return r
     }
 
     private fun leftOuterSwitchRoutine(): Routine {
-        val r = Routine("left_outer")
-        r.addAction(NothingAction(10.0))
+        val r = Routine("left_outer", 180.0,
+            NothingAction(10.0)
+        )
         return r
     }
 
     private fun rightOuterSwitchRoutine(): Routine {
-        val r = Routine("right_outer")
-        r.addAction(NothingAction(10.0))
+        val r = Routine("right_outer", 180.0,
+            NothingAction(10.0)
+        )
         return r
     }
 
     private fun generateBaselineRoutine(): Routine {
-        val r = Routine("baseline")
-        r.addAction(NothingAction(10.0))
+        val r = Routine("baseline", 180.0,
+            NothingAction(10.0)
+        )
         return r
     }
 

@@ -65,6 +65,10 @@ object Constants {
     }
 
     object PID {
+        const val ACCEPTABLE_VELOCITY_THRESHOLD = 3.0 // inches / s
+        const val ACCEPTABLE_TURN_ERROR = 3.0 // degrees (?)
+        const val ACCEPTABLE_DISTANCE_ERROR = 2.0 // inches
+
         const val VEL_KP = 2.5
         const val VEL_KI = 0.0
         const val VEL_KD = 0.0
