@@ -1,5 +1,28 @@
 # Path Generation and Pure Pursuit
 
+## Odometry:
+
+We estimate the robot's position by assuming that it drives in perfect arcs. Estimate using 2 encoders (1 on left and one on right side of the drivetrain.) as well as a gyroscope.
+```
+fun update(leftDistance: Double, rightDistance: Double, angle: Double) {
+    val newAngle = Math.toRadians(angle)
+    var angle_delta = newAngle - lastAngle
+    if (angle_delta == 0.0) angle_delta = Constants.EPSILON
+    val leftDelta = leftDistance - lastLeft
+    val rightDelta = rightDistance - lastRight
+    val distance = (leftDelta + rightDelta) / 2.0
+    val radius_of_curvature = distance / angle_delta
+    val dy = radius_of_curvature * Math.sin(angle_delta)
+    val dx = radius_of_curvature * (Math.cos(angle_delta) - 1)
+    y -= dx * Math.cos(lastAngle) - dy * Math.sin(lastAngle)
+    x += dx * Math.sin(lastAngle) + dy * Math.cos(lastAngle)
+    lastLeft = leftDistance
+    lastRight = rightDistance
+    lastAngle = newAngle
+}
+
+```
+
 ## Spline Generation:
 
 We generate our paths using "Parametric Quintic Hermtite Splines." This basically means that for each pair of points, we have a parametric function (different equation for x and y, both are in respect to t). Both the x and y have a 5th degree polynomial in respect to t. Each point has an x coordinate, y coordinate, and desired heading: theta. The initial point (poin that comes earlier) of each segment is represented by t = 0.0 (time = 0) and the end point is t = 1.0 (time = 1). This "time" is completely arbitrary and doesn't mean actual time in seconds. The heading at each point (that's the hermite part of quintic hermite) basically creates a tangent at that point that the parametric function trys to follow for atleast a small ammout of time which allows for more precise robot placement.
@@ -93,3 +116,5 @@ for (i in 0..samples.size - 2) {
 Now the veloctites should be manageable by the robot.
 
 ## Path Following:
+
+To be added
