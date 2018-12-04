@@ -24,10 +24,21 @@ class PathFollower(path: Path) {
         val velocityTarget = mPath.getVelocity(mLastClosestPointIndex)
         // this line will theorhetically allow backwards following
         // remove it if it doent work
-        val negateVelo = if (mPath.reversed) -1.0 else 1.0
-        // calculate Velo for both sides
-        val leftVelo = negateVelo * (velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0)
-        val rightVelo = negateVelo * (velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0)
+        // val negateVelo = if (mPath.reversed) -1.0 else 1.0
+        // // calculate Velo for both sides
+        // val leftVelo = negateVelo * (velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0)
+        // val rightVelo = negateVelo * (velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0)
+        val leftVelo: Double
+        val rightVelo: Double
+        if (!mPath.reversed) {
+            leftVelo = (velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0)
+            rightVelo = (velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0)
+        } else {
+            // veloctities are same as above, just negated and switched around.
+            leftVelo = -(velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0)
+            rightVelo = -(velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0)
+        }
+
         // maybe need to flip left and right if following backwards. need to check
         return PathFollowerOutput(leftVelo, rightVelo)
     }

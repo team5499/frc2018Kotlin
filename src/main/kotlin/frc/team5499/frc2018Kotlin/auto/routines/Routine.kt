@@ -16,8 +16,8 @@ class Routine(name: String, startHeading: Rotation2d, vararg actions: Action) {
         get() = field
 
     init {
-        stepNumber = 0
-        mName = name
+        this.stepNumber = 0
+        this.mName = name
         this.startHeading = startHeading
         this.actions = actions.copyOf()
     }
