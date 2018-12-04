@@ -1,6 +1,9 @@
 package frc.team5499.frc2018Kotlin.auto.routines
 
+import frc.team5499.frc2018Kotlin.path.PathGenerator
+
 import frc.team5499.frc2018Kotlin.auto.actions.NothingAction
+import frc.team5499.frc2018Kotlin.auto.actions.DrivePathAction
 
 @SuppressWarnings("MagicNumber")
 object Routines {
@@ -25,14 +28,17 @@ object Routines {
 
     private fun generateCenterLeftSwitchRoutine(): Routine {
         val r = Routine("center_switch_left", 180.0,
-            NothingAction(10.0)
+            DrivePathAction(PathGenerator.Paths.startLeftSwitchPath, 100.0),
+            NothingAction(1.0),
+            DrivePathAction(PathGenerator.Paths.leftSwitchToPyramid, 100.0)
         )
         return r
     }
 
     private fun generateCenterRightSwitchRoutine(): Routine {
         val r = Routine("center_switch_right", 180.0,
-            NothingAction(10.0)
+            DrivePathAction(PathGenerator.Paths.startRightSwitchPath, 100.0),
+            NothingAction(1.0)
         )
         return r
     }

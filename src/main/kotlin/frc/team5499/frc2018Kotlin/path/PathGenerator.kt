@@ -16,18 +16,22 @@ object PathGenerator {
     private val kCenterStartPose = Pose2d(Vector2(0.0, -4.0), Rotation2d.fromDegrees(180.0))
     private val kLeftSwitch = Pose2d(Vector2(100.0, 60.0), Rotation2d.fromDegrees(180.0))
     private val kRightSwitch = Pose2d(Vector2(100, -60), Rotation2d.fromDegrees(180.0))
+    private val kPyramid = Pose2d(Vector2(82.0, 5.0), Rotation2d.fromDegrees(0.0))
 
     // THE PATHS
     public object Paths {
         public val startLeftSwitchPath: Path
         public val startRightSwitchPath: Path
+        public val leftSwitchToPyramid: Path
 
         init {
             this.startLeftSwitchPath = generateStartLeftSwitch()
+            this.leftSwitchToPyramid = generateLeftSwitchToPyramid()
+
             this.startRightSwitchPath = generateStartRightSwitch()
         }
 
-        fun generateStartLeftSwitch(): Path {
+        private fun generateStartLeftSwitch(): Path {
             val waypoints: Array<Pose2d> = arrayOf(
                 kCenterStartPose,
                 kCenterStartPose.transformBy(Vector2(12.0, 0.0)),
@@ -37,7 +41,17 @@ object PathGenerator {
             return generatePath(true, waypoints)
         }
 
-        fun generateStartRightSwitch(): Path {
+        private fun generateLeftSwitchToPyramid(): Path {
+            val waypoints: Array<Pose2d> = arrayOf(
+                kLeftSwitch,
+                kLeftSwitch.transformBy(Vector2(-12.0, 0.0)),
+                kPyramid.transformBy(Vector2(-12.0, 0.0)),
+                kPyramid
+            )
+            return generatePath(false, waypoints)
+        }
+
+        private fun generateStartRightSwitch(): Path {
             val waypoints: Array<Pose2d> = arrayOf(
                 kCenterStartPose,
                 kCenterStartPose.transformBy(Vector2(12.0, 0.0)),

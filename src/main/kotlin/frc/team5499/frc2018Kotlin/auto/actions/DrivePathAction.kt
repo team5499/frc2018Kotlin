@@ -33,5 +33,6 @@ public class DrivePathAction(path: Path, timeout: Double) : Action(timeout) {
 
     public override fun finish() {
         mPathFollower = null
+        Drivetrain.setVelocity(0.0, 0.0)
     }
 }

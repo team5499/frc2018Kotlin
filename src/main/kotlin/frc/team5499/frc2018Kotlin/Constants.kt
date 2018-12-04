@@ -23,11 +23,11 @@ object Constants {
     }
 
     object Input {
-        const val DRIVER_PORT: Int = 1
-        const val CODRIVER_PORT: Int = 2
+        const val DRIVER_PORT: Int = 0
+        const val CODRIVER_PORT: Int = 1
 
         // change to change drive mode
-        val DRIVE_CONFIG: DriveConfig = DriveConfig.TANK
+        val DRIVE_CONFIG: DriveConfig = DriveConfig.SPACE
 
         // cheesy
         const val THROTTLE_DEADBAND = 0.02

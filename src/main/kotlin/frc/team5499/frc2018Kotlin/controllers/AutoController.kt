@@ -51,7 +51,7 @@ object AutoController : Controller() {
 
             AutoMode.BASELINE -> {
                 mMode = AutoMode.CENTER
-                println("AUTO MODE: Selected Two Cube Center Auto!")
+                println("AUTO MODE: Selected Center Auto!")
             }
         }
     }
