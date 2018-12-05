@@ -33,17 +33,9 @@ class PathFollower(path: Path) {
         val lookahead = calculateLookahead(currentRobotPose)
         val curvature = calculateCurvature(currentRobotPose, lookahead, robotAngle)
         val velocityTarget = mPath.getVelocity(mLastClosestPointIndex)
-        // this line will theorhetically allow backwards following
-        // remove it if it doent work
-        // val negateVelo = if (mPath.reversed) -1.0 else 1.0
-        // // calculate Velo for both sides
-        // val leftVelo = negateVelo * (velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0)
-        // val rightVelo = negateVelo * (velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0)
         val negate = if (mPath.reversed) -1.0 else 1.0
         val leftVelo = negate * (velocityTarget * (2.0 + (curvature * Constants.TRACK_WIDTH)) / 2.0)
         val rightVelo = negate * (velocityTarget * (2.0 - (curvature * Constants.TRACK_WIDTH)) / 2.0)
-
-        // maybe need to flip left and right if following backwards. need to check
         return PathFollowerOutput(leftVelo, rightVelo)
     }
 

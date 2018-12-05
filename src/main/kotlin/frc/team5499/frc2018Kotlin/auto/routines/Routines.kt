@@ -28,17 +28,22 @@ object Routines {
 
     private fun generateCenterLeftSwitchRoutine(): Routine {
         val r = Routine("center_switch_left", 180.0,
-            DrivePathAction(PathGenerator.Paths.startLeftSwitchPath, 100.0),
+            DrivePathAction(PathGenerator.Paths.startLeftSwitch, 100.0),
             NothingAction(1.0),
-            DrivePathAction(PathGenerator.Paths.leftSwitchToPyramid, 100.0)
+            DrivePathAction(PathGenerator.Paths.leftSwitchToPyramid, 100.0),
+            NothingAction(1.0),
+            DrivePathAction(PathGenerator.Paths.pyramidToLeftSwitch, 100.0)
         )
         return r
     }
 
     private fun generateCenterRightSwitchRoutine(): Routine {
         val r = Routine("center_switch_right", 180.0,
-            DrivePathAction(PathGenerator.Paths.startRightSwitchPath, 100.0),
-            NothingAction(1.0)
+            DrivePathAction(PathGenerator.Paths.startRightSwitch, 100.0),
+            NothingAction(1.0),
+            DrivePathAction(PathGenerator.Paths.rightSwitchToPyramid, 100.0),
+            NothingAction(1.0),
+            DrivePathAction(PathGenerator.Paths.pyramidToRightSwitch, 100.0)
         )
         return r
     }

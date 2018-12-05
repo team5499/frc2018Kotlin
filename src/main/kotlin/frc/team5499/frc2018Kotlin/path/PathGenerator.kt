@@ -20,15 +20,23 @@ object PathGenerator {
 
     // THE PATHS
     public object Paths {
-        public val startLeftSwitchPath: Path
-        public val startRightSwitchPath: Path
+
+        public val startLeftSwitch: Path
         public val leftSwitchToPyramid: Path
+        public val pyramidToLeftSwitch: Path
+
+        public val startRightSwitch: Path
+        public val rightSwitchToPyramid: Path
+        public val pyramidToRightSwitch: Path
 
         init {
-            this.startLeftSwitchPath = generateStartLeftSwitch()
+            this.startLeftSwitch = generateStartLeftSwitch()
             this.leftSwitchToPyramid = generateLeftSwitchToPyramid()
+            this.pyramidToLeftSwitch = generatePyramidToLeftSwitch()
 
-            this.startRightSwitchPath = generateStartRightSwitch()
+            this.startRightSwitch = generateStartRightSwitch()
+            this.rightSwitchToPyramid = generateRightSwitchToPyramid()
+            this.pyramidToRightSwitch = generatePyramidToRightSwitch()
         }
 
         private fun generateStartLeftSwitch(): Path {
@@ -48,7 +56,18 @@ object PathGenerator {
                 kPyramid.transformBy(Vector2(-12.0, 0.0)),
                 kPyramid
             )
-            return generatePath(false, waypoints)
+            return generatePath(false, waypoints, Constants.Path.MAX_VELOCITY,
+                Constants.Path.MAX_ACCELERATION, 15.0, 0.0)
+        }
+
+        private fun generatePyramidToLeftSwitch(): Path {
+            val waypoints: Array<Pose2d> = arrayOf(
+                kPyramid,
+                kPyramid.transformBy(Vector2(-12.0, 0.0)),
+                kLeftSwitch.transformBy(Vector2(-12.0, 0.0)),
+                kLeftSwitch
+            )
+            return generatePath(true, waypoints)
         }
 
         private fun generateStartRightSwitch(): Path {
@@ -59,6 +78,27 @@ object PathGenerator {
                 kRightSwitch
             )
 
+            return generatePath(true, waypoints)
+        }
+
+        private fun generateRightSwitchToPyramid(): Path {
+            val waypoints: Array<Pose2d> = arrayOf(
+                kRightSwitch,
+                kRightSwitch.transformBy(Vector2(-12.0, 0.0)),
+                kPyramid.transformBy(Vector2(-12.0, 0.0)),
+                kPyramid
+            )
+            return generatePath(false, waypoints, Constants.Path.MAX_VELOCITY,
+                Constants.Path.MAX_ACCELERATION, 15.0, 0.0)
+        }
+
+        private fun generatePyramidToRightSwitch(): Path {
+            val waypoints: Array<Pose2d> = arrayOf(
+                kPyramid,
+                kPyramid.transformBy(Vector2(-12.0, 0.0)),
+                kRightSwitch.transformBy(Vector2(-12.0, 0.0)),
+                kRightSwitch
+            )
             return generatePath(true, waypoints)
         }
     }

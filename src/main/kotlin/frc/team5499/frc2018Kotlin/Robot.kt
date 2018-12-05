@@ -15,6 +15,9 @@ class Robot : TimedRobot() {
     override fun robotPeriodic() {}
 
     override fun disabledInit() {
+        Drivetrain.reset()
+        AutoController.reset()
+        TeleopController.reset()
         Drivetrain.isBrakeMode = false
     }
 

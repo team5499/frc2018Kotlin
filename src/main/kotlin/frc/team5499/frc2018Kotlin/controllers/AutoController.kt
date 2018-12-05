@@ -58,6 +58,7 @@ object AutoController : Controller() {
 
     @Suppress("ComplexMethod")
     override fun start() {
+        reset()
         var is_left: Boolean = DriverStation.getInstance().getGameSpecificMessage().substring(0, 1).equals("L")
         when (mMode) {
             AutoMode.CENTER -> {

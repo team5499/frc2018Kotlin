@@ -78,8 +78,11 @@ object Drivetrain : Subsystem() {
         }
         get() = field
 
-    val position: Vector2
+    var position: Vector2
         get() = Position.positionVector
+        set(value) {
+            Position.positionVector = Vector2(value)
+        }
 
     val pose: Pose2d
         get() = Pose2d(position, heading)
