@@ -95,8 +95,7 @@ object PathGenerator {
         private fun generatePyramidToRightSwitch(): Path {
             val waypoints: Array<Pose2d> = arrayOf(
                 kPyramid,
-                kPyramid.transformBy(Vector2(-12.0, 0.0)),
-                kRightSwitch.transformBy(Vector2(-12.0, 0.0)),
+                kPyramid.transformBy(Pose2d(Vector2(-12.0, -30.0), Rotation2d.fromDegrees(90))),
                 kRightSwitch
             )
             return generatePath(true, waypoints)
