@@ -17,12 +17,6 @@ object AutoController : Controller() {
 
     private var isFinished: Boolean
 
-    init {
-        isFinished = false
-        currentRoutine = Routines.baseline
-        currentAction = null
-    }
-
     public enum class AutoMode {
         CENTER,
         LEFT,
@@ -30,7 +24,15 @@ object AutoController : Controller() {
         BASELINE
     }
 
-    private var mMode: AutoMode = AutoMode.BASELINE
+    private var mMode: AutoMode
+
+    init {
+        isFinished = false
+        currentRoutine = Routines.baseline
+        currentAction = null
+        mMode = AutoMode.BASELINE
+        println("AUTO MODE: Selected Baseline Auto!")
+    }
 
     public fun rotateAuto() {
         when (mMode) {
@@ -117,6 +119,9 @@ object AutoController : Controller() {
     }
 
     public override fun reset() {
+        currentAction = null
+        currentRoutine = Routines.baseline
         Routines.resetAll()
+        isFinished = false
     }
 }

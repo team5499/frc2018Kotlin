@@ -46,7 +46,7 @@ class Routine(name: String, startHeading: Rotation2d, vararg actions: Action) {
     }
 
     public fun reset() {
-        stepNumber = 0
+        this.stepNumber = 0
     }
 
     public fun isLastStep(): Boolean {
