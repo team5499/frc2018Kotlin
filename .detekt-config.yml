@@ -82,7 +82,7 @@ complexity:
   LabeledExpression:
     active: false
   LargeClass:
-    active: true
+    active: false
     threshold: 150
   LongMethod:
     active: true
@@ -425,7 +425,7 @@ style:
     active: false
     maxJumpCount: 1
   MagicNumber:
-    active: true
+    active: false
     ignoreNumbers: '-1,0,1,2'
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: false
