@@ -1,24 +1,36 @@
-/*package frc.team5499.frc2018Kotlin.auto.actions
+package frc.team5499.frc2018Kotlin.auto.actions
 
-public class DrivePathAction(path: Path, timeout: Double) : Action(timeout) {
+import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
-    init{
-        //var mPath: Path = path
+class DrivePathAction(timeout: Double, inches: Double) : Action(timeout) {
+
+    var mInches: Double
+
+    init {
+        mInches = inches
     }
 
-    override public fun start() {
+    override fun start() {
+        super.start()
+        Drivetrain.setPosition(mInches)
     }
 
-    override public fun update() {
+    override fun update() {
+        super.update()
     }
 
-    override public fun next(): Boolean {
+    override fun next(): Boolean {
+        if (super.timedOut()) {
+            return true
+        }
         return false
     }
 
-    override public fun finish() {
+    override fun finish() {
+        super.finish()
     }
 
-    override public fun reset() {
+    override fun reset() {
+        super.reset()
     }
-}*/
+}
