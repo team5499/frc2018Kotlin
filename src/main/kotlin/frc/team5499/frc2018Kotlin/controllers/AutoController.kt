@@ -4,6 +4,7 @@ import frc.team5499.frc2018Kotlin.auto.actions.Action
 import frc.team5499.frc2018Kotlin.auto.routines.Routine
 import frc.team5499.frc2018Kotlin.auto.routines.Routines
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
+import frc.team5499.frc2018Kotlin.subsystems.Arm
 
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 
@@ -90,6 +91,7 @@ object AutoController : Controller() {
             }
         }
         Drivetrain.heading = Rotation2d(currentRoutine.startHeading)
+        println(Drivetrain.position)
         currentAction = currentRoutine.getCurrentAction()
         currentAction!!.start()
     }
@@ -118,5 +120,7 @@ object AutoController : Controller() {
 
     public override fun reset() {
         Routines.resetAll()
+        Drivetrain.reset()
+        Arm.reset()
     }
 }

@@ -38,12 +38,11 @@ public class ArmAction(
 
     public override fun start() {
         super.start()
-    }
-
-    public override fun update() {
         Arm.setArm(armDirection.speed)
         Arm.setIntake(intakeDirection.speed)
     }
+
+    public override fun update() {}
 
     public override fun next(): Boolean {
         if (mWaitForTimeout)

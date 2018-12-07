@@ -4,6 +4,12 @@ import frc.team5499.frc2018Kotlin.path.PathGenerator
 
 import frc.team5499.frc2018Kotlin.auto.actions.NothingAction
 import frc.team5499.frc2018Kotlin.auto.actions.DrivePathAction
+import frc.team5499.frc2018Kotlin.auto.actions.WaitUntilRegionAction
+import frc.team5499.frc2018Kotlin.auto.actions.ArmAction
+import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.IntakeDirection
+import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.ArmDirection
+
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
 
 @SuppressWarnings("MagicNumber")
 object Routines {
@@ -64,7 +70,9 @@ object Routines {
 
     private fun generateBaselineRoutine(): Routine {
         val r = Routine("baseline", 180.0,
-            NothingAction(10.0)
+            WaitUntilRegionAction(Vector2(12.0, 12.0), Vector2(48.0, 40.0)),
+            ArmAction(ArmDirection.NONE, IntakeDirection.DROP, true, 2.0),
+            ArmAction(ArmDirection.NONE, IntakeDirection.NONE, false, 0.0)
         )
         return r
     }
