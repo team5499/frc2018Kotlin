@@ -2,8 +2,20 @@ package frc.team5499.frc2018Kotlin.utils
 
 import frc.team5499.frc2018Kotlin.Constants
 
-@SuppressWarnings("MagicNumber")
+@SuppressWarnings("MagicNumber", "TooManyFunctions")
 object Utils {
+
+    public fun epsilonEquals(a: Double, b: Double, epsilon: Double): Boolean {
+        return (a - epsilon <= b) && (a + epsilon >= b)
+    }
+
+    public fun epsilonEquals(a: Double, b: Double): Boolean {
+        return epsilonEquals(a, b, Constants.EPSILON)
+    }
+
+    public fun epsilonEquals(a: Int, b: Int, epsilon: Int): Boolean {
+        return (a - epsilon <= b) && (a + epsilon >= b)
+    }
 
     fun limit(value: Double, limit: Double): Double {
         return limit(value, -limit, limit)

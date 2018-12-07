@@ -2,6 +2,7 @@ package frc.team5499.frc2018Kotlin.utils.math.physics
 
 import frc.team5499.frc2018Kotlin.utils.CSVWritable
 import frc.team5499.frc2018Kotlin.Constants
+import frc.team5499.frc2018Kotlin.utils.Utils
 
 import java.text.DecimalFormat
 
@@ -124,7 +125,162 @@ class DifferentialDrive(
             (dynamics.wheelAcceleration.right - dynamics.wheelTorque.left) / (wheelRadius * moi) -
             dynamics.chassisVelocity.angular * angularDrag / moi
 
-        // dynamics.dcurvature
+        // Add forces and torques about the center of mass.
+        dynamics.chassisAcceleration.linear = (dynamics.wheelTorque.right + dynamics.wheelTorque.left) /
+                (wheelRadius * mass)
+        // (Tr - Tl) / r_w * r_wb - drag * w = I * angular_accel
+        dynamics.chassisAcceleration.angular = effectiveWheelbaseRadius * (dynamics.wheelTorque.right - dynamics
+                .wheelTorque.left) / (wheelRadius * moi) - dynamics.chassisVelocity.angular * angularDrag / moi
+
+        // Solve for change in curvature from angular acceleration.
+        // total angular accel = linear_accel * curvature + v^2 * dcurvature
+        dynamics.dcurvature = (dynamics.chassisAcceleration.angular -
+            dynamics.chassisAcceleration.linear * dynamics.curvature) /
+            (dynamics.chassisVelocity.linear * dynamics.chassisVelocity.linear)
+        if (dynamics.dcurvature.isNaN()) dynamics.dcurvature = 0.0
+
+        // Resolve chassis accelerations to each wheel.
+        dynamics.wheelAcceleration.left = dynamics.chassisAcceleration.linear - dynamics.chassisAcceleration
+                .angular * effectiveWheelbaseRadius
+        dynamics.wheelAcceleration.right = dynamics.chassisAcceleration.linear + dynamics.chassisAcceleration
+                .angular * effectiveWheelbaseRadius
+    }
+
+    public fun solveInverseDynamics(chassisVelocity: ChassisState, chassisAcceleration: ChassisState): DriveDynamics {
+        val dynamics = DriveDynamics()
+        dynamics.chassisVelocity = chassisVelocity
+        dynamics.curvature = dynamics.chassisVelocity.angular / dynamics.chassisVelocity.linear
+        if (dynamics.curvature.isNaN()) dynamics.curvature = 0.0
+        dynamics.chassisAcceleration = chassisAcceleration
+        dynamics.dcurvature = (dynamics.chassisAcceleration.angular -
+            dynamics.chassisAcceleration.linear * dynamics.curvature) /
+            (dynamics.chassisVelocity.linear * dynamics.chassisVelocity.linear)
+        if (dynamics.dcurvature.isNaN()) dynamics.dcurvature = 0.0
+        dynamics.wheelVelocity = solveInverseKinematics(chassisVelocity)
+        dynamics.wheelAcceleration = solveInverseKinematics(chassisAcceleration)
+        solveInverseDynamics(dynamics)
+        return dynamics
+    }
+
+    public fun solveInverseDynamics(wheelVelocity: WheelState, wheelAcceleration: WheelState): DriveDynamics {
+        val dynamics = DriveDynamics()
+        dynamics.chassisVelocity = solveForwardKinematics(wheelVelocity)
+        dynamics.curvature = dynamics.chassisVelocity.angular / dynamics.chassisVelocity.linear
+        if (dynamics.curvature.isNaN()) dynamics.curvature = 0.0
+        dynamics.chassisAcceleration = solveForwardKinematics(wheelAcceleration)
+        dynamics.dcurvature = (dynamics.chassisAcceleration.angular -
+            dynamics.chassisAcceleration.linear * dynamics.curvature) /
+            (dynamics.chassisVelocity.linear * dynamics.chassisVelocity.linear)
+        if (dynamics.dcurvature.isNaN()) dynamics.dcurvature = 0.0
+        dynamics.wheelVelocity = wheelVelocity
+        dynamics.wheelAcceleration = wheelAcceleration
+        solveInverseDynamics(dynamics)
+        return dynamics
+    }
+
+    // Assumptions about dynamics: velocities and accelerations provided, curvature and dcurvature computed.
+    public fun solveInverseDynamics(dynamics: DriveDynamics) {
+        // Determine the necessary torques on the left and right wheels to produce the desired wheel accelerations.
+        dynamics.wheelTorque.left = wheelRadius / 2.0 * (dynamics.chassisAcceleration.linear * mass -
+                dynamics.chassisAcceleration.angular * moi / effectiveWheelbaseRadius -
+                dynamics.chassisVelocity.angular * angularDrag / effectiveWheelbaseRadius)
+        dynamics.wheelTorque.right = wheelRadius / 2.0 * (dynamics.chassisAcceleration.linear * mass +
+                dynamics.chassisAcceleration.angular * moi / effectiveWheelbaseRadius +
+                dynamics.chassisVelocity.angular * angularDrag / effectiveWheelbaseRadius)
+
+        // Solve for input voltages.
+        dynamics.voltage.left = leftTransmission.getVoltageForTorque(dynamics.wheelVelocity.left, dynamics
+                .wheelTorque.left)
+        dynamics.voltage.right = rightTransmission.getVoltageForTorque(dynamics.wheelVelocity.right, dynamics
+                .wheelTorque.right)
+    }
+
+    @Suppress("ReturnCount")
+    public fun getMaxAbsVelocity(curvature: Double, maxAbsVoltage: Double): Double {
+
+        val leftSpeedAtMaxVoltage = leftTransmission.freeSpeedAtVoltage(maxAbsVoltage)
+        val rightSpeedAtMaxVoltage = rightTransmission.freeSpeedAtVoltage(maxAbsVoltage)
+        if (Utils.epsilonEquals(curvature, 0.0)) {
+            return wheelRadius * Math.min(leftSpeedAtMaxVoltage, rightSpeedAtMaxVoltage)
+        }
+        if (curvature.isInfinite()) {
+            // Turn in place.  Return value meaning becomes angular velocity.
+            val wheelSpeed = Math.min(leftSpeedAtMaxVoltage, rightSpeedAtMaxVoltage)
+            return Math.signum(curvature) * wheelRadius * wheelSpeed / effectiveWheelbaseRadius
+        }
+
+        val rightSpeedIfLeftMax = leftSpeedAtMaxVoltage * (effectiveWheelbaseRadius * curvature +
+                1.0) / (1.0 - effectiveWheelbaseRadius * curvature)
+        if (Math.abs(rightSpeedIfLeftMax) <= rightSpeedAtMaxVoltage + Constants.EPSILON) {
+            // Left max is active constraint.
+            return wheelRadius * (leftSpeedAtMaxVoltage + rightSpeedIfLeftMax) / 2.0
+        }
+        val leftSpeedIfRightMax = rightSpeedAtMaxVoltage * (1.0 - effectiveWheelbaseRadius *
+                curvature) / (1.0 + effectiveWheelbaseRadius * curvature)
+        // Right at max is active constraint.
+        return wheelRadius * (rightSpeedAtMaxVoltage + leftSpeedIfRightMax) / 2.0
+    }
+
+    @Suppress("ComplexMethod", "NestedBlockDepth")
+    public fun getMinMaxAcceleration(
+        chassisVelocity: ChassisState,
+        curvature: Double,
+        maxAbsVoltage: Double
+    ): MinMax {
+        val result = MinMax()
+        val wheelVelocities = solveInverseKinematics(chassisVelocity)
+        result.min = Double.POSITIVE_INFINITY
+        result.max = Double.NEGATIVE_INFINITY
+
+        // Math:
+        // (Tl + Tr) / r_w = m*a
+        // (Tr - Tl) / r_w * r_wb - drag*w = i*(a * k + v^2 * dk)
+
+        // 2 equations, 2 unknowns.
+        // Solve for a and (Tl|Tr)
+
+        val linearTerm = if (curvature.isInfinite()) 0.0 else mass * effectiveWheelbaseRadius
+        val angularTerm = if (curvature.isInfinite()) moi else moi * curvature
+
+        val dragTorque = chassisVelocity.angular * angularDrag
+
+        val l1 = arrayOf<Boolean>(false, true)
+        val l2 = arrayOf<Double>(1.0, -1.0)
+        for (left in l1) {
+            for (sign in l2) {
+                val fixedTransmission = if (left) leftTransmission else rightTransmission
+                val variableTransmission = if (left) rightTransmission else leftTransmission
+                val fixedTorque = fixedTransmission.getTorqueForVoltage(
+                    if (left) wheelVelocities.left else wheelVelocities.right,
+                    sign * maxAbsVoltage
+                )
+                val variableTorque: Double
+                if (left) {
+                    variableTorque = ((-dragTorque) * mass * wheelRadius + fixedTorque * (linearTerm + angularTerm)) /
+                        (linearTerm - angularTerm)
+                } else {
+                    variableTorque = ((+dragTorque) * mass * wheelRadius + fixedTorque * (linearTerm - angularTerm)) /
+                        (linearTerm + angularTerm)
+                }
+                val variableVoltage = variableTransmission.getVoltageForTorque(
+                    if (!left) wheelVelocities.left else wheelVelocities.right,
+                    variableTorque
+                )
+                if (Math.abs(variableVoltage) <= maxAbsVoltage + Constants.EPSILON) {
+                    val accel: Double
+                    if (curvature.isInfinite()) {
+                        accel = (if (left) -1.0 else 1.0) * (fixedTorque - variableTorque) * effectiveWheelbaseRadius /
+                            (moi * wheelRadius) - dragTorque / moi
+                    } else {
+                        accel = (fixedTorque + variableTorque) / (mass * wheelRadius)
+                    }
+                    result.min = Math.min(result.min, accel)
+                    result.min = Math.max(result.max, accel)
+                }
+            }
+        }
+
+        return result
     }
 
     // Can refer to velocity or acceleration depending on context.
@@ -177,4 +333,6 @@ class DifferentialDrive(
                 "$chassisAcceleration, $wheelVelocity, $wheelAcceleration, $voltage, $wheelTorque")
         }
     }
+
+    public data class MinMax(var min: Double = 0.0, var max: Double = 0.0)
 }
