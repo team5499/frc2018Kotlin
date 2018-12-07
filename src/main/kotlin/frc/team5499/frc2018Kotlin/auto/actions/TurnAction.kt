@@ -1,40 +1,39 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
-import frc.team5499.frc2018Kotlin.auto.routines.Routine
-import frc.team5499.frc2018Kotlin.auto.routines.Routine.RoutineTag
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
-public class TurnAction(timeout: Double, angle: Double) : Action(timeout) { //ADD 'TYPE: TURNTYPE' WHEN ABOSUTLE TURN IS INITIALIZED
+import frc.team5499.frc2018Kotlin.Constants
 
-    public enum class TurnType{
+public class TurnAction(timeout: Double, angle: Double) : Action(timeout) {
+
+    public enum class TurnType {
         ABOSLUTE,
         RELATIVE
     }
 
-    var mAngle: Double = angle
+    val mAngle: Double
 
-    init{
-        var mAngle: Double = angle
-        //var mType: TurnType = type
+    init {
+        mAngle = angle
+        // var mType: TurnType = type
     }
 
-    override public fun start() {
+    public override fun start() {
         super.start()
         Drivetrain.setTurn(mAngle)
     }
 
-    override public fun update() {
+    public override fun update() {
         super.update()
     }
 
-    override public fun next(): Boolean {
-        if(super.timedOut()) {
+    public override fun next(): Boolean {
+        @Suppress("MagicNumber")
+        if (super.timedOut() ||
+            (Math.abs(Drivetrain.turnError) < Constants.PID.ACCEPTABLE_TURN_ERROR &&
+            Math.abs(Drivetrain.averageVelocity) < Constants.PID.ACCEPTABLE_VELOCITY_THRESHOLD)) {
             return true
         }
         return false
-    }
-
-    override public fun reset() {
-        super.reset()
     }
 }

@@ -1,6 +1,7 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
 import frc.team5499.frc2018Kotlin.subsystems.Arm
+import frc.team5499.frc2018Kotlin.Constants
 
 public class ArmAction(
     armDirectionSt: ArmAction.ArmDirection,
@@ -34,12 +35,11 @@ public class ArmAction(
 
     public override fun start() {
         super.start()
+        Arm.setIntake(intakeDirection.speed)
+        Arm.setArm(armDirection.speed)
     }
 
-    public override fun update() {
-        Arm.setArm(armDirection.speed)
-        Arm.setIntakeSpeed(intakeDirection.speed)
-    }
+    public override fun update() {}
 
     public override fun next(): Boolean {
         return super.next()
@@ -48,9 +48,5 @@ public class ArmAction(
     public override fun finish() {
         println("finish arm")
         // Arm.getInstance().stop()
-    }
-
-    public override fun reset() {
-        super.reset()
     }
 }

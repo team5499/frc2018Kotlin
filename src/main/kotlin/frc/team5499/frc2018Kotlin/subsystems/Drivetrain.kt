@@ -14,7 +14,9 @@ import com.ctre.phoenix.ParamEnum
 
 import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.Position
-import frc.team5499.frc2018Kotlin.utils.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 import frc.team5499.frc2018Kotlin.utils.Utils
 import frc.team5499.frc2018Kotlin.utils.DriveSignal
 
@@ -76,6 +78,17 @@ object Drivetrain : Subsystem() {
         }
         get() = field
 
+    var position: Vector2
+        get() = Position.positionVector
+        set(value) {
+            Position.positionVector = Vector2(value)
+        }
+
+    val pose: Pose2d
+        get() = Pose2d(position, heading)
+
+    // hardware functions
+
     var isBrakeMode = false
         set(value) {
             if (value == field) return
@@ -88,17 +101,18 @@ object Drivetrain : Subsystem() {
         }
         get() = field
 
-    // hardware functions
+    private var mGyroOffset: Rotation2d = Rotation2d.identity
+        get() = field
+        set(value) { field = value }
 
-    var gyroAngle: Double
+    var heading: Rotation2d
         get() {
-            var ypr = doubleArrayOf(0.0, 0.0, 0.0)
-            mGyro.getYawPitchRoll(ypr)
-            return ypr[0]
+            return Rotation2d.fromDegrees(mGyro.getFusedHeading()).rotateBy(mGyroOffset)
         }
         set(value) {
-            @Suppress("MagicNumber")
-            mGyro.setYaw(value * 64.0, 0)
+            println("SET HEADING: ${heading.degrees}")
+            mGyroOffset = value.rotateBy(Rotation2d.fromDegrees(mGyro.getFusedHeading()).inverse())
+            println("Gyro offset: ${mGyroOffset.degrees}")
         }
 
     val gyroAngularVelocity: Double
@@ -107,10 +121,6 @@ object Drivetrain : Subsystem() {
             mGyro.getRawGyro(xyz)
             return xyz[1]
         }
-
-    fun zeroGyro() {
-        gyroAngle = 0.0
-    }
 
     var leftDistance: Double
         get() {
@@ -133,6 +143,9 @@ object Drivetrain : Subsystem() {
 
     val rightVelocity: Double
         get() = Utils.encoderTicksPer100MsToInchesPerSecond(mRightMaster.sensorCollection.quadratureVelocity)
+
+    val averageVelocity: Double
+        get() = (leftVelocity + rightVelocity) / 2.0
 
     val leftVelocityError: Double
         get() = Utils.encoderTicksPer100MsToInchesPerSecond(mLeftMaster.getClosedLoopError(0))
@@ -157,6 +170,7 @@ object Drivetrain : Subsystem() {
 
     // setup funcs
     private fun configForPercent() {
+        isBrakeMode = false
         mLeftMaster.apply {
             // follow(null)
             configNominalOutputForward(0.0, 0)
@@ -186,6 +200,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForVelocity() {
+        isBrakeMode = true
         mLeftMaster.apply {
             setInverted(false)
             // follow(null)
@@ -253,6 +268,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForTurn() {
+        isBrakeMode = true
         mLeftMaster.apply {
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
@@ -307,6 +323,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForPosition() {
+        isBrakeMode = true
         mLeftMaster.apply {
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             configPeakOutputForward(+1.0, 0)
@@ -400,16 +417,14 @@ object Drivetrain : Subsystem() {
     }
 
     // misc functions
-    val position: Vector2
-        get() = Position.positionVector
 
     // super class methods
     override fun update() {
-        Position.update(leftDistance, rightDistance, gyroAngle)
+        Position.update(leftDistance, rightDistance, heading.degrees)
     }
 
     override fun reset() {
-        zeroGyro()
+        // zeroGyro()
         leftDistance = 0.0
         rightDistance = 0.0
         Position.reset()

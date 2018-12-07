@@ -1,38 +1,35 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
-import frc.team5499.frc2018Kotlin.auto.routines.Routine
-import frc.team5499.frc2018Kotlin.auto.routines.Routine.RoutineTag
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
+import frc.team5499.frc2018Kotlin.Constants
 
 public class DriveStraightAction(timeout: Double, inches: Double) : Action(timeout) {
-    
-    var mInches: Double
 
-    init{
+    private val mInches: Double
+
+    init {
         mInches = inches
     }
 
-    override public fun start() {
+    public override fun start() {
         super.start()
         Drivetrain.setPosition(mInches)
     }
 
-    override public fun update() {
+    public override fun update() {
         super.update()
     }
 
-    override public fun next(): Boolean {
-        if(super.timedOut()) {
+    public override fun next(): Boolean {
+        if (super.timedOut() ||
+            (Math.abs(Drivetrain.positionError) < Constants.PID.ACCEPTABLE_DISTANCE_ERROR &&
+            Math.abs(Drivetrain.averageVelocity) < Constants.PID.ACCEPTABLE_VELOCITY_THRESHOLD)) {
             return true
         }
         return false
     }
 
-    override public fun finish() {
+    public override fun finish() {
         super.finish()
-    }
-
-    override public fun reset() {
-        super.reset()
     }
 }

@@ -2,70 +2,54 @@ package frc.team5499.frc2018Kotlin.auto.routines
 
 import frc.team5499.frc2018Kotlin.auto.actions.Action
 
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 
-open class Routine(name: String) {
-    companion object{
-        public val CURRENTROUTINE: RoutineTag = RoutineTag("__default__", -1)
-        public val NOT_FINISHED: RoutineTag = RoutineTag("", -1)
+class Routine(name: String, startHeading: Rotation2d, vararg actions: Action) {
+
+    val actions: Array<out Action>
+    var stepNumber: Int
+        private set
+        get() = field
+    val mName: String
+        get() = field
+    val startHeading: Rotation2d
+        get() = field
+
+    init {
+        this.stepNumber = 0
+        this.mName = name
+        this.startHeading = startHeading
+        this.actions = actions.copyOf()
     }
 
-    var m_actions: MutableList<Action> = mutableListOf<Action>()
-    var m_step_number: Int = 0
-    var m_name: String = name
-   
-    public fun getName(): String {
-        return m_name
-    }
-
-    public fun addAction(action: Action) {
-        m_actions.add(action)
-    }
+    @Suppress("SpreadOperator")
+    constructor(
+        name: String,
+        degreesHeading: Double,
+        vararg actions: Action
+    ): this(name, Rotation2d.fromDegrees(degreesHeading), *actions)
 
     public fun getCurrentAction(): Action {
-        return m_actions.get(m_step_number)
+        return actions.get(stepNumber)
     }
 
-    public fun getActionIndex(): Int {
-        return m_step_number
-    }
-
-    public fun advanceRoutine (): Boolean {
-        if(isLastStep()){
+    public fun advanceRoutine(): Boolean {
+        if (isLastStep()) {
             return false
         }
-        m_step_number++
+        stepNumber++
         return true
     }
 
-    public fun setActionIndex (index: Int) {
-        m_step_number = index
+    public fun setActionIndex(index: Int) {
+        stepNumber = index
     }
 
-    open public fun reset () {
-        for (i: Action in m_actions) {
-            i.reset()
-        }
-        m_step_number = 0
+    public fun reset() {
+        this.stepNumber = 0
     }
 
-    public fun isLastStep (): Boolean {
-        return (m_step_number >= (m_actions.size - 1))
-    }
-
-    class RoutineTag (const_name: String, const_index: Int) {
-        private var name: String = const_name 
-        private var index: Int = const_index
-
-        public fun getName(): String {
-            return name
-        } 
-
-        public fun getIndex(): Int {
-            return index
-        }
-
-        public fun equals(o: RoutineTag): Boolean {
-            return (o.getName() == getName() && o.getIndex() == getIndex())
-        }
+    public fun isLastStep(): Boolean {
+        return (stepNumber >= (actions.size - 1))
     }
 }
