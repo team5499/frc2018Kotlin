@@ -5,7 +5,10 @@ import frc.team5499.frc2018Kotlin.path.PathGenerator
 import frc.team5499.frc2018Kotlin.auto.actions.NothingAction
 import frc.team5499.frc2018Kotlin.auto.actions.DrivePathAction
 import frc.team5499.frc2018Kotlin.auto.actions.WaitUntilRegionAction
+import frc.team5499.frc2018Kotlin.auto.actions.CrossedXBoundaryAction
 import frc.team5499.frc2018Kotlin.auto.actions.ArmAction
+import frc.team5499.frc2018Kotlin.auto.actions.ParallelAction
+import frc.team5499.frc2018Kotlin.auto.actions.SerialAction
 import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.IntakeDirection
 import frc.team5499.frc2018Kotlin.auto.actions.ArmAction.ArmDirection
 
@@ -34,11 +37,29 @@ object Routines {
 
     private fun generateCenterLeftSwitchRoutine(): Routine {
         val r = Routine("center_switch_left", 180.0,
-            DrivePathAction(PathGenerator.Paths.startLeftSwitch, 100.0),
-            NothingAction(1.0),
-            DrivePathAction(PathGenerator.Paths.leftSwitchToPyramid, 100.0),
-            NothingAction(1.0),
-            DrivePathAction(PathGenerator.Paths.pyramidToLeftSwitch, 100.0)
+            ParallelAction(
+                DrivePathAction(PathGenerator.Paths.startLeftSwitch, 100.0),
+                SerialAction(
+                    CrossedXBoundaryAction(90.0, false),
+                    ArmAction(ArmDirection.NONE, IntakeDirection.DROP, true, 0.75)
+                )
+            ),
+            ParallelAction(
+                DrivePathAction(PathGenerator.Paths.leftSwitchToPyramid, 100.0),
+                SerialAction(
+                    ArmAction(ArmDirection.DOWN, IntakeDirection.NONE, true, 0.5),
+                    ArmAction(ArmDirection.NONE, IntakeDirection.INTAKE, true, 0.0)
+                )
+            ),
+            ParallelAction(
+                DrivePathAction(PathGenerator.Paths.pyramidToLeftSwitch, 100.0),
+                SerialAction(
+                    ArmAction(ArmDirection.UP, IntakeDirection.HOLD, true, 0.7),
+                    ArmAction(ArmDirection.NONE, IntakeDirection.NONE, true, 1.0)
+                )
+            ),
+            ArmAction(ArmDirection.NONE, IntakeDirection.DROP, true, 1.0)
+
         )
         return r
     }

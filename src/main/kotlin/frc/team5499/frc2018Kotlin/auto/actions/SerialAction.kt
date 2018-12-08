@@ -1,7 +1,7 @@
 
 package frc.team5499.frc2018Kotlin.auto.actions
 
-public class SerialAction(timeout: Double, vararg actions: Action) : Action(timeout) {
+public class SerialAction(vararg actions: Action) : Action(0.0) {
 
     private val childActions: Array<out Action>
     private var index: Int = 0
@@ -27,7 +27,7 @@ public class SerialAction(timeout: Double, vararg actions: Action) : Action(time
     }
 
     public override fun next(): Boolean {
-        return childActions[childActions.size - 1].next()
+        return index == (childActions.size - 1) && childActions[childActions.size - 1].next()
     }
 
     public override fun finish() {
