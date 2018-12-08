@@ -24,9 +24,6 @@ class ParallelAction(timeout: Double, vararg actions: Action) : Action(timeout) 
 
     @Suppress("ReturnCount")
     override fun next(): Boolean {
-        if (super.timedOut()) {
-            return true
-        }
         for (a: Action in mActions) {
             if (!a.next()) {
                 return false
