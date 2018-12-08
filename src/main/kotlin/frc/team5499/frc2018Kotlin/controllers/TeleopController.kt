@@ -7,6 +7,7 @@ import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.utils.DriveHelper
 import frc.team5499.frc2018Kotlin.utils.DriveSignal
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
+import frc.team5499.frc2018Kotlin.subsystems.Arm
 
 object TeleopController : Controller() {
 
@@ -48,6 +49,11 @@ object TeleopController : Controller() {
         }
 
         Drivetrain.setPercent(signal)
+
+        Arm.setArm(codriver.getY(Hand.kRight))
+        if (codriver.getBumper(Hand.kRight))
+            Arm.intake()
+        else Arm.setIntake(0.0)
     }
 
     fun rotateAuto(): Boolean {

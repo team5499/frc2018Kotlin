@@ -116,7 +116,7 @@ object Constants {
         const val INTAKE_DROP_SPEED: Double = 0.3
         const val MAX_ARM_SPEED: Double = 0.7
 
-        const val ARM_UP_SPEED = 1.0
+        const val ARM_UP_SPEED = 0.8
         const val ARM_DOWN_SPEED = -1.0
         const val ARM_UP_HOLD_SPEED = 0.2
         const val ARM_DOWN_HOLD_SPEED = -0.2
