@@ -93,7 +93,6 @@ object AutoController : Controller() {
             }
         }
         Drivetrain.heading = Rotation2d(currentRoutine.startHeading)
-        println(Drivetrain.position)
         currentAction = currentRoutine.getCurrentAction()
         currentAction!!.start()
     }
