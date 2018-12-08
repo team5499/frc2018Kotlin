@@ -1,6 +1,6 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
-class ParallelAction(timeout: Double, vararg actions: Action) : Action(timeout) {
+class ParallelAction(vararg actions: Action) : Action(0.0) {
 
     private val mActions: Array<out Action>
 

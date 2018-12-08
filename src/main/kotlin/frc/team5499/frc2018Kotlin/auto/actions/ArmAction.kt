@@ -6,7 +6,7 @@ import frc.team5499.frc2018Kotlin.Constants
 public class ArmAction(
     armDirectionSt: ArmAction.ArmDirection,
     intakeDirectionSt: ArmAction.IntakeDirection,
-    waitForTimeout: Boolean = false,
+    continueRunning: Boolean = false,
     timeout: Double
 ) : Action(timeout) {
 
@@ -21,19 +21,19 @@ public class ArmAction(
     enum class IntakeDirection(val speed: Double) {
         INTAKE(Constants.Arm.INTAKE_SPEED),
         HOLD(Constants.Arm.INTAKE_HOLD_SPEED),
-        DROP(Constants.Arm.INTAKE_HOLD_SPEED),
+        DROP(Constants.Arm.INTAKE_DROP_SPEED),
         SPIT(Constants.Arm.INTAKE_SPIT_SPEED),
         NONE(0.0)
     }
 
     val armDirection: ArmDirection
     val intakeDirection: IntakeDirection
-    val mWaitForTimeout: Boolean
+    val mContinue: Boolean
 
     init {
         armDirection = armDirectionSt
         intakeDirection = intakeDirectionSt
-        mWaitForTimeout = waitForTimeout
+        mContinue = continueRunning
     }
 
     public override fun start() {
@@ -45,9 +45,13 @@ public class ArmAction(
     public override fun update() {}
 
     public override fun next(): Boolean {
-        if (mWaitForTimeout)
-            return super.next()
-        else
-            return true
+        return super.next()
+    }
+
+    public override fun finish() {
+        if (!mContinue) {
+            Arm.setArm(0.0)
+            Arm.setIntake(0.0)
+        }
     }
 }
