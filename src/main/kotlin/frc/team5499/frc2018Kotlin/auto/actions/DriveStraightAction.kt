@@ -21,7 +21,7 @@ public class DriveStraightAction(timeout: Double, inches: Double) : Action(timeo
     }
 
     public override fun next(): Boolean {
-        if (super.timedOut() ||
+        if (super.next() ||
             (Math.abs(Drivetrain.positionError) < Constants.PID.ACCEPTABLE_DISTANCE_ERROR &&
             Math.abs(Drivetrain.averageVelocity) < Constants.PID.ACCEPTABLE_VELOCITY_THRESHOLD)) {
             return true

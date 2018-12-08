@@ -7,7 +7,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource
 import com.ctre.phoenix.motorcontrol.SensorTerm
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced
-import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.sensors.PigeonIMU
 import com.ctre.phoenix.motorcontrol.DemandType
 import com.ctre.phoenix.ParamEnum
@@ -19,29 +18,30 @@ import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
 import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 import frc.team5499.frc2018Kotlin.utils.Utils
 import frc.team5499.frc2018Kotlin.utils.DriveSignal
+import frc.team5499.frc2018Kotlin.utils.hardware.LazyTalonSRX
 
 @Suppress("LargeClass", "TooManyFunctions")
 object Drivetrain : Subsystem() {
 
     // HARDWARE INIT
-    private val mLeftMaster = TalonSRX(Constants.Talons.LEFT_MASTER_PORT).apply {
+    private val mLeftMaster = LazyTalonSRX(Constants.Talons.LEFT_MASTER_PORT).apply {
         setInverted(false)
         setSensorPhase(false)
         setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
     }
 
-    private val mLeftSlave = TalonSRX(Constants.Talons.LEFT_SLAVE_PORT).apply {
+    private val mLeftSlave = LazyTalonSRX(Constants.Talons.LEFT_SLAVE_PORT).apply {
         setInverted(false)
         follow(mLeftMaster)
     }
 
-    private val mRightMaster = TalonSRX(Constants.Talons.RIGHT_MASTER_PORT).apply {
+    private val mRightMaster = LazyTalonSRX(Constants.Talons.RIGHT_MASTER_PORT).apply {
         setInverted(true)
         setSensorPhase(false)
         setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
     }
 
-    private val mRightSlave = TalonSRX(Constants.Talons.RIGHT_SLAVE_PORT).apply {
+    private val mRightSlave = LazyTalonSRX(Constants.Talons.RIGHT_SLAVE_PORT).apply {
         setInverted(true)
         follow(mRightMaster)
     }
