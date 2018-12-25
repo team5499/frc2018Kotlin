@@ -7,38 +7,41 @@ import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource
 import com.ctre.phoenix.motorcontrol.SensorTerm
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced
-import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.sensors.PigeonIMU
 import com.ctre.phoenix.motorcontrol.DemandType
 import com.ctre.phoenix.ParamEnum
 
 import frc.team5499.frc2018Kotlin.Constants
 import frc.team5499.frc2018Kotlin.Position
-import frc.team5499.frc2018Kotlin.utils.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
+import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
 import frc.team5499.frc2018Kotlin.utils.Utils
+import frc.team5499.frc2018Kotlin.utils.DriveSignal
+import frc.team5499.frc2018Kotlin.utils.hardware.LazyTalonSRX
 
 @Suppress("LargeClass", "TooManyFunctions")
 object Drivetrain : Subsystem() {
 
     // HARDWARE INIT
-    private val mLeftMaster = TalonSRX(Constants.Talons.LEFT_MASTER_PORT).apply {
+    private val mLeftMaster = LazyTalonSRX(Constants.Talons.LEFT_MASTER_PORT).apply {
         setInverted(false)
         setSensorPhase(false)
         setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
     }
 
-    private val mLeftSlave = TalonSRX(Constants.Talons.LEFT_SLAVE_PORT).apply {
+    private val mLeftSlave = LazyTalonSRX(Constants.Talons.LEFT_SLAVE_PORT).apply {
         setInverted(false)
         follow(mLeftMaster)
     }
 
-    private val mRightMaster = TalonSRX(Constants.Talons.RIGHT_MASTER_PORT).apply {
+    private val mRightMaster = LazyTalonSRX(Constants.Talons.RIGHT_MASTER_PORT).apply {
         setInverted(true)
         setSensorPhase(false)
         setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
     }
 
-    private val mRightSlave = TalonSRX(Constants.Talons.RIGHT_SLAVE_PORT).apply {
+    private val mRightSlave = LazyTalonSRX(Constants.Talons.RIGHT_SLAVE_PORT).apply {
         setInverted(true)
         follow(mRightMaster)
     }
@@ -75,6 +78,17 @@ object Drivetrain : Subsystem() {
         }
         get() = field
 
+    var position: Vector2
+        get() = Position.positionVector
+        set(value) {
+            Position.positionVector = Vector2(value)
+        }
+
+    val pose: Pose2d
+        get() = Pose2d(position, heading)
+
+    // hardware functions
+
     var isBrakeMode = false
         set(value) {
             if (value == field) return
@@ -87,17 +101,18 @@ object Drivetrain : Subsystem() {
         }
         get() = field
 
-    // hardware functions
+    private var mGyroOffset: Rotation2d = Rotation2d.identity
+        get() = field
+        set(value) { field = value }
 
-    var gyroAngle: Double
+    var heading: Rotation2d
         get() {
-            var ypr = doubleArrayOf(0.0, 0.0, 0.0)
-            mGyro.getYawPitchRoll(ypr)
-            return ypr[0]
+            return Rotation2d.fromDegrees(mGyro.getFusedHeading()).rotateBy(mGyroOffset)
         }
         set(value) {
-            @Suppress("MagicNumber")
-            mGyro.setYaw(value * 64.0, 0)
+            println("SET HEADING: ${heading.degrees}")
+            mGyroOffset = value.rotateBy(Rotation2d.fromDegrees(mGyro.getFusedHeading()).inverse())
+            println("Gyro offset: ${mGyroOffset.degrees}")
         }
 
     val gyroAngularVelocity: Double
@@ -106,10 +121,6 @@ object Drivetrain : Subsystem() {
             mGyro.getRawGyro(xyz)
             return xyz[1]
         }
-
-    fun zeroGyro() {
-        gyroAngle = 0.0
-    }
 
     var leftDistance: Double
         get() {
@@ -132,6 +143,9 @@ object Drivetrain : Subsystem() {
 
     val rightVelocity: Double
         get() = Utils.encoderTicksPer100MsToInchesPerSecond(mRightMaster.sensorCollection.quadratureVelocity)
+
+    val averageVelocity: Double
+        get() = (leftVelocity + rightVelocity) / 2.0
 
     val leftVelocityError: Double
         get() = Utils.encoderTicksPer100MsToInchesPerSecond(mLeftMaster.getClosedLoopError(0))
@@ -156,6 +170,7 @@ object Drivetrain : Subsystem() {
 
     // setup funcs
     private fun configForPercent() {
+        isBrakeMode = false
         mLeftMaster.apply {
             // follow(null)
             configNominalOutputForward(0.0, 0)
@@ -185,6 +200,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForVelocity() {
+        isBrakeMode = true
         mLeftMaster.apply {
             setInverted(false)
             // follow(null)
@@ -252,6 +268,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForTurn() {
+        isBrakeMode = true
         mLeftMaster.apply {
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.Talons.TALON_UPDATE_PERIOD_MS, 0)
@@ -306,6 +323,7 @@ object Drivetrain : Subsystem() {
     }
 
     private fun configForPosition() {
+        isBrakeMode = true
         mLeftMaster.apply {
             configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0)
             configPeakOutputForward(+1.0, 0)
@@ -362,9 +380,18 @@ object Drivetrain : Subsystem() {
 
     // drive funcs
     fun setPercent(left: Double, right: Double) {
+        setPercent(left, right, false)
+    }
+
+    fun setPercent(left: Double, right: Double, brakeMode: Boolean) {
         driveMode = DriveMode.OPEN_LOOP
         mLeftMaster.set(ControlMode.PercentOutput, left)
         mRightMaster.set(ControlMode.PercentOutput, right)
+        isBrakeMode = brakeMode
+    }
+
+    fun setPercent(signal: DriveSignal) {
+        setPercent(signal.left, signal.right, signal.brakeMode)
     }
 
     fun setPosition(distance: Double) {
@@ -390,16 +417,14 @@ object Drivetrain : Subsystem() {
     }
 
     // misc functions
-    val position: Vector2
-        get() = Position.positionVector
 
     // super class methods
     override fun update() {
-        Position.update(leftDistance, rightDistance, gyroAngle)
+        Position.update(leftDistance, rightDistance, heading.degrees)
     }
 
     override fun reset() {
-        zeroGyro()
+        // zeroGyro()
         leftDistance = 0.0
         rightDistance = 0.0
         Position.reset()
