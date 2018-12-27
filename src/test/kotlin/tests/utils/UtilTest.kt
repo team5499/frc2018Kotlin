@@ -1,8 +1,9 @@
 package tests.utils
 
-import frc.team5499.frc2018Kotlin.utils.DriveSignal
-import frc.team5499.frc2018Kotlin.utils.Utils
 import frc.team5499.frc2018Kotlin.Constants
+
+import org.team5499.monkeyLib.input.DriveSignal
+import org.team5499.monkeyLib.util.Utils
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -11,7 +12,7 @@ public class UtilTest {
     @Test
     fun test_inches_to_encoder_ticks() {
         val inches = 2.0
-        val output = Utils.inchesToEncoderTicks(inches)
+        val output = Utils.inchesToEncoderTicks(Constants.ENCODER_TICKS_PER_ROTATION, Constants.WHEEL_CIR, inches)
         assert(output == (2.0 * Constants.ENCODER_TICKS_PER_ROTATION / Constants.WHEEL_CIR).toInt())
     }
 

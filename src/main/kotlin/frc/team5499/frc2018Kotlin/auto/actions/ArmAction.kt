@@ -3,6 +3,8 @@ package frc.team5499.frc2018Kotlin.auto.actions
 import frc.team5499.frc2018Kotlin.subsystems.Arm
 import frc.team5499.frc2018Kotlin.Constants
 
+import org.team5499.monkeyLib.auto.Action
+
 public class ArmAction(
     armDirectionSt: ArmAction.ArmDirection,
     intakeDirectionSt: ArmAction.IntakeDirection,

@@ -4,11 +4,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
-
-import frc.team5499.frc2018Kotlin.utils.math.splines.QuinticHermiteSpline
+import org.team5499.monkeyLib.math.geometry.Vector2
+import org.team5499.monkeyLib.math.geometry.Rotation2d
+import org.team5499.monkeyLib.math.geometry.Pose2d
+import org.team5499.monkeyLib.math.splines.QuinticHermiteSpline
 
 class QuinticHermiteOptimizerTest {
 

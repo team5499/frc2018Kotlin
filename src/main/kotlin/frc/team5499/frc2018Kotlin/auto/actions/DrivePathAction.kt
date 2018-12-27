@@ -1,8 +1,11 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
-import frc.team5499.frc2018Kotlin.path.Path
-import frc.team5499.frc2018Kotlin.path.PathFollower
+import frc.team5499.frc2018Kotlin.Constants
+
+import org.team5499.monkeyLib.path.Path
+import org.team5499.monkeyLib.path.PathFollower
+import org.team5499.monkeyLib.auto.Action
 
 public class DrivePathAction(path: Path, timeout: Double) : Action(timeout) {
 
@@ -15,7 +18,7 @@ public class DrivePathAction(path: Path, timeout: Double) : Action(timeout) {
     }
 
     public override fun start() {
-        mPathFollower = PathFollower(mPath)
+        mPathFollower = PathFollower(mPath, Constants.TRACK_WIDTH, Constants.Path.LOOK_AHEAD_DISTANCE)
         val output = mPathFollower!!.update(Drivetrain.pose)
         Drivetrain.setVelocity(output.leftVelocity, output.rightVelocity)
     }

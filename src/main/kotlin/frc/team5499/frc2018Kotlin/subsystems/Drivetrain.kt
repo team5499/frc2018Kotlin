@@ -12,13 +12,15 @@ import com.ctre.phoenix.motorcontrol.DemandType
 import com.ctre.phoenix.ParamEnum
 
 import frc.team5499.frc2018Kotlin.Constants
-import frc.team5499.frc2018Kotlin.Position
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Pose2d
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
-import frc.team5499.frc2018Kotlin.utils.Utils
-import frc.team5499.frc2018Kotlin.utils.DriveSignal
-import frc.team5499.frc2018Kotlin.utils.hardware.LazyTalonSRX
+
+import org.team5499.monkeyLib.Subsystem
+import org.team5499.monkeyLib.math.geometry.Vector2
+import org.team5499.monkeyLib.math.geometry.Rotation2d
+import org.team5499.monkeyLib.math.geometry.Pose2d
+import org.team5499.monkeyLib.math.Position
+import org.team5499.monkeyLib.hardware.LazyTalonSRX
+import org.team5499.monkeyLib.input.DriveSignal
+import org.team5499.monkeyLib.util.Utils
 
 @Suppress("LargeClass", "TooManyFunctions")
 object Drivetrain : Subsystem() {
@@ -78,14 +80,14 @@ object Drivetrain : Subsystem() {
         }
         get() = field
 
-    var position: Vector2
-        get() = Position.positionVector
-        set(value) {
-            Position.positionVector = Vector2(value)
-        }
+    private val position = Position()
+
+    fun setPosition(newPos: Vector2) {
+        position.positionVector = Vector2(newPos)
+    }
 
     val pose: Pose2d
-        get() = Pose2d(position, heading)
+        get() = Pose2d(position.positionVector, heading)
 
     // hardware functions
 
@@ -124,49 +126,93 @@ object Drivetrain : Subsystem() {
 
     var leftDistance: Double
         get() {
-            return Utils.encoderTicksToInches(mLeftMaster.sensorCollection.quadraturePosition)
+            return Utils.encoderTicksToInches(
+                Constants.ENCODER_TICKS_PER_ROTATION,
+                Constants.WHEEL_CIR,
+                mLeftMaster.sensorCollection.quadraturePosition
+            )
         }
         set(inches) {
-            mLeftMaster.sensorCollection.setQuadraturePosition(Utils.inchesToEncoderTicks(inches), 0)
+            mLeftMaster.sensorCollection.setQuadraturePosition(
+                Utils.inchesToEncoderTicks(Constants.ENCODER_TICKS_PER_ROTATION,
+                Constants.WHEEL_CIR,
+                inches), 0)
         }
 
     var rightDistance: Double
         get() {
-            return Utils.encoderTicksToInches(mRightMaster.sensorCollection.quadraturePosition)
+            return Utils.encoderTicksToInches(
+                Constants.ENCODER_TICKS_PER_ROTATION,
+                Constants.WHEEL_CIR,
+                mRightMaster.sensorCollection.quadraturePosition
+            )
         }
         set(inches) {
-            mRightMaster.sensorCollection.setQuadraturePosition(Utils.inchesToEncoderTicks(inches), 0)
+            mRightMaster.sensorCollection.setQuadraturePosition(
+                Utils.inchesToEncoderTicks(Constants.ENCODER_TICKS_PER_ROTATION,
+                Constants.WHEEL_CIR,
+                inches), 0)
         }
 
     val leftVelocity: Double
-        get() = Utils.encoderTicksPer100MsToInchesPerSecond(mLeftMaster.sensorCollection.quadratureVelocity)
+        get() = Utils.encoderTicksPer100MsToInchesPerSecond(
+            Constants.ENCODER_TICKS_PER_ROTATION,
+            Constants.WHEEL_CIR,
+            mLeftMaster.sensorCollection.quadratureVelocity
+        )
 
     val rightVelocity: Double
-        get() = Utils.encoderTicksPer100MsToInchesPerSecond(mRightMaster.sensorCollection.quadratureVelocity)
+        get() = Utils.encoderTicksPer100MsToInchesPerSecond(
+            Constants.ENCODER_TICKS_PER_ROTATION,
+            Constants.WHEEL_CIR,
+            mRightMaster.sensorCollection.quadratureVelocity
+        )
 
     val averageVelocity: Double
         get() = (leftVelocity + rightVelocity) / 2.0
 
     val leftVelocityError: Double
-        get() = Utils.encoderTicksPer100MsToInchesPerSecond(mLeftMaster.getClosedLoopError(0))
+        get() = Utils.encoderTicksPer100MsToInchesPerSecond(
+            Constants.ENCODER_TICKS_PER_ROTATION,
+            Constants.WHEEL_CIR,
+            mLeftMaster.getClosedLoopError(0)
+        )
 
     val rightVelocityError: Double
-        get() = Utils.encoderTicksPer100MsToInchesPerSecond(mRightMaster.getClosedLoopError(0))
+        get() = Utils.encoderTicksPer100MsToInchesPerSecond(
+            Constants.ENCODER_TICKS_PER_ROTATION,
+            Constants.WHEEL_CIR,
+            mRightMaster.getClosedLoopError(0)
+        )
 
     val averageVelocityError: Double
         get() = (leftVelocityError + rightVelocityError) / 2.0
 
     val positionError: Double
-        get() = Utils.encoderTicksToInches(mRightMaster.getClosedLoopError(0))
+        get() = Utils.encoderTicksToInches(
+            Constants.ENCODER_TICKS_PER_ROTATION,
+            Constants.WHEEL_CIR,
+            mRightMaster.getClosedLoopError(0)
+        )
 
     val anglePositionError: Double
-        get() = Utils.talonAngleToDegrees(mRightMaster.getClosedLoopError(1))
+        get() = Utils.talonAngleToDegrees(
+            Constants.Gyro.TURN_UNITS_PER_ROTATION,
+            mRightMaster.getClosedLoopError(1)
+        )
 
     val turnError: Double
-        get() = Utils.talonAngleToDegrees(mRightMaster.getClosedLoopError(0))
+        get() = Utils.talonAngleToDegrees(
+            Constants.Gyro.TURN_UNITS_PER_ROTATION,
+            mRightMaster.getClosedLoopError(0)
+        )
 
     val turnFixedError: Double
-        get() = Utils.encoderTicksToInches(mRightMaster.getClosedLoopError(1))
+        get() = Utils.encoderTicksToInches(
+            Constants.ENCODER_TICKS_PER_ROTATION,
+            Constants.WHEEL_CIR,
+            mRightMaster.getClosedLoopError(1)
+        )
 
     // setup funcs
     private fun configForPercent() {
@@ -396,15 +442,24 @@ object Drivetrain : Subsystem() {
 
     fun setPosition(distance: Double) {
         driveMode = DriveMode.POSITION
-        val absDistance = Utils.inchesToEncoderTicks(((leftDistance + rightDistance) / 2.0) + distance)
+        val absDistance = Utils.inchesToEncoderTicks(
+            Constants.ENCODER_TICKS_PER_ROTATION,
+            Constants.WHEEL_CIR,
+            ((leftDistance + rightDistance) / 2.0) + distance
+        )
         val angleTarget = mRightMaster.getSelectedSensorPosition(1)
         mRightMaster.set(ControlMode.Position, absDistance.toDouble(), DemandType.AuxPID, angleTarget.toDouble())
     }
 
     fun setTurn(angle: Double) {
         driveMode = DriveMode.TURN
-        val fixedDistance = Utils.inchesToEncoderTicks((leftDistance + rightDistance) / 2.0)
-        val angleTarget = mRightMaster.getSelectedSensorPosition(1) + Utils.degreesToTalonAngle(angle)
+        val fixedDistance = Utils.inchesToEncoderTicks(
+            Constants.ENCODER_TICKS_PER_ROTATION,
+            Constants.WHEEL_CIR,
+            (leftDistance + rightDistance) / 2.0
+        )
+        val angleTarget = mRightMaster.getSelectedSensorPosition(1) +
+            Utils.degreesToTalonAngle(Constants.Gyro.TURN_UNITS_PER_ROTATION, angle)
         mRightMaster.set(ControlMode.Position, angleTarget.toDouble(), DemandType.AuxPID, fixedDistance.toDouble())
     }
 
@@ -412,22 +467,32 @@ object Drivetrain : Subsystem() {
         driveMode = DriveMode.VELOCITY
         val left = Math.min(Constants.MAX_VELOCITY_SETPOINT, leftSpeed)
         val right = Math.min(Constants.MAX_VELOCITY_SETPOINT, rightSpeed)
-        mLeftMaster.set(ControlMode.Velocity, Utils.inchesPerSecondToEncoderTicksPer100Ms(left))
-        mRightMaster.set(ControlMode.Velocity, Utils.inchesPerSecondToEncoderTicksPer100Ms(right))
+        mLeftMaster.set(ControlMode.Velocity,
+            Utils.inchesPerSecondToEncoderTicksPer100Ms(
+                Constants.ENCODER_TICKS_PER_ROTATION,
+                Constants.WHEEL_CIR,
+                left)
+            )
+        mRightMaster.set(ControlMode.Velocity,
+            Utils.inchesPerSecondToEncoderTicksPer100Ms(
+                Constants.ENCODER_TICKS_PER_ROTATION,
+                Constants.WHEEL_CIR,
+                right)
+            )
     }
 
     // misc functions
 
     // super class methods
     override fun update() {
-        Position.update(leftDistance, rightDistance, heading.degrees)
+        position.update(leftDistance, rightDistance, heading.degrees)
     }
 
     override fun reset() {
         // zeroGyro()
         leftDistance = 0.0
         rightDistance = 0.0
-        Position.reset()
+        position.reset()
         isBrakeMode = false
     }
 

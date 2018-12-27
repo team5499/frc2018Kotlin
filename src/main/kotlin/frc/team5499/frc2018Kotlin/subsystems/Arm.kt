@@ -4,7 +4,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.NeutralMode
 
 import frc.team5499.frc2018Kotlin.Constants
-import frc.team5499.frc2018Kotlin.utils.hardware.LazyTalonSRX
+
+import org.team5499.monkeyLib.Subsystem
+import org.team5499.monkeyLib.hardware.LazyTalonSRX
 
 @Suppress("TooManyFunctions")
 object Arm : Subsystem() {

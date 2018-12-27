@@ -4,10 +4,11 @@ import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
 
 import frc.team5499.frc2018Kotlin.Constants
-import frc.team5499.frc2018Kotlin.utils.DriveHelper
-import frc.team5499.frc2018Kotlin.utils.DriveSignal
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 import frc.team5499.frc2018Kotlin.subsystems.Arm
+
+import org.team5499.monkeyLib.Controller
+import org.team5499.monkeyLib.input.DriveSignal
 
 object TeleopController : Controller() {
 
@@ -28,25 +29,25 @@ object TeleopController : Controller() {
     }
 
     override fun update() {
-        val signal: DriveSignal
-        when (driveConfig) {
-            DriveConfig.CHEESY -> {
-                signal = DriveHelper.cheesyDrive(-driver.getY(Hand.kLeft),
-                    driver.getX(Hand.kRight),
-                    driver.getBumper(Hand.kRight),
-                    false)
-            }
-            DriveConfig.SPACE -> {
-                signal = DriveHelper.spaceDrive(-driver.getY(Hand.kLeft),
-                    driver.getX(Hand.kRight),
-                    driver.getBumper(Hand.kRight))
-            }
-            DriveConfig.TANK -> {
-                signal = DriveHelper.tankDrive(-driver.getY(Hand.kLeft),
-                    -driver.getY(Hand.kRight),
-                    driver.getBumper(Hand.kRight))
-            }
-        }
+        val signal: DriveSignal = DriveSignal()
+        // when (driveConfig) {
+        //     DriveConfig.CHEESY -> {
+        //         signal = DriveHelper.cheesyDrive(-driver.getY(Hand.kLeft),
+        //             driver.getX(Hand.kRight),
+        //             driver.getBumper(Hand.kRight),
+        //             false)
+        //     }
+        //     DriveConfig.SPACE -> {
+        //         signal = DriveHelper.spaceDrive(-driver.getY(Hand.kLeft),
+        //             driver.getX(Hand.kRight),
+        //             driver.getBumper(Hand.kRight))
+        //     }
+        //     DriveConfig.TANK -> {
+        //         signal = DriveHelper.tankDrive(-driver.getY(Hand.kLeft),
+        //             -driver.getY(Hand.kRight),
+        //             driver.getBumper(Hand.kRight))
+        //     }
+        // }
 
         Drivetrain.setPercent(signal)
 
