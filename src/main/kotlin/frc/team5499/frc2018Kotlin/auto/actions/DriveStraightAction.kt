@@ -3,6 +3,8 @@ package frc.team5499.frc2018Kotlin.auto.actions
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 import frc.team5499.frc2018Kotlin.Constants
 
+import org.team5499.monkeyLib.auto.Action
+
 public class DriveStraightAction(timeout: Double, inches: Double) : Action(timeout) {
 
     private val mInches: Double

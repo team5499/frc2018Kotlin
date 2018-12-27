@@ -4,6 +4,8 @@ import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
 import frc.team5499.frc2018Kotlin.Constants
 
+import org.team5499.monkeyLib.auto.Action
+
 public class TurnAction(timeout: Double, angle: Double) : Action(timeout) {
 
     public enum class TurnType {

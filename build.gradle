@@ -6,6 +6,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         url 'https://maven.team5499.org'
     }
@@ -13,7 +14,7 @@ repositories {
 
 dependencies {
     compile 'org.jetbrains.kotlin:kotlin-stdlib'
-    compile 'org.team5499:monkey-lib:1.0'
+    compile 'org.team5499:monkey-lib:1.1.0'
     compile group: 'com.opencsv', name: 'opencsv', version: '4.0'
 
     compile wpilib()

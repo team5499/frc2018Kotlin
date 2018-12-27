@@ -1,8 +1,9 @@
 package frc.team5499.frc2018Kotlin.auto.actions
 
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Vector2
-
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
+
+import org.team5499.monkeyLib.auto.Action
+import org.team5499.monkeyLib.math.geometry.Vector2
 
 class WaitUntilRegionAction(lowerLeftCorner: Vector2, upperRightCorner: Vector2) : Action(0.0) {
 

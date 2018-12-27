@@ -2,6 +2,8 @@ package frc.team5499.frc2018Kotlin.auto.actions
 
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
+import org.team5499.monkeyLib.auto.Action
+
 class CrossedXBoundaryAction(xLine: Double, lessThan: Boolean = false) : Action(0.0) {
 
     private val mLineCoord: Double

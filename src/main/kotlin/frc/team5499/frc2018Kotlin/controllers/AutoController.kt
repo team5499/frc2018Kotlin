@@ -1,12 +1,13 @@
 package frc.team5499.frc2018Kotlin.controllers
 
-import frc.team5499.frc2018Kotlin.auto.actions.Action
-import frc.team5499.frc2018Kotlin.auto.routines.Routine
 import frc.team5499.frc2018Kotlin.auto.routines.Routines
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 import frc.team5499.frc2018Kotlin.subsystems.Arm
 
-import frc.team5499.frc2018Kotlin.utils.math.geometry.Rotation2d
+import org.team5499.monkeyLib.Controller
+import org.team5499.monkeyLib.auto.Routine
+import org.team5499.monkeyLib.auto.Action
+import org.team5499.monkeyLib.math.geometry.Rotation2d
 
 import edu.wpi.first.wpilibj.DriverStation
 
