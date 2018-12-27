@@ -9,6 +9,9 @@ import frc.team5499.frc2018Kotlin.subsystems.Arm
 
 import org.team5499.monkeyLib.Controller
 import org.team5499.monkeyLib.input.DriveSignal
+import org.team5499.monkeyLib.input.CheesyDriveHelper
+import org.team5499.monkeyLib.input.SpaceDriveHelper
+import org.team5499.monkeyLib.input.TankDriveHelper
 
 object TeleopController : Controller() {
 
@@ -18,10 +21,40 @@ object TeleopController : Controller() {
         TANK
     }
 
-    var driveConfig = Constants.Input.DRIVE_CONFIG
+    private var driveConfig = Constants.Input.DRIVE_CONFIG
 
-    val driver = XboxController(Constants.Input.DRIVER_PORT)
-    val codriver = XboxController(Constants.Input.CODRIVER_PORT)
+    private val driver: XboxController
+    private val codriver: XboxController
+
+    private var cheesyDriveConfig: CheesyDriveHelper.CheesyDriveConfig
+
+    private val cheesyHelper: CheesyDriveHelper
+    private val tankHelper: TankDriveHelper
+    private val spaceHelper: SpaceDriveHelper
+
+    init {
+        driver = XboxController(Constants.Input.DRIVER_PORT)
+        codriver = XboxController(Constants.Input.CODRIVER_PORT)
+
+        cheesyDriveConfig = CheesyDriveHelper.CheesyDriveConfig()
+        cheesyDriveConfig.deadband = Constants.Input.THROTTLE_DEADBAND
+        cheesyDriveConfig.quickstopDeadband = Constants.Input.QUICKSTOP_DEADBAND
+        cheesyDriveConfig.quickstopWeight = Constants.Input.QUICKSTOP_WEIGHT
+        cheesyDriveConfig.quickstopScalar = Constants.Input.QUICKSTOP_SCALAR
+        cheesyDriveConfig.highWheelNonlinearity = Constants.Input.HIGH_WHEEL_NONLINEARITY
+        cheesyDriveConfig.lowWheelNonlinearity = Constants.Input.LOW_WHEEL_NONLINEARITY
+        cheesyDriveConfig.highNeginertiaScalar = Constants.Input.HIGH_NEGINERTIA_SCALAR
+        cheesyDriveConfig.highSensitivity = Constants.Input.HIGH_SENSITIVITY
+        cheesyDriveConfig.lowNeginertiaTurnScalar = Constants.Input.LOW_NEGINERTIA_TURN_SCALAR
+        cheesyDriveConfig.lowNeginertiaThreshold = Constants.Input.LOW_NEGINERTIA_THRESHOLD
+        cheesyDriveConfig.lowNeginertiaFarScalar = Constants.Input.LOW_NEGINERTIA_FAR_SCALAR
+        cheesyDriveConfig.lowNeginertiaCloseScalar = Constants.Input.LOW_NEGINERTIA_CLOSE_SCALAR
+        cheesyDriveConfig.lowSensitivity = Constants.Input.LOW_SENSITIVITY
+
+        cheesyHelper = CheesyDriveHelper(cheesyDriveConfig)
+        tankHelper = TankDriveHelper(Constants.Input.THROTTLE_DEADBAND, Constants.Input.SLOW_MULT)
+        spaceHelper = SpaceDriveHelper(Constants.Input.THROTTLE_DEADBAND, Constants.Input.TURN_MULT)
+    }
 
     override fun start() {
         driveConfig = Constants.Input.DRIVE_CONFIG
@@ -29,25 +62,25 @@ object TeleopController : Controller() {
     }
 
     override fun update() {
-        val signal: DriveSignal = DriveSignal()
-        // when (driveConfig) {
-        //     DriveConfig.CHEESY -> {
-        //         signal = DriveHelper.cheesyDrive(-driver.getY(Hand.kLeft),
-        //             driver.getX(Hand.kRight),
-        //             driver.getBumper(Hand.kRight),
-        //             false)
-        //     }
-        //     DriveConfig.SPACE -> {
-        //         signal = DriveHelper.spaceDrive(-driver.getY(Hand.kLeft),
-        //             driver.getX(Hand.kRight),
-        //             driver.getBumper(Hand.kRight))
-        //     }
-        //     DriveConfig.TANK -> {
-        //         signal = DriveHelper.tankDrive(-driver.getY(Hand.kLeft),
-        //             -driver.getY(Hand.kRight),
-        //             driver.getBumper(Hand.kRight))
-        //     }
-        // }
+        val signal: DriveSignal
+        when (driveConfig) {
+            DriveConfig.CHEESY -> {
+                signal = cheesyHelper.calculateOutput(-driver.getY(Hand.kLeft),
+                    driver.getX(Hand.kRight),
+                    driver.getBumper(Hand.kRight),
+                    false)
+            }
+            DriveConfig.SPACE -> {
+                signal = spaceHelper.calculateOutput(-driver.getY(Hand.kLeft),
+                    driver.getX(Hand.kRight),
+                    driver.getBumper(Hand.kRight))
+            }
+            DriveConfig.TANK -> {
+                signal = tankHelper.calculateOutput(-driver.getY(Hand.kLeft),
+                    -driver.getY(Hand.kRight),
+                    driver.getBumper(Hand.kRight))
+            }
+        }
 
         Drivetrain.setPercent(signal)
 
