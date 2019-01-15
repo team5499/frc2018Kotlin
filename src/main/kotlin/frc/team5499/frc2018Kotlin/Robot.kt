@@ -6,10 +6,19 @@ import frc.team5499.frc2018Kotlin.controllers.TeleopController
 import frc.team5499.frc2018Kotlin.controllers.AutoController
 import frc.team5499.frc2018Kotlin.subsystems.Drivetrain
 
+import frc.team5499.frc2018Kotlin.utils.CustomLogger
+
 class Robot : TimedRobot() {
 
     override fun robotInit() {
         super.setPeriod(Constants.UPDATE_PERIOD)
+        CustomLogger.LOG.info("test")
+        // val mediaDir: File = File("/media/")
+        // var list = mediaDir.list()
+        // println(list.indices)
+        // for (i in list.indices) {
+        //     println(list[i])
+        // }
     }
 
     override fun robotPeriodic() {}
